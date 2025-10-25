@@ -1,20 +1,15 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { CoreModule } from './core/core.module';
-import { SharedModule } from './shared/shared.module';
+import { RouterModule, Routes } from '@angular/router';
 
+export const routes: Routes = [
+  {path : '', redirectTo: '/auth', pathMatch: 'full'},
+  {path: 'auth', loadChildren: () => import('./features/auth/auth.module').then(m => m.AuthModule)},
+  {path: 'home', loadChildren: () => import('./features/home/home.module').then(m => m.HomeModule)}
+]
 @NgModule({
-  declarations: [AppComponent],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    HttpClientModule,
-    CoreModule,
-    SharedModule
-  ],
-  bootstrap: [AppComponent]
+
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+
 })
 export class AppModule { }
