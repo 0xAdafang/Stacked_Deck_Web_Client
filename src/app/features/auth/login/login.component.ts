@@ -1,49 +1,58 @@
-import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import { AuthService } from '../../../core/services/auth.service';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-login',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './login.component.html',
-  imports: [
-    ReactiveFormsModule
-  ],
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
-  loginForm : FormGroup;
+export class LoginComponent {
+  loginForm: FormGroup;
   errorMessage: string | null = null;
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
   ) {
+
     this.loginForm = this.fb.group({
       username: ['', [Validators.required]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      password: ['', [Validators.required, Validators.minLength(6)]],
     });
   }
 
-  ngOnInit(): void {
-  }
-
   onSubmit(): void {
-    if (this.loginForm.valid) {
-      const credentials = this.loginForm.value;
-      this.authService.login(credentials).subscribe({
-        next: (user) => {
-          if (user.token) {
-            this.authService.saveToken(user.token);
-            this.router.navigate(['/home']);
-          }
-        },
-        error: (err) => {
-          this.errorMessage = 'Invalid username or password.';
-          console.error(err);
-        }
-      });
+    this.errorMessage = null;
+
+    if (this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();
+      return;
     }
+
+    const { username, password } = this.loginForm.value;
+
+    this.authService.login({
+      identifier: username,
+      password: password
+    }).subscribe({
+      next: (res) => {
+        if (res && res.token) {
+          this.authService.saveToken(res.token);
+          this.router.navigate(['/home']);
+        } else {
+          this.errorMessage = 'No token received from server.';
+        }
+      },
+      error: (err) => {
+        console.error('Login error:', err);
+        this.errorMessage = 'Invalid username or password.';
+      }
+    });
   }
 }

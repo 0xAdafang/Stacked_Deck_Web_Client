@@ -4,6 +4,10 @@ import { Observable } from 'rxjs';
 import { User } from '../models/user.model';
 import { environment } from '../../../environments/environment';
 
+export interface AuthService {
+  token: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -12,9 +16,9 @@ export class AuthService {
 
   constructor(private http: HttpClient) { }
 
-  login(credentials: { username : string, password: string }):
+  login(data: { identifier : string, password: string }):
   Observable<User> {
-    return this.http.post<User>(`${this.apiUrl}/signin`,credentials);
+    return this.http.post<User>(`${this.apiUrl}/login`, data);
   }
 
   saveToken(token: string): void {

@@ -1,22 +1,52 @@
 <div class="login-container">
   <h2>Login</h2>
+
   <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
     <div class="form-group">
       <label for="username">Username</label>
-      <input type="text" id="username" formControlName="username" required>
-      <div *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched">
-        <span *ngIf="loginForm.get('username')?.errors?.['required']">Username is required</span>
+      <input
+        type="text"
+        id="username"
+        formControlName="username"
+        required
+      />
+
+      <div
+        *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched"
+        class="field-error"
+      >
+        <span *ngIf="loginForm.get('username')?.errors?.['required']">
+          Username is required
+        </span>
       </div>
     </div>
+
     <div class="form-group">
       <label for="password">Password</label>
-      <input type="password" id="password" formControlName="password" required>
-      <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
-        <span *ngIf="loginForm.get('password')?.errors?.['required']">Password is required</span>
-        <span *ngIf="loginForm.get('password')?.errors?.['minlength']">Password must be at least 6 characters</span>
+      <input
+        type="password"
+        id="password"
+        formControlName="password"
+        required
+      />
+
+      <div
+        *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+        class="field-error"
+      >
+        <span *ngIf="loginForm.get('password')?.errors?.['required']">
+          Password is required
+        </span>
+        <span *ngIf="loginForm.get('password')?.errors?.['minlength']">
+          Password must be at least 6 characters
+        </span>
       </div>
     </div>
+
     <button type="submit" [disabled]="loginForm.invalid">Login</button>
-    <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+
+    <div *ngIf="errorMessage" class="error">
+      {{ errorMessage }}
+    </div>
   </form>
 </div>
