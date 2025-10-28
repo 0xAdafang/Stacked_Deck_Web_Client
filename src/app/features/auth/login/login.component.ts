@@ -42,8 +42,8 @@ export class LoginComponent {
       password: password
     }).subscribe({
       next: (res) => {
-        if (res && res.token) {
-          this.authService.saveToken(res.token);
+        if (res && res.accessToken) {
+          this.authService.saveToken(res.accessToken);
           this.router.navigate(['/home']);
         } else {
           this.errorMessage = 'No token received from server.';
