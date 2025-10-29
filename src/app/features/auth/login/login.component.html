@@ -45,6 +45,15 @@
 
     <button type="submit" [disabled]="loginForm.invalid">Login</button>
 
+    <div class="mt-4 flex items-center justify-between text-sm">
+      <a routerLink="/auth/register" class="underline">Créer un compte</a>
+      <a routerLink="/auth/forgot-password" class="underline">Mot de passe oublié ?</a>
+    </div>
+
+    <div *ngIf="verified" class="mt-4 p-3 rounded bg-green-100 text-green-800">
+      Your account has been successfully verified. You can now log in.
+    </div>
+
     <div *ngIf="errorMessage" class="error">
       {{ errorMessage }}
     </div>
