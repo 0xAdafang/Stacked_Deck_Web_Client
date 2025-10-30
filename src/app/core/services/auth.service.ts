@@ -42,10 +42,15 @@ export class AuthService {
     return this.http.post<void>('/api/auth.forgot-password', null, { params, withCredentials: true });
   }
 
-  resetPassword(payload: { token: string; newPassword: string}) {
-    const params = new HttpParams().set('token', token).set('newPassword', newPassword);
-    return this.http.post<void>('/api/auth/reset-password', null, { params, withCredentials: true });
-  }
+  resetPassword(token: string, newPassword: string) {
+    const params = new HttpParams()
+      .set('token', token)
+      .set('newPassword', newPassword);
+
+    return this.http.post<void>(`${this.apiUrl}/reset-password`, null, {
+      params,
+      withCredentials: true
+    });
 
 
 
