@@ -17,7 +17,7 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
   login(data: { identifier : string, password: string }):
-  Observable<User> {
+    Observable<User> {
     return this.http.post<User>(`${this.apiUrl}/login`, data);
   }
 
@@ -39,7 +39,7 @@ export class AuthService {
 
   forgotPassword(email: string) {
     const params = new HttpParams().set('email', email);
-    return this.http.post<void>('/api/auth.forgot-password', null, { params, withCredentials: true });
+    return this.http.post<void>('/api/auth/forgot-password', null, { params, withCredentials: true });
   }
 
   resetPassword(token: string, newPassword: string) {
@@ -51,7 +51,13 @@ export class AuthService {
       params,
       withCredentials: true
     });
+  }
 
-
-
+  resendVerification(email: string) {
+    return this.http.post<void>(`${this.apiUrl}/resend-verification`, {
+      email
+    }, {
+      withCredentials: true
+    });
+  }
 }

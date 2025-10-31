@@ -1,18 +1,17 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
-import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
-  selector: 'app-forgot-password',
+  selector: 'app-resend-verification',
   standalone: true,
-  templateUrl: './forgot-password.component.html',
+  templateUrl: './resend-verification.component.html',
   imports: [
     ReactiveFormsModule
   ],
-  styleUrls: ['./forgot-password.component.scss']
+  styleUrls: ['./resend-verification.component.css']
 })
-export class ForgotPasswordComponent {
+export class ResendVerificationComponent {
   form: FormGroup;
 
   sending = false;
@@ -28,7 +27,7 @@ export class ForgotPasswordComponent {
     });
   }
 
-  submit(): void {
+  submit() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
@@ -36,16 +35,15 @@ export class ForgotPasswordComponent {
 
     this.sending = true;
     this.errorMsg = '';
-
     const email = this.form.value.email!;
 
-    this.auth.forgotPassword(email).subscribe({
+    this.auth.resendVerification(email).subscribe({
       next: () => {
         this.sent = true;
         this.sending = false;
       },
-      error: (err: HttpErrorResponse) => {
-        this.errorMsg = "Unable to send reset email. Please try again later.";
+      error: () => {
+        this.errorMsg = "Unable to resend email at this time.";
         this.sending = false;
       }
     });

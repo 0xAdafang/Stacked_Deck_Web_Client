@@ -16,6 +16,7 @@ export class LoginComponent implements OnInit {
   errorMessage: string | null = null;
   successMessage: string | null = null;
   verified: boolean = false;
+  unverifiedEmail: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -23,7 +24,6 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute
   ) {
-
     this.loginForm = this.fb.group({
       username: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(6)]],
@@ -31,13 +31,13 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
     const verifiedParam = this.route.snapshot.queryParamMap.get('verified');
     this.verified = verifiedParam === 'true';
   }
 
   onSubmit(): void {
     this.errorMessage = null;
+    this.unverifiedEmail = '';
 
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
@@ -60,9 +60,15 @@ export class LoginComponent implements OnInit {
       },
       error: (err) => {
         console.error('Login error:', err);
-        this.errorMessage = 'Invalid username or password.';
+
+
+        this.errorMessage = err?.error?.message ?? 'Connexion impossible';
+
+
+        if (this.errorMessage && this.errorMessage.toLowerCase().includes('not verified')) {
+          this.unverifiedEmail = username;
+        }
       }
     });
   }
-
 }

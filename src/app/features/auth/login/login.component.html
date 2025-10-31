@@ -46,8 +46,8 @@
     <button type="submit" [disabled]="loginForm.invalid">Login</button>
 
     <div class="mt-4 flex items-center justify-between text-sm">
-      <a routerLink="/auth/register" class="underline">Créer un compte</a>
-      <a routerLink="/auth/forgot-password" class="underline">Mot de passe oublié ?</a>
+      <a routerLink="/auth/register" class="underline">Create account</a>
+      <a routerLink="/auth/forgot-password" class="underline">Forgot password ?</a>
     </div>
 
     <div *ngIf="verified" class="mt-4 p-3 rounded bg-green-100 text-green-800">
@@ -57,5 +57,15 @@
     <div *ngIf="errorMessage" class="error">
       {{ errorMessage }}
     </div>
+    <div *ngIf="errorMsg" class="error">
+      {{ errorMsg }}
+      <ng-container *ngIf="unverifiedEmail">
+        <br />
+        <a [routerLink]="['/auth/resend-verification']" [queryParams]="{ email: unverifiedEmail }">
+          Renvoyer l’email de vérification
+        </a>
+      </ng-container>
+    </div>
+
   </form>
 </div>

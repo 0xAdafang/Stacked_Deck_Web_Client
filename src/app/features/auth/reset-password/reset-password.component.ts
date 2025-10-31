@@ -1,25 +1,19 @@
 import { Component } from '@angular/core';
-import { FormBuilder, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService } from '../../core/services/auth.service'; // adapte le chemin si besoin
+import { AuthService } from '../../../core/services/auth.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-reset-password',
+  standalone: true,
+  imports: [ReactiveFormsModule],
   templateUrl: './reset-password.component.html',
   styleUrls: ['./reset-password.component.scss']
 })
 export class ResetPasswordComponent {
-
-
-  token: string = this.route.snapshot.queryParamMap.get('token') ?? '';
-
-  form = this.fb.group(
-    {
-      password: ['', [Validators.required, Validators.minLength(8)]],
-      confirmPassword: ['', Validators.required],
-    },
-    { validators: this.matchPasswords }
-  );
+  token: string;
+  form: FormGroup;
 
   submitting = false;
   serverError = '';
@@ -29,15 +23,23 @@ export class ResetPasswordComponent {
     private route: ActivatedRoute,
     private router: Router,
     private auth: AuthService
-  ) {}
+  ) {
+    this.token = this.route.snapshot.queryParamMap.get('token') ?? '';
 
+    this.form = this.fb.group(
+      {
+        password: ['', [Validators.required, Validators.minLength(8)]],
+        confirmPassword: ['', Validators.required],
+      },
+      { validators: this.matchPasswords }
+    );
+  }
 
   private matchPasswords(control: AbstractControl): ValidationErrors | null {
     const pass = control.get('password')?.value;
     const confirm = control.get('confirmPassword')?.value;
     if (!pass || !confirm) return null;
     return pass === confirm ? null : { mismatch: true };
-
   }
 
   submit(): void {
@@ -51,7 +53,7 @@ export class ResetPasswordComponent {
       next: () => {
         this.router.navigate(['/auth/login'], { queryParams: { reset: 'ok' } });
       },
-      error: (err) => {
+      error: (err: HttpErrorResponse) => {
         this.serverError = err?.error?.message ?? 'Password cannot be reset.';
         this.submitting = false;
       }
