@@ -8,6 +8,7 @@ import { LoginComponent } from './login/login.component';
 import {ResetPasswordComponent} from './reset-password/reset-password.component';
 import {ForgotPasswordComponent} from './forgot-password/forgot-password.component';
 import { ResendVerificationComponent } from './resend-verification/resend-verification.component';
+import {RegisterComponent} from './register/register.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
