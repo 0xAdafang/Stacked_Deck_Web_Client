@@ -14,9 +14,11 @@ import { AuthService } from '../../../core/services/auth.service';
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   errorMessage: string | null = null;
+  errorMsg = '';
   successMessage: string | null = null;
   verified: boolean = false;
   unverifiedEmail: string = '';
+
 
   constructor(
     private fb: FormBuilder,
