@@ -1,26 +1,60 @@
 import { Injectable } from '@angular/core';
-import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {
+  HttpEvent,
+  HttpHandler,
+  HttpInterceptor,
+  HttpRequest,
+  HttpErrorResponse
+} from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError, switchMap } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private authService: AuthService) {}
 
-  intercept(req: HttpRequest<unknown>, next: HttpHandler):
-  Observable<HttpEvent<unknown>> {
-    const token = this.authService.getToken();
+  private isRefreshing = false;
 
-    if (!token) {
-      return next.handle(req);
-    }
+  constructor(private auth: AuthService) {}
 
-    const authReq = req.clone({
-    setHeaders: {
-      Authorization: `Bearer ${token}`
-      }
-    });
+  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    const token = this.auth.getToken();
 
-    return next.handle(authReq);
+    const authReq = token
+      ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
+      : req;
+
+    return next.handle(authReq).pipe(
+      catchError((err: HttpErrorResponse) => {
+        if (err.status === 401 && !this.isRefreshing) {
+          this.isRefreshing = true;
+
+          // on tente un refresh
+          return this.auth.refresh().pipe(
+            switchMap((newToken) => {
+              this.isRefreshing = false;
+
+              if (!newToken) {
+                this.auth.logout();
+                return throwError(() => err);
+              }
+
+              const retryReq = req.clone({
+                setHeaders: { Authorization: `Bearer ${newToken}` }
+              });
+
+              return next.handle(retryReq);
+            }),
+            catchError((refreshError) => {
+              this.isRefreshing = false;
+              this.auth.logout();
+              return throwError(() => refreshError);
+            })
+          );
+        }
+
+        return throwError(() => err);
+      })
+    );
   }
 }
