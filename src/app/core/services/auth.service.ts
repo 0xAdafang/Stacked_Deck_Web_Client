@@ -70,6 +70,14 @@ export class AuthService {
     });
   }
 
+  verifyEmail(token: string) {
+    const params = new HttpParams().set('token', token);
+    return this.http.get<void>(`${this.baseUrl}/verify`, {
+      params,
+      withCredentials: true
+    });
+  }
+
 
   refresh(): Observable<string | null> {
 

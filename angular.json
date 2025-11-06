@@ -59,7 +59,8 @@
               "buildTarget": "DrawACard:build:production"
             },
             "development": {
-              "buildTarget": "DrawACard:build:development"
+              "buildTarget": "DrawACard:build:development",
+              "proxyConfig": "proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"

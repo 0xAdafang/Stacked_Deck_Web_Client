@@ -8,6 +8,7 @@ import { RegisterComponent } from './register/register.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { ResendVerificationComponent } from './resend-verification/resend-verification.component';
+import { VerifyComponent} from './verify-email/verify.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -15,6 +16,7 @@ const routes: Routes = [
   { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
   { path: 'resend-verification', component: ResendVerificationComponent },
+  { path: 'verify', component: VerifyComponent },
 ];
 
 @NgModule({
@@ -22,13 +24,14 @@ const routes: Routes = [
 
   ],
   imports: [
-    CommonModule,         
+    CommonModule,
     RouterModule.forChild(routes),
     LoginComponent,
     ForgotPasswordComponent,
     RegisterComponent,
     ResetPasswordComponent,
     ResendVerificationComponent,
+    VerifyComponent,
   ]
 })
 export class AuthModule {}
