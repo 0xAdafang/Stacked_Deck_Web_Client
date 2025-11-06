@@ -1,11 +1,13 @@
 import {Component, OnInit} from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import {CommonModule} from '@angular/common';
 
 @Component({
   selector: 'app-resend-verification',
   templateUrl: './resend-verification.component.html',
+  imports: [ReactiveFormsModule, CommonModule],
   styleUrls: ['./resend-verification.component.scss']
 })
 export class ResendVerificationComponent implements OnInit {
