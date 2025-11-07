@@ -72,7 +72,7 @@ export class RegisterComponent {
     this.auth.register(payload).subscribe({
       next: () => {
 
-        void this.router.navigate(['/auth/login'], { queryParams: { checkEmail: 1 } });
+        void this.router.navigate(['/auth/verify-email'], { queryParams: { checkEmail: 1 } });
       },
       error: (err: any) => {
         this.serverError = err?.error?.message ?? 'Registration is not possible at this time.';

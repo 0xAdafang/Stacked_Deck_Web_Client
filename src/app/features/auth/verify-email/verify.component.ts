@@ -1,37 +1,40 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-verify-email',
-  template: `<p>Vérification de ton email...</p>`,
-
+  templateUrl: './verify.component.html',
+  styleUrls: ['./verify.component.scss']
 })
-
 export class VerifyComponent implements OnInit {
+  email?: string;
+  verified = false;
+  verifyError = false;
+
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
-    private http: HttpClient
+    private auth: AuthService,
+    private router: Router
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
+
+    this.email = this.route.snapshot.queryParamMap.get('email') ?? undefined;
+
+
     const token = this.route.snapshot.queryParamMap.get('token');
+    if (token) {
+      this.auth.verifyEmail(token).subscribe({
+        next: () => {
+          this.verified = true;
 
-    if (!token) {
-      this.router.navigate(['/auth/login'], { queryParams: { verifyError: 1 } });
-      return;
+          setTimeout(() => this.router.navigate(['/auth/login']), 2000);
+        },
+        error: () => {
+          this.verifyError = true;
+        }
+      });
     }
-
-    const params = new HttpParams().set('token', token);
-
-    this.http.get('/api/auth/verify', {params, withCredentials: true}).subscribe({
-      next: data => {
-        this.router.navigate(['/auth/login'], { queryParams: { verified: 1 } });
-      },
-      error: () => {
-        this.router.navigate(['/auth/login'], { queryParams: { verifyError: 1 } });
-      }
-    });
   }
 }

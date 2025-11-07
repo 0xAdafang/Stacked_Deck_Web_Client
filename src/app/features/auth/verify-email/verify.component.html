@@ -1,0 +1,20 @@
+<div class="verify-wrapper">
+  <h2>Vérifie ton adresse e-mail</h2>
+
+  <p *ngIf="email; else noEmail">
+    Nous avons envoyé un lien de confirmation à
+    <strong>{{ email }}</strong>.
+    Clique sur le lien dans le mail pour activer ton compte.
+  </p>
+
+  <ng-template #noEmail>
+    <p>
+      Nous t’avons envoyé un mail de confirmation. Consulte ta boîte de réception
+      et clique sur le lien.
+    </p>
+  </ng-template>
+
+  <p class="hint">
+    Pas reçu ? <a routerLink="/auth/resend-verification">Renvoyer le mail</a>
+  </p>
+</div>

@@ -29,7 +29,7 @@ export class AuthInterceptor implements HttpInterceptor {
         if (err.status === 401 && !this.isRefreshing) {
           this.isRefreshing = true;
 
-          // on tente un refresh
+
           return this.auth.refresh().pipe(
             switchMap((newToken) => {
               this.isRefreshing = false;
