@@ -1,24 +1,31 @@
-<h2>Resend verification email</h2>
+<div class="resend-wrapper">
+  <h2>Resend verification email</h2>
 
-<form *ngIf="!sent" [formGroup]="form" (ngSubmit)="submit()">
-  <label>
-    Email
-    <input type="email" formControlName="email" />
-  </label>
-  <div *ngIf="form.get('email')?.touched && form.get('email')?.invalid" class="error">
-    Invalid email.
+  <form *ngIf="!sent" [formGroup]="form" (ngSubmit)="submit()">
+    <label>
+      Email address
+      <input type="email" formControlName="email" placeholder="your@email.com" />
+    </label>
+    <div *ngIf="form.get('email')?.touched && form.get('email')?.invalid" class="error">
+      Please enter a valid email address.
+    </div>
+
+    <div *ngIf="errorMsg" class="error">
+      {{ errorMsg }}
+    </div>
+
+    <button type="submit" [disabled]="form.invalid || sending">
+      {{ sending ? 'Sending...' : 'Resend verification email' }}
+    </button>
+  </form>
+
+  <div *ngIf="sent" class="success">
+    <p>
+      If an account exists for this email and is not yet verified,
+      a new verification email has been sent.
+    </p>
+    <p>
+      <a routerLink="/auth/login">Back to login</a>
+    </p>
   </div>
-
-  <div *ngIf="errorMsg" class="error">
-    {{ errorMsg }}
-  </div>
-
-  <button type="submit" [disabled]="form.invalid || sending">
-    {{ sending ? 'Sending...': 'Resend email' }}
-  </button>
-</form>
-
-<div *ngIf="sent" class="success">
-  If an account exists for this email and it is not yet activated,
-  a new verification email has just been sent.
 </div>

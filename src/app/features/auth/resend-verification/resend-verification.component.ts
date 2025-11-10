@@ -51,7 +51,7 @@ export class ResendVerificationComponent implements OnInit {
         this.sending = false;
       },
       error: () => {
-        this.errorMsg = 'It is not possible to resend the email at this time.';
+        this.errorMsg = 'Unable to resend the email at this time. Please try again later.';
         this.sending = false;
       }
     });

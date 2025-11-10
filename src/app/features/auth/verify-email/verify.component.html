@@ -1,20 +1,46 @@
 <div class="verify-wrapper">
-  <h2>Vérifie ton adresse e-mail</h2>
 
-  <p *ngIf="email; else noEmail">
-    Nous avons envoyé un lien de confirmation à
-    <strong>{{ email }}</strong>.
-    Clique sur le lien dans le mail pour activer ton compte.
-  </p>
+  <!-- Success message after verification -->
+  <div *ngIf="verified" class="success-message">
+    <h2>✓ Email verified successfully!</h2>
+    <p>Your account is now activated.</p>
+    <p>Redirecting to login page...</p>
+  </div>
 
-  <ng-template #noEmail>
+  <!-- Error message -->
+  <div *ngIf="verifyError" class="error-message">
+    <h2>✗ Verification error</h2>
+    <p>The link may have expired or is invalid.</p>
     <p>
-      Nous t’avons envoyé un mail de confirmation. Consulte ta boîte de réception
-      et clique sur le lien.
+      <a [routerLink]="['/auth/resend-verification']" [queryParams]="{email: email}">
+        Resend verification email
+      </a>
     </p>
-  </ng-template>
+  </div>
 
-  <p class="hint">
-    Pas reçu ? <a routerLink="/auth/resend-verification">Renvoyer le mail</a>
-  </p>
+  <!-- Initial message: waiting for email verification -->
+  <div *ngIf="!verified && !verifyError">
+    <h2>Verify your email address</h2>
+
+    <p *ngIf="email; else noEmail">
+      We've sent a confirmation link to
+      <strong>{{ email }}</strong>.
+      Click the link in the email to activate your account.
+    </p>
+
+    <ng-template #noEmail>
+      <p>
+        We've sent you a confirmation email. Check your inbox
+        and click on the link.
+      </p>
+    </ng-template>
+
+    <p class="hint">
+      Didn't receive it?
+      <a [routerLink]="['/auth/resend-verification']" [queryParams]="{email: email}">
+        Resend email
+      </a>
+    </p>
+  </div>
+
 </div>
