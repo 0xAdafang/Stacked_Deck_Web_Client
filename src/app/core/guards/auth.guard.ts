@@ -11,21 +11,22 @@ export class AuthGuard implements CanActivate {
   ) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree {
-    const publicRoutes = ['/auth/login', '/auth/register', '/auth/verify'];
-
     const cleanUrl = state.url.split('?')[0];
 
 
-    if (publicRoutes.indexOf(cleanUrl) !== -1) {
+    const publicRoutePrefixes = ['/auth/login', '/auth/register', '/auth/verify-email', '/reset-password'];
+    if (publicRoutePrefixes.some(p => cleanUrl.startsWith(p))) {
       return true;
     }
+
 
     if (this.auth.isAuthenticated()) {
       return true;
     }
 
+
     return this.router.createUrlTree(['/auth/login'], {
-      queryParams: {returnUrl: state.url}
+      queryParams: { returnUrl: state.url }
     });
   }
 }

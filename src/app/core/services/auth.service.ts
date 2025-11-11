@@ -53,13 +53,10 @@ export class AuthService {
     });
   }
 
-  resetPassword(token: string, newPassword: string) {
-    const params = new HttpParams()
-      .set('token', token)
-      .set('newPassword', newPassword);
-    return this.http.post<void>(`${this.baseUrl}/reset-password`, null, {
-      params,
-      withCredentials: true
+  resetPassword(token: string, password: string): Observable<void> {
+    return this.http.post<void>(`${this.baseUrl}/reset-password`, {
+      token,
+      password
     });
   }
 
