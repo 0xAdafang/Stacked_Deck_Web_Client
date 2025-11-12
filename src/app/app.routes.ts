@@ -9,6 +9,10 @@ export const routes: Routes = [
       import('./features/auth/auth.module').then(m => m.AuthModule)
   },
   {
+    path: 'reset-password',
+    redirectTo: 'auth/reset-password'
+  },
+  {
     path: 'home',
     canActivate: [AuthGuard],
     loadChildren: () =>

@@ -54,11 +54,15 @@ export class AuthService {
   }
 
   resetPassword(token: string, password: string): Observable<void> {
-    return this.http.post<void>(`${this.baseUrl}/reset-password`, {
-      token,
-      password
+    const params = new HttpParams()
+      .set('token', token)
+      .set('newPassword', password);
+    return this.http.post<void>(`${this.baseUrl}/reset-password`, null, {
+      params,
+      withCredentials: true
     });
   }
+
 
 
   resendVerification(email: string) {
