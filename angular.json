@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "DrawACard": {
+    "StackedDeck": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -56,10 +56,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "DrawACard:build:production"
+              "buildTarget": "StackedDeck:build:production"
             },
             "development": {
-              "buildTarget": "DrawACard:build:development",
+              "buildTarget": "StackedDeck:build:development",
               "proxyConfig": "proxy.conf.json"
             }
           },

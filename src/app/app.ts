@@ -5,8 +5,8 @@ import { RouterOutlet } from '@angular/router';
   selector: 'app-root',
   imports: [RouterOutlet],
   templateUrl: './app.component.html',
-  styleUrl: './app.css'
+  styleUrl: './app.scss'
 })
 export class App {
-  protected readonly title = signal('DrawACard');
+  protected readonly title = signal('StackedDeck');
 }
