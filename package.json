@@ -1,5 +1,5 @@
 {
-  "name": "draw-acard",
+  "name": "stacked-deck",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -29,7 +29,6 @@
     "@angular/platform-browser": "^20.3.0",
     "@angular/router": "^20.3.0",
     "@stomp/stompjs": "^7.2.1",
-    "http": "^0.0.1-security",
     "rxjs": "~7.8.0",
     "sockjs-client": "^1.6.1",
     "tslib": "^2.3.0",

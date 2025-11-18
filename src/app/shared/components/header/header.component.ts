@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import {FormsModule} from '@angular/forms';
+import { FormsModule } from '@angular/forms';
+import { ThemeService } from '../../../core/services/theme.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -10,16 +12,28 @@ import {FormsModule} from '@angular/forms';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-
-export class HeaderComponent {
+export class HeaderComponent implements OnInit, OnDestroy {
   isDark = true;
   mobileMenuOpen = false;
   cartCount = 3;
   searchQuery = '';
 
+  private themeSubscription?: Subscription;
+
+  constructor(private themeService: ThemeService) {}
+
+  ngOnInit(): void {
+    this.themeSubscription = this.themeService.isDark$.subscribe(
+      isDark => this.isDark = isDark
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.themeSubscription?.unsubscribe();
+  }
+
   toggleTheme(): void {
-    this.isDark = !this.isDark;
-    localStorage.setItem('theme', this.isDark ? 'dark' : 'light');
+    this.themeService.toggleTheme();
   }
 
   toggleMobileMenu(): void {
@@ -29,14 +43,7 @@ export class HeaderComponent {
   onSearch(): void {
     if (this.searchQuery.trim()) {
       console.log('Searching for:', this.searchQuery);
-      //TODO : implementer la recherche
-    }
-  }
-
-  ngOnInit(): void {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-      this.isDark = savedTheme === 'dark';
+      // TODO: Implémenter la recherche
     }
   }
 }

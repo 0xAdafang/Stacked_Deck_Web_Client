@@ -1,10 +1,145 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Title</title>
-</head>
-<body>
+<app-header></app-header>
+<div [class.dark-theme]="isDark" [class.light-theme]="!isDark" class="home-wrapper">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="container">
+      <div class="hero-content">
+        <h1 class="hero-title">
+          Premium <span class="gradient-text">Pokémon TCG</span>
+          <br />Marketplace
+        </h1>
+        <p class="hero-subtitle">
+          Discover rare cards, build your dream deck, and join thousands of collectors worldwide
+        </p>
+        <div class="hero-actions">
+          <button class="btn btn-primary" routerLink="/products">
+            <span>Browse Cards</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m9 18 6-6-6-6"/>
+            </svg>
+          </button>
+          <button class="btn btn-secondary" routerLink="/new-releases">
+            New Releases
+          </button>
+        </div>
 
-</body>
-</html>
+        <!-- Stats -->
+        <div class="hero-stats">
+          <div class="stat-item">
+            <div class="stat-value">10K+</div>
+            <div class="stat-label">Cards Available</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">5K+</div>
+            <div class="stat-label">Happy Collectors</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">98%</div>
+            <div class="stat-label">Satisfaction Rate</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="card-showcase">
+          <div class="showcase-card card-1"></div>
+          <div class="showcase-card card-2"></div>
+          <div class="showcase-card card-3"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Categories Section -->
+  <section class="categories-section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Featured <span class="accent-text">Collections</span></h2>
+        <p class="section-subtitle">Explore the latest and most popular Pokémon sets</p>
+      </div>
+
+      <div class="categories-grid">
+        <div *ngFor="let category of categories" class="category-card" [routerLink]="['/products']" [queryParams]="{set: category.id}">
+          <div class="category-image" [style.background-image]="'url(' + category.image + ')'"></div>
+          <div class="category-overlay"></div>
+          <div class="category-content">
+            <h3 class="category-name">{{ category.name }}</h3>
+            <p class="category-count">{{ category.cardCount }} cards</p>
+          </div>
+          <div class="category-glow"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Cards Section -->
+  <section class="cards-section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Trending <span class="accent-text">Cards</span></h2>
+        <p class="section-subtitle">Most popular cards among collectors</p>
+      </div>
+
+      <div class="cards-grid">
+        <div *ngFor="let card of featuredCards" class="card-item">
+          <div class="card-image-wrapper" [routerLink]="['/products', card.id]">
+            <img [src]="card.image" [alt]="card.name" class="card-image" />
+            <div class="card-overlay">
+              <button class="quick-view-btn">Quick View</button>
+            </div>
+            <div class="rarity-badge" [style.background-color]="getRarityColor(card.rarity)">
+              {{ card.rarity }}
+            </div>
+            <div *ngIf="!card.inStock" class="out-of-stock-badge">Out of Stock</div>
+          </div>
+
+          <div class="card-info">
+            <h3 class="card-name">{{ card.name }}</h3>
+            <p class="card-set">{{ card.set }}</p>
+            <div class="card-footer">
+              <div class="card-price">${{ card.price.toFixed(2) }}</div>
+              <button
+                class="add-to-cart-btn"
+                [disabled]="!card.inStock"
+                (click)="addToCart(card)"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="8" cy="21" r="1"></circle>
+                  <circle cx="19" cy="21" r="1"></circle>
+                  <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="view-all-wrapper">
+        <button class="btn btn-outline" routerLink="/products">
+          View All Cards
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m9 18 6-6-6-6"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-content">
+        <h2 class="cta-title">Ready to start your collection?</h2>
+        <p class="cta-subtitle">Join thousands of collectors and find your dream cards today</p>
+        <button class="btn btn-primary btn-large" routerLink="/auth/register">
+          Get Started
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m9 18 6-6-6-6"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+</div>
+<app-footer></app-footer>
