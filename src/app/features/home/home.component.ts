@@ -5,6 +5,8 @@ import { HeaderComponent } from '../../shared/components/header/header.component
 import { ThemeService } from '../../core/services/theme.service';
 import {Subscription} from 'rxjs';
 import {FooterComponent} from '../../shared/components/footer/footer.component';
+import {HttpClient} from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
 
 
@@ -26,6 +28,14 @@ interface Category {
   cardCount: number;
 }
 
+interface PageResponse<T> {
+  content: T[];
+  totalPages: number;
+  totalElements: number;
+  size: number;
+  number: number;
+}
+
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -37,137 +47,58 @@ export class HomeComponent implements OnInit, OnDestroy {
   isDark = true;
   private themeSubscription?: Subscription;
 
+  base = environment.apiUrl;
 
-  categories: Category[] = [
-    {
-      id: '1',
-      name: 'Scarlet & Violet',
-      image: 'https://images.unsplash.com/photo-1613771404721-1f92d799e49f?w=400&h=300&fit=crop',
-      cardCount: 245
-    },
-    {
-      id: '2',
-      name: 'Crown Zenith',
-      image: 'https://images.unsplash.com/photo-1606166325683-7e92e3d0c4f8?w=400&h=300&fit=crop',
-      cardCount: 159
-    },
-    {
-      id: '3',
-      name: 'Lost Origin',
-      image: 'https://images.unsplash.com/photo-1611118303126-f316c77d5793?w=400&h=300&fit=crop',
-      cardCount: 196
-    },
-    {
-      id: '4',
-      name: 'Silver Tempest',
-      image: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?w=400&h=300&fit=crop',
-      cardCount: 215
-    }
-  ];
+  categories: Category[] = [];
+  featuredCards: any[] = [];
 
 
-  featuredCards: Card[] = [
-    {
-      id: '1',
-      name: 'Charizard ex',
-      set: 'Obsidian Flames',
-      image: 'https://images.unsplash.com/photo-1606166325683-7e92e3d0c4f8?w=300&h=420&fit=crop',
-      price: 89.99,
-      rarity: 'ultra-rare',
-      condition : 'near-mint',
-      inStock: true
-    },
-    {
-      id: '2',
-      name: 'Pikachu VMAX',
-      set: 'Vivid Voltage',
-      image: 'https://images.unsplash.com/photo-1611118303126-f316c77d5793?w=300&h=420&fit=crop',
-      price: 45.50,
-      rarity: 'secret',
-      condition : 'mint',
-      inStock: true
-    },
-    {
-      id: '3',
-      name: 'Mewtwo V',
-      set: 'Pokémon GO',
-      image: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?w=300&h=420&fit=crop',
-      price: 32.99,
-      rarity: 'rare',
-      condition: 'light-played',
-      inStock: false
-    },
-    {
-      id: '4',
-      name: 'Rayquaza VMAX',
-      set: 'Evolving Skies',
-      image: 'https://images.unsplash.com/photo-1613771404721-1f92d799e49f?w=300&h=420&fit=crop',
-      price: 125.00,
-      rarity: 'ultra-rare',
-      condition: 'near-mint',
-      inStock: true
-    },
-    {
-      id: '5',
-      name: 'Lugia V',
-      set: 'Silver Tempest',
-      image: 'https://images.unsplash.com/photo-1606166325683-7e92e3d0c4f8?w=300&h=420&fit=crop',
-      price: 28.75,
-      rarity: 'rare',
-      condition: 'moderately played',
-      inStock: true
-    },
-    {
-      id: '6',
-      name: 'Giratina VSTAR',
-      set: 'Lost Origin',
-      image: 'https://images.unsplash.com/photo-1611118303126-f316c77d5793?w=300&h=420&fit=crop',
-      price: 67.50,
-      rarity: 'secret',
-      condition : 'mint',
-      inStock: true
-    },
-    {
-      id: '7',
-      name: 'Umbreon VMAX',
-      set: 'Evolving Skies',
-      image: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?w=300&h=420&fit=crop',
-      price: 210.00,
-      rarity: 'secret',
-      condition: 'near-mint',
-      inStock: false
-    },
-    {
-      id: '8',
-      name: 'Leafeon V',
-      set: 'Evolving Skies',
-      image: 'https://images.unsplash.com/photo-1613771404721-1f92d799e49f?w=300&h=420&fit=crop',
-      price: 15.99,
-      rarity: 'rare',
-      condition: 'mint',
-      inStock: true
-    }
-  ];
-
-  constructor(private themeService: ThemeService) {}
+  constructor(
+    private themeService: ThemeService,
+    private http: HttpClient
+  ) {}
 
   ngOnInit(): void {
     this.themeSubscription = this.themeService.isDark$.subscribe(
       isDark => this.isDark = isDark
     );
+
+    this.loadFeaturedCategories();
+    this.loadFeaturedCards();
   }
 
-  ngOnDestroy(): void {
-    this.themeSubscription?.unsubscribe();
+  private loadFeaturedCategories(): void {
+    this.http.get<Category[]>(`${this.base}/api/public/featured-categories`).subscribe({
+      next: (data) => this.categories = data,
+      error: (err) => console.error('Error loading featured categories', err)
+    });
   }
+
+  private loadFeaturedCards(): void {
+    this.http.get<PageResponse<any>>(`${this.base}/api/public/featured-products?size=8`).subscribe({
+      next: (response) => this.featuredCards = response.content,
+      error: (err) => console.error('Error loading featured cards', err)
+    });
+  }
+
 
   getRarityColor(rarity: string): string {
-    const colors: { [key: string]: string } = {
-      'common': '#9ca3af',
-      'uncommon': '#3b82f6',
-      'rare': '#8b5cf6',
-      'ultra-rare': '#ec4899',
-      'secret': '#fbbf24'
+    const colors: Record<string, string> = {
+      COMMON: '#9ca3af',
+      UNCOMMON: '#6b7280',
+      RARE: '#8b5cf6',
+      RARE_HOLO: '#a78bfa',
+      DOUBLE_RARE: '#c084fc',
+      TRIPLE_RARE: '#d8b4fe',
+      ULTRA_RARE: '#ec4899',
+      ILLUSTRATION_RARE: '#f472b6',
+      SPECIAL_ILLUSTRATION_RARE: '#f9a8d4',
+      HYPER_RARE: '#fbbf24',
+      RAINBOW_RARE: '#facc15',
+      SECRET_RARE: '#fde047',
+      SHINY_RARE: '#86efac',
+      SHINY: '#86efac',
+      PROMO: '#60a5fa'
     };
     return colors[rarity] || '#9ca3af';
   }
@@ -175,5 +106,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   addToCart(card: Card): void {
     console.log('Adding to cart:', card);
     // TODO: Implémenter l'ajout au panier
+  }
+
+  ngOnDestroy(): void {
+    this.themeSubscription?.unsubscribe();
   }
 }

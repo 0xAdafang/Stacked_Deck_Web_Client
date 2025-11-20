@@ -59,7 +59,7 @@
       </div>
 
       <div class="categories-grid">
-        <div *ngFor="let category of categories" class="category-card" [routerLink]="['/products']" [queryParams]="{set: category.id}">
+        <div *ngFor="let category of categories" class="category-card" [routerLink]="['/products']" [queryParams]="{categoryId: category.id}">
           <div class="category-image" [style.background-image]="'url(' + category.image + ')'"></div>
           <div class="category-overlay"></div>
           <div class="category-content">
@@ -95,9 +95,9 @@
 
           <div class="card-info">
             <h3 class="card-name">{{ card.name }}</h3>
-            <p class="card-set">{{ card.set }}</p>
+            <p class="card-set">{{ card.category?.name || 'Pokémon TCG' }}</p>
             <div class="card-footer">
-              <div class="card-price">${{ card.price.toFixed(2) }}</div>
+              <div class="card-price">${{ card.price.amount.toFixed(2) }}</div>
               <button
                 class="add-to-cart-btn"
                 [disabled]="!card.inStock"
