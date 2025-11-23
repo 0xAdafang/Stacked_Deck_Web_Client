@@ -15,20 +15,37 @@ export class AuthInterceptor implements HttpInterceptor {
 
   private isRefreshing = false;
 
+
+  private readonly PUBLIC_ENDPOINTS = [
+    '/api/public/',
+    '/api/auth/',
+    '/api/catalog/'
+  ];
+
   constructor(private auth: AuthService) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const token = this.auth.getToken();
 
+    console.log('🔧 Interceptor - URL:', req.url);
+    console.log('🔧 Interceptor - Est public?', this.isPublicEndpoint(req.url));
+
+
+    if (this.isPublicEndpoint(req.url)) {
+      console.log('✅ Interceptor - Endpoint public, pas de token ajouté');
+      return next.handle(req);
+    }
+
+
+    const token = this.auth.getToken();
     const authReq = token
       ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
       : req;
 
     return next.handle(authReq).pipe(
       catchError((err: HttpErrorResponse) => {
-        if (err.status === 401 && !this.isRefreshing) {
-          this.isRefreshing = true;
 
+        if (err.status === 401 && !this.isRefreshing && !this.isPublicEndpoint(req.url)) {
+          this.isRefreshing = true;
 
           return this.auth.refresh().pipe(
             switchMap((newToken) => {
@@ -56,5 +73,9 @@ export class AuthInterceptor implements HttpInterceptor {
         return throwError(() => err);
       })
     );
+  }
+
+  private isPublicEndpoint(url: string): boolean {
+    return this.PUBLIC_ENDPOINTS.some(endpoint => url.includes(endpoint));
   }
 }

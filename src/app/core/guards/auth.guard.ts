@@ -5,6 +5,18 @@ import { AuthService } from '../services/auth.service';
 @Injectable({ providedIn: 'root' })
 export class AuthGuard implements CanActivate {
 
+  private readonly PUBLIC_ROUTES = [
+    '/home',
+    '/products',
+    '/auth/login',
+    '/auth/register',
+    '/auth/verify-email',
+    '/auth/reset-password',
+    '/auth/forgot-password',
+    '/auth/resend-verification',
+    '/auth/verify'
+  ];
+
   constructor(
     private auth: AuthService,
     private router: Router
@@ -18,27 +30,26 @@ export class AuthGuard implements CanActivate {
     console.log('🔍 Guard - isAuthenticated:', this.auth.isAuthenticated());
 
 
-    const publicRoutePrefixes = [
-      '/auth/login',
-      '/auth/register',
-      '/auth/verify-email',
-      '/auth/reset-password',
-      '/auth/forgot-password',
-      '/auth/resend-verification',
-      '/auth/verify'
-    ];
-    if (publicRoutePrefixes.some(p => cleanUrl.startsWith(p))) {
+    if (this.isPublicRoute(cleanUrl)) {
+      console.log('✅ Route publique, accès autorisé');
       return true;
     }
 
 
     if (this.auth.isAuthenticated()) {
+      console.log('✅ Utilisateur authentifié, accès autorisé');
       return true;
     }
 
 
+    console.log('❌ Non authentifié, redirection vers login');
     return this.router.createUrlTree(['/auth/login'], {
       queryParams: { returnUrl: state.url }
     });
+  }
+
+
+  private isPublicRoute(url: string): boolean {
+    return this.PUBLIC_ROUTES.some(route => url.startsWith(route));
   }
 }
