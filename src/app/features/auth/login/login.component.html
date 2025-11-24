@@ -1,71 +1,87 @@
-<div class="login-container">
-  <h2>Login</h2>
+<div class="auth-wrapper" [class.dark-theme]="isDark" [class.light-theme]="!isDark">
+  <div class="auth-card">
 
-  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-    <div class="form-group">
-      <label for="username">Username</label>
-      <input
-        type="text"
-        id="username"
-        formControlName="username"
-        required
-      />
-
-      <div
-        *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched"
-        class="field-error"
-      >
-        <span *ngIf="loginForm.get('username')?.errors?.['required']">
-          Username is required
-        </span>
+    <div class="auth-header">
+      <div class="logo-container">
+        <span class="logo-primary">STACKED</span>
+        <span class="logo-accent">DECK</span>
       </div>
+      <h2 class="auth-title">Welcome Back</h2>
+      <p class="auth-subtitle">Sign in to manage your collection</p>
     </div>
 
-    <div class="form-group">
-      <label for="password">Password</label>
-      <input
-        type="password"
-        id="password"
-        formControlName="password"
-        required
-      />
-
-      <div
-        *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
-        class="field-error"
-      >
-        <span *ngIf="loginForm.get('password')?.errors?.['required']">
-          Password is required
-        </span>
-        <span *ngIf="loginForm.get('password')?.errors?.['minlength']">
-          Password must be at least 6 characters
-        </span>
-      </div>
-    </div>
-
-    <button type="submit" [disabled]="loginForm.invalid">Login</button>
-
-    <div class="mt-4 flex items-center justify-between text-sm">
-      <a routerLink="/auth/register" class="underline">Create account</a>
-      <a routerLink="/auth/forgot-password" class="underline">Forgot password ?</a>
-    </div>
-
-    <div *ngIf="verified" class="mt-4 p-3 rounded bg-green-100 text-green-800">
+    <div *ngIf="verified" class="alert alert-success">
       Your account has been successfully verified. You can now log in.
     </div>
 
-    <div *ngIf="errorMessage" class="error">
-      {{ errorMessage }}
-    </div>
-    <div *ngIf="errorMsg" class="error">
-      {{ errorMsg }}
-      <ng-container *ngIf="unverifiedEmail">
-        <br />
-        <a [routerLink]="['/auth/resend-verification']" [queryParams]="{ email: unverifiedEmail }">
-          Renvoyer l’email de vérification
-        </a>
-      </ng-container>
+    <div *ngIf="verifyError" class="alert alert-error">
+      Invalid or expired verification token.
     </div>
 
-  </form>
+    <div *ngIf="checkEmail" class="alert alert-info">
+      Please check your email to verify your account.
+    </div>
+
+    <div *ngIf="errorMessage" class="alert alert-error">
+      {{ errorMessage }}
+    </div>
+
+    <div *ngIf="errorMsg" class="alert alert-warning">
+      {{ errorMsg }}
+      <div class="mt-2">
+        <a [routerLink]="['/auth/resend-verification']" [queryParams]="{ email: unverifiedEmail }" class="alert-link">
+          Resend verification email
+        </a>
+      </div>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form">
+
+      <div class="form-group">
+        <label for="username" class="form-label">Username / Email</label>
+        <div class="input-wrapper">
+          <input
+            type="text"
+            id="username"
+            formControlName="username"
+            class="form-input"
+            placeholder="Enter your username"
+            [class.input-error]="loginForm.get('username')?.invalid && loginForm.get('username')?.touched"
+          />
+        </div>
+        <div *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched" class="field-error">
+          <span *ngIf="loginForm.get('username')?.errors?.['required']">Username is required</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="label-row">
+          <label for="password" class="form-label">Password</label>
+          <a routerLink="/auth/forgot-password" class="forgot-link">Forgot password?</a>
+        </div>
+        <div class="input-wrapper">
+          <input
+            type="password"
+            id="password"
+            formControlName="password"
+            class="form-input"
+            placeholder="Enter your password"
+            [class.input-error]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+          />
+        </div>
+        <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="field-error">
+          <span *ngIf="loginForm.get('password')?.errors?.['required']">Password is required</span>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-submit" [disabled]="loginForm.invalid">
+        Sign In
+      </button>
+
+      <div class="auth-footer">
+        Don't have an account?
+        <a routerLink="/auth/register" class="register-link">Create one now</a>
+      </div>
+    </form>
+  </div>
 </div>

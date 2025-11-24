@@ -1,46 +1,81 @@
-<div class="verify-wrapper">
+<div class="auth-wrapper" [class.dark-theme]="isDark" [class.light-theme]="!isDark">
+  <div class="auth-card">
 
-  <!-- Success message after verification -->
-  <div *ngIf="verified" class="success-message">
-    <h2>✓ Email verified successfully!</h2>
-    <p>Your account is now activated.</p>
-    <p>Redirecting to login page...</p>
+    <div class="auth-header">
+      <div class="logo-container">
+        <span class="logo-primary">STACKED</span>
+        <span class="logo-accent">DECK</span>
+      </div>
+    </div>
+
+    <div *ngIf="isLoading" class="status-state loading-state">
+      <div class="spinner"></div>
+      <h2 class="auth-title">Verifying...</h2>
+      <p class="auth-subtitle">Please wait while we activate your account.</p>
+    </div>
+
+    <div *ngIf="verified" class="status-state success-state">
+      <div class="status-icon icon-success">
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+          <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+      </div>
+      <h2 class="auth-title">Email Verified!</h2>
+      <p class="auth-subtitle">Your account is now active.</p>
+      <p class="redirect-text">Redirecting to login...</p>
+    </div>
+
+    <div *ngIf="verifyError" class="status-state error-state">
+      <div class="status-icon icon-error">
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="15" y1="9" x2="9" y2="15"></line>
+          <line x1="9" y1="9" x2="15" y2="15"></line>
+        </svg>
+      </div>
+      <h2 class="auth-title">Verification Failed</h2>
+      <p class="auth-subtitle">The link may be invalid or expired.</p>
+
+      <div class="action-area">
+        <a [routerLink]="['/auth/resend-verification']" [queryParams]="{email: email}" class="btn-primary">
+          Resend Verification Email
+        </a>
+      </div>
+    </div>
+
+    <div *ngIf="!verified && !verifyError && !isLoading" class="status-state info-state">
+      <div class="status-icon icon-info">
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+          <polyline points="22,6 12,13 2,6"></polyline>
+        </svg>
+      </div>
+      <h2 class="auth-title">Check your inbox</h2>
+
+      <div *ngIf="email; else noEmail" class="email-info">
+        <p class="auth-subtitle">
+          We've sent a confirmation link to:
+        </p>
+        <div class="email-badge">{{ email }}</div>
+        <p class="auth-subtitle small">
+          Click the link in the email to activate your account.
+        </p>
+      </div>
+
+      <ng-template #noEmail>
+        <p class="auth-subtitle">
+          We've sent you a confirmation email. Check your inbox and click on the link.
+        </p>
+      </ng-template>
+
+      <div class="footer-hint">
+        Didn't receive it?
+        <a [routerLink]="['/auth/resend-verification']" [queryParams]="{email: email}" class="text-link">
+          Resend email
+        </a>
+      </div>
+    </div>
+
   </div>
-
-  <!-- Error message -->
-  <div *ngIf="verifyError" class="error-message">
-    <h2>✗ Verification error</h2>
-    <p>The link may have expired or is invalid.</p>
-    <p>
-      <a [routerLink]="['/auth/resend-verification']" [queryParams]="{email: email}">
-        Resend verification email
-      </a>
-    </p>
-  </div>
-
-  <!-- Initial message: waiting for email verification -->
-  <div *ngIf="!verified && !verifyError">
-    <h2>Verify your email address</h2>
-
-    <p *ngIf="email; else noEmail">
-      We've sent a confirmation link to
-      <strong>{{ email }}</strong>.
-      Click the link in the email to activate your account.
-    </p>
-
-    <ng-template #noEmail>
-      <p>
-        We've sent you a confirmation email. Check your inbox
-        and click on the link.
-      </p>
-    </ng-template>
-
-    <p class="hint">
-      Didn't receive it?
-      <a [routerLink]="['/auth/resend-verification']" [queryParams]="{email: email}">
-        Resend email
-      </a>
-    </p>
-  </div>
-
 </div>

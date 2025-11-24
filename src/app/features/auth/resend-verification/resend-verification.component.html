@@ -1,31 +1,73 @@
-<div class="resend-wrapper">
-  <h2>Resend verification email</h2>
+<div class="auth-wrapper" [class.dark-theme]="isDark" [class.light-theme]="!isDark">
+  <div class="auth-card">
 
-  <form *ngIf="!sent" [formGroup]="form" (ngSubmit)="submit()">
-    <label>
-      Email address
-      <input type="email" formControlName="email" placeholder="your@email.com" />
-    </label>
-    <div *ngIf="form.get('email')?.touched && form.get('email')?.invalid" class="error">
-      Please enter a valid email address.
+    <div class="auth-header">
+      <div class="logo-container">
+        <span class="logo-primary">STACKED</span>
+        <span class="logo-accent">DECK</span>
+      </div>
+      <h2 class="auth-title">Verify Account</h2>
+      <p class="auth-subtitle" *ngIf="!sent">
+        Didn't receive the email? Send it again.
+      </p>
     </div>
 
-    <div *ngIf="errorMsg" class="error">
-      {{ errorMsg }}
+    <ng-container *ngIf="!sent">
+
+      <div *ngIf="errorMsg" class="alert alert-error">
+        {{ errorMsg }}
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="submit()" class="auth-form">
+
+        <div class="form-group">
+          <label for="email" class="form-label">Email Address</label>
+          <input
+            type="email"
+            id="email"
+            formControlName="email"
+            class="form-input"
+            placeholder="your@email.com"
+            [class.input-error]="form.get('email')?.touched && form.get('email')?.invalid"
+          />
+
+          <div *ngIf="form.get('email')?.touched && form.get('email')?.invalid" class="field-error">
+            <span *ngIf="form.get('email')?.errors?.['required']">Email is required</span>
+            <span *ngIf="form.get('email')?.errors?.['email']">Please enter a valid email</span>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-submit" [disabled]="form.invalid || sending">
+          {{ sending ? 'Sending...' : 'Resend Verification Email' }}
+        </button>
+
+      </form>
+    </ng-container>
+
+    <div *ngIf="sent" class="success-state">
+      <div class="success-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect width="20" height="16" x="2" y="4" rx="2"></rect>
+          <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+        </svg>
+      </div>
+      <h3 class="success-title">Email Sent</h3>
+      <p class="success-text">
+        If an account exists for <strong>{{ form.get('email')?.value }}</strong>, we've sent a new verification link.
+      </p>
+      <p class="success-text mt-2">
+        Please check your spam folder just in case.
+      </p>
     </div>
 
-    <button type="submit" [disabled]="form.invalid || sending">
-      {{ sending ? 'Sending...' : 'Resend verification email' }}
-    </button>
-  </form>
+    <div class="auth-footer">
+      <a routerLink="/auth/login" class="back-link">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m15 18-6-6 6-6"/>
+        </svg>
+        Back to Login
+      </a>
+    </div>
 
-  <div *ngIf="sent" class="success">
-    <p>
-      If an account exists for this email and is not yet verified,
-      a new verification email has been sent.
-    </p>
-    <p>
-      <a routerLink="/auth/login">Back to login</a>
-    </p>
   </div>
 </div>

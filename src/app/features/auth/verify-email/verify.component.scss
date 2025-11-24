@@ -1,10 +1,198 @@
-.verify-wrapper {
+// --- Variables ---
+$primary: #ef4444;
+$primary-hover: #dc2626;
+
+// Backgrounds
+$bg-dark: #09090b;
+$card-dark: #18181b;
+$border-dark: #27272a;
+
+$bg-light: #f4f4f5;
+$card-light: #ffffff;
+$border-light: #e4e4e7;
+
+// --- Layout Global ---
+.auth-wrapper {
+  min-height: calc(100vh - 80px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.5rem;
+  transition: background-color 0.3s ease;
+
+  // Thème Sombre
+  &.dark-theme {
+    background-color: $bg-dark;
+    .auth-card {
+      background-color: $card-dark;
+      border: 1px solid $border-dark;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+    }
+    .auth-title { color: #ffffff; }
+    .auth-subtitle { color: #a1a1aa; }
+    .email-badge { background-color: rgba(255, 255, 255, 0.05); color: #e4e4e7; border: 1px solid $border-dark; }
+    .redirect-text { color: #71717a; }
+    .footer-hint { color: #71717a; }
+  }
+
+  // Thème Clair
+  &.light-theme {
+    background-color: $bg-light;
+    .auth-card {
+      background-color: $card-light;
+      border: 1px solid $border-light;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    .auth-title { color: #18181b; }
+    .auth-subtitle { color: #52525b; }
+    .email-badge { background-color: #f4f4f5; color: #18181b; border: 1px solid $border-light; }
+    .redirect-text { color: #a1a1aa; }
+    .footer-hint { color: #71717a; }
+  }
+}
+
+.auth-card {
+  width: 100%;
   max-width: 480px;
-  margin: 3rem auto;
+  padding: 3rem 2rem;
+  border-radius: 1rem;
   text-align: center;
 }
 
-.hint {
-  margin-top: 1.5rem;
+// Header
+.auth-header {
+  margin-bottom: 2rem;
+  .logo-container {
+    font-size: 1.75rem;
+    font-weight: 800;
+    letter-spacing: -0.05em;
+  }
+  .logo-primary { color: inherit; }
+  .logo-accent { color: $primary; }
+}
+
+// Status States (Icons & Typography)
+.status-state {
+  animation: fadeIn 0.5s ease;
+}
+
+.auth-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.auth-subtitle {
+  font-size: 1rem;
+  line-height: 1.5;
+
+  &.small {
+    font-size: 0.9rem;
+    margin-top: 1rem;
+    opacity: 0.8;
+  }
+}
+
+// Icons
+.status-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+
+  svg { width: 40px; height: 40px; }
+
+  &.icon-success {
+    background-color: rgba(34, 197, 94, 0.1);
+    color: #22c55e;
+  }
+
+  &.icon-error {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: $primary;
+  }
+
+  &.icon-info {
+    background-color: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+  }
+}
+
+// Specific Elements
+.email-badge {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  margin: 1rem 0;
+  font-family: monospace;
+}
+
+.redirect-text {
   font-size: 0.9rem;
+  margin-top: 2rem;
+  font-style: italic;
+  animation: pulse 2s infinite;
+}
+
+.footer-hint {
+  margin-top: 2rem;
+  font-size: 0.9rem;
+  border-top: 1px solid;
+  border-color: inherit; // Hérite de la bordure du thème définie plus haut si possible, sinon gérer manuellement
+  padding-top: 1.5rem;
+  opacity: 0.8;
+
+  .dark-theme & { border-color: $border-dark; }
+  .light-theme & { border-color: $border-light; }
+}
+
+.text-link {
+  color: $primary;
+  text-decoration: none;
+  font-weight: 600;
+  &:hover { text-decoration: underline; }
+}
+
+.btn-primary {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background-color: $primary;
+  color: white;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  transition: all 0.2s;
+
+  &:hover { background-color: $primary-hover; }
+}
+
+// Spinner
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba($primary, 0.3);
+  border-radius: 50%;
+  border-top-color: $primary;
+  animation: spin 1s ease-in-out infinite;
+  margin: 0 auto 1.5rem;
+}
+
+// Animations
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
 }

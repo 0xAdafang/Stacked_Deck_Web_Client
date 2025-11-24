@@ -3,6 +3,8 @@ import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import {CommonModule} from '@angular/common';
+import {Subscription} from 'rxjs';
+import {ThemeService} from '../../../core/services/theme.service';
 
 @Component({
   selector: 'app-login',
@@ -15,6 +17,8 @@ export class LoginComponent implements OnInit {
 
 
   loginForm!: FormGroup;
+  isDark = true;
+  private themeSubscription?: Subscription;
 
   errorMessage = '';
   errorMsg = '';
@@ -27,7 +31,8 @@ export class LoginComponent implements OnInit {
     private fb: FormBuilder,
     private auth: AuthService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private themeService: ThemeService
   ) {
 
     this.loginForm = this.fb.group({
@@ -37,6 +42,10 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+    this.themeSubscription = this.themeService.isDark$.subscribe(
+      isDark => this.isDark = isDark
+    );
 
     this.verified = this.route.snapshot.queryParamMap.has('verified');
     this.verifyError = this.route.snapshot.queryParamMap.has('verifyError');
@@ -68,7 +77,7 @@ export class LoginComponent implements OnInit {
     this.auth.login({ identifier: username!, password: password! }).subscribe({
       next: () => this.router.navigate(['/home']),
       error: (err) => {
-        const msg = err?.error?.message ?? 'Connexion impossible';
+        const msg = err?.error?.message ?? 'Connection failed';
         if (msg.toLowerCase().includes('not verified')) {
           this.errorMsg = msg;
           this.unverifiedEmail = username ?? '';

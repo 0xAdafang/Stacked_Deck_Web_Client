@@ -1,45 +1,93 @@
-<h2>Create an account</h2>
+<div class="auth-wrapper" [class.dark-theme]="isDark" [class.light-theme]="!isDark">
+  <div class="auth-card">
 
-<form [formGroup]="form" (ngSubmit)="submit()">
+    <div class="auth-header">
+      <div class="logo-container">
+        <span class="logo-primary">STACKED</span>
+        <span class="logo-accent">DECK</span>
+      </div>
+      <h2 class="auth-title">Create Account</h2>
+      <p class="auth-subtitle">Join the elite collectors today</p>
+    </div>
 
-  <label>
-    Email
-    <input type="email" formControlName="email" />
-  </label>
-  <div *ngIf="form.get('email')?.touched && form.get('email')?.invalid" class="error">
-    Invalid email
+    <div *ngIf="serverError" class="alert alert-error">
+      {{ serverError }}
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="auth-form">
+
+      <div class="form-group">
+        <label for="email" class="form-label">Email Address</label>
+        <input
+          type="email"
+          id="email"
+          formControlName="email"
+          class="form-input"
+          placeholder="name@example.com"
+          [class.input-error]="form.get('email')?.touched && form.get('email')?.invalid"
+        />
+        <div *ngIf="form.get('email')?.touched && form.get('email')?.invalid" class="field-error">
+          <span *ngIf="form.get('email')?.errors?.['required']">Email is required</span>
+          <span *ngIf="form.get('email')?.errors?.['email']">Please enter a valid email</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="username" class="form-label">Username</label>
+        <input
+          type="text"
+          id="username"
+          formControlName="username"
+          class="form-input"
+          placeholder="Choose a username"
+          [class.input-error]="form.get('username')?.touched && form.get('username')?.invalid"
+        />
+        <div *ngIf="form.get('username')?.touched && form.get('username')?.invalid" class="field-error">
+          <span *ngIf="form.get('username')?.errors?.['required']">Username is required</span>
+          <span *ngIf="form.get('username')?.errors?.['pattern']">3-20 characters (letters, numbers, _, -)</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password" class="form-label">Password</label>
+        <input
+          type="password"
+          id="password"
+          formControlName="password"
+          class="form-input"
+          placeholder="Min. 8 characters"
+          [class.input-error]="form.get('password')?.touched && form.get('password')?.invalid"
+        />
+        <div *ngIf="form.get('password')?.touched && form.get('password')?.invalid" class="field-error">
+          <span *ngIf="form.get('password')?.errors?.['required']">Password is required</span>
+          <span *ngIf="form.get('password')?.errors?.['minlength']">Must be at least 8 characters</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword" class="form-label">Confirm Password</label>
+        <input
+          type="password"
+          id="confirmPassword"
+          formControlName="confirmPassword"
+          class="form-input"
+          placeholder="Repeat your password"
+          [class.input-error]="form.hasError('mismatch') && form.get('confirmPassword')?.touched"
+        />
+        <div *ngIf="form.hasError('mismatch') && form.get('confirmPassword')?.touched" class="field-error">
+          Passwords do not match
+        </div>
+      </div>
+
+      <button type="submit" class="btn-submit" [disabled]="form.invalid || submitting">
+        {{ submitting ? 'Creating Account...' : 'Sign Up' }}
+      </button>
+
+      <div class="auth-footer">
+        Already have an account?
+        <a routerLink="/auth/login" class="register-link">Log in here</a>
+      </div>
+
+    </form>
   </div>
-
-  <label>
-    Username
-    <input type="text" formControlName="username" />
-  </label>
-  <div *ngIf="form.get('username')?.touched && form.get('username')?.invalid" class="error">
-    Invalid username
-  </div>
-
-  <label>
-    Password
-    <input type="password" formControlName="password" />
-  </label>
-  <div *ngIf="form.get('password')?.touched && form.get('password')?.invalid" class="error">
-    Minimum 8 characters.
-  </div>
-
-  <label>
-    Confirm password
-    <input type="password" formControlName="confirmPassword" />
-  </label>
-  <div *ngIf="form.hasError('mismatch')" class="error">
-    passwords dosen't match
-  </div>
-
-  <div *ngIf="serverError" class="error">
-    {{ serverError }}
-  </div>
-
-  <button type="submit" [disabled]="form.invalid || submitting">
-    {{ submitting ? 'Creation...' : 'Create account' }}
-  </button>
-
-</form>
+</div>

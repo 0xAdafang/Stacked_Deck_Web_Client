@@ -1,46 +1,242 @@
-.login-container {
-  max-width: 400px;
-  margin: 50px auto;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+// --- Variables (Mêmes que Header/Home) ---
+$primary: #ef4444;       // Rouge
+$primary-hover: #dc2626; // Rouge foncé
+
+// Backgrounds
+$bg-dark: #09090b;       // Fond page sombre
+$card-dark: #18181b;     // Fond carte sombre
+$border-dark: #27272a;   // Bordure sombre
+$input-dark: #27272a;    // Input sombre
+
+$bg-light: #f4f4f5;      // Fond page clair
+$card-light: #ffffff;    // Fond carte clair
+$border-light: #e4e4e7;  // Bordure clair
+$input-light: #f4f4f5;   // Input clair
+
+// --- Styles ---
+
+.auth-wrapper {
+  min-height: calc(100vh - 80px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.5rem;
+  transition: background-color 0.3s ease;
+
+  // Thème Sombre
+  &.dark-theme {
+    background-color: $bg-dark;
+
+    .auth-card {
+      background-color: $card-dark;
+      border: 1px solid $border-dark;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+    }
+
+    .auth-title { color: #ffffff; }
+    .auth-subtitle { color: #a1a1aa; }
+    .form-label { color: #e4e4e7; }
+
+    .form-input {
+      background-color: $input-dark;
+      border-color: $border-dark;
+      color: white;
+      &::placeholder { color: #71717a; }
+      &:focus { border-color: $primary; box-shadow: 0 0 0 1px $primary; }
+    }
+
+    .auth-footer { color: #a1a1aa; }
+  }
+
+  // Thème Clair
+  &.light-theme {
+    background-color: $bg-light;
+
+    .auth-card {
+      background-color: $card-light;
+      border: 1px solid $border-light;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    .auth-title { color: #18181b; }
+    .auth-subtitle { color: #71717a; }
+    .form-label { color: #3f3f46; }
+
+    .form-input {
+      background-color: $input-light;
+      border-color: $border-light;
+      color: #18181b;
+      &::placeholder { color: #a1a1aa; }
+      &:focus { border-color: $primary; background-color: white; }
+    }
+
+    .auth-footer { color: #71717a; }
+  }
+}
+
+// Carte Centrale
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 2.5rem;
+  border-radius: 1rem;
+  transition: all 0.3s ease;
+}
+
+// Header de la carte
+.auth-header {
   text-align: center;
+  margin-bottom: 2rem;
 
-  h2 {
-    margin-bottom: 20px;
-  }
-  .form-group {
-    margin-bottom: 15px;
-
-    label {
-      display: block;
-      margin-bottom: 5px;
-    }
-
-    input {
-      width: 100%;
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
+  .logo-container {
+    margin-bottom: 1.5rem;
+    font-size: 1.75rem;
+    font-weight: 800;
+    letter-spacing: -0.05em;
   }
 
-  button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+  .logo-primary { color: inherit; }
+  .logo-accent { color: $primary; }
 
-    &[disabled] {
-      background-color: #cccccc;
-      cursor: not-allowed;
+  .auth-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  .auth-subtitle {
+    font-size: 0.95rem;
+  }
+}
+
+// Formulaire
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.form-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.forgot-link {
+  font-size: 0.85rem;
+  color: $primary;
+  text-decoration: none;
+  font-weight: 500;
+  &:hover { text-decoration: underline; }
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid transparent;
+  outline: none;
+  font-size: 0.95rem;
+  transition: all 0.2s;
+
+  &.input-error {
+    border-color: $primary;
+    background-color: rgba($primary, 0.05);
+  }
+}
+
+.field-error {
+  color: $primary;
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+}
+
+// Bouton Submit
+.btn-submit {
+  width: 100%;
+  padding: 0.85rem;
+  background-color: $primary;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 0.5rem;
+
+  &:hover:not(:disabled) {
+    background-color: $primary-hover;
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+// Footer et Liens
+.auth-footer {
+  text-align: center;
+  font-size: 0.95rem;
+  margin-top: 1rem;
+
+  .register-link {
+    color: $primary;
+    font-weight: 600;
+    text-decoration: none;
+    margin-left: 0.25rem;
+    &:hover { text-decoration: underline; }
+  }
+}
+
+// Alerts (Succès / Erreur)
+.alert {
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid;
+
+  &.alert-success {
+    background-color: rgba(34, 197, 94, 0.1);
+    color: #22c55e;
+    border-color: rgba(34, 197, 94, 0.2);
+  }
+
+  &.alert-error {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: $primary;
+    border-color: rgba(239, 68, 68, 0.2);
+  }
+
+  &.alert-warning {
+    background-color: rgba(234, 179, 8, 0.1);
+    color: #eab308;
+    border-color: rgba(234, 179, 8, 0.2);
+
+    .alert-link {
+      color: inherit;
+      font-weight: 700;
+      text-decoration: underline;
     }
   }
 
-  .error {
-    color: red;
-    margin-top: 10px;
+  &.alert-info {
+    background-color: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+    border-color: rgba(59, 130, 246, 0.2);
   }
 }
