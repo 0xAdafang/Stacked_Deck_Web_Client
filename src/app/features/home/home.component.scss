@@ -1,431 +1,393 @@
-$magenta: #ec4899;
-$magenta-light: #f472b6;
-$magenta-dark: #db2777;
+// --- Variables (Palette "Team Rocket" & "Soft Zinc") ---
 
-@mixin glow($color: $magenta, $intensity: 0.5) {
-  box-shadow: 0 0 10px rgba($color, $intensity),
-              0 0 20px rgba($color, $intensity * 0.6);
+// TEAM ROCKET RED (Accents)
+$primary: #ef4444;       // Rouge vibrant (Red 500) - L'emblème R
+$primary-dark: #dc2626;  // Rouge sang pour le hover (Red 600)
+$primary-light: #fca5a5; // Rouge pâle pour les détails subtils
+$accent: #ffffff;        // Blanc pur pour le contraste sur fond noir
+
+// BACKGROUNDS
+
+// Dark Theme (Team Rocket Base)
+$bg-dark: #09090b;       // Noir presque pur (Zinc 950) - Profond et sérieux
+$bg-card-dark: #18181b;  // Gris anthracite très sombre (Zinc 900) pour les cartes
+
+// Light Theme (Soft & Eye-friendly)
+$bg-light: #f4f4f5;      // Gris Zinc très léger (plus doux que le blanc #ffffff)
+$bg-card-light: #ffffff; // Blanc pur pour que les produits "pop" sur le fond gris
+
+// --- Mixins (Ombres et Effets) ---
+@mixin shadow-sm {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
 }
 
-@mixin glow-hover($color: $magenta, $intensity: 0.7) {
-  box-shadow: 0 0 15px rgba($color, $intensity),
-              0 0 30px rgba($color, $intensity * 0.7);
+@mixin shadow-md {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
-@mixin glow-strong($color: $magenta) {
-  box-shadow: 0 0 20px rgba($color, 0.6),
-  0 0 40px rgba($color, 0.4),
-  0 0 60px rgba($color, 0.2);
+@mixin shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
+@mixin hover-lift {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  &:hover {
+    transform: translateY(-4px);
+    @include shadow-lg;
+  }
+}
+
+// --- Global Layout ---
 .container {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 0 1.5rem;
 }
 
 .home-wrapper {
   min-height: 100vh;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease;
 
+  // Configuration TEAM ROCKET (Dark)
   &.dark-theme {
-    background-color: #0f1419;
-    color: white;
+    background-color: $bg-dark;
+    color: #f4f4f5; // Texte presque blanc
+
+    .section-subtitle, .hero-subtitle {
+      color: #a1a1aa; // Gris moyen pour le texte secondaire
+    }
+
+    // Ajustement spécifique pour les bordures en mode sombre
+    .card-item, .category-card {
+      border-color: #27272a; // Bordure subtile grise
+    }
   }
 
+  // Configuration SOFT LIGHT
   &.light-theme {
-    background-color: #ffffff;
-    color: #111827;
+    background-color: $bg-light; // Le fameux "blanc pas trop blanc"
+    color: #18181b; // Texte presque noir pour le confort de lecture
+
+    .section-subtitle, .hero-subtitle {
+      color: #52525b; // Gris Zinc moyen
+    }
   }
 }
 
+// --- Hero Section ---
 .hero-section {
-  padding: 4rem 0;
+  padding: 5rem 0 6rem;
   position: relative;
   overflow: hidden;
 
-  @media (min-width: 1024px) {
-    padding: 6rem 0;
+  // Petit gradient subtil en arrière plan pour donner du volume
+  .dark-theme & {
+    background: radial-gradient(circle at top right, rgba($primary, 0.08), transparent 40%);
   }
 
   .container {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 3rem;
+    gap: 4rem;
     align-items: center;
 
-    @media (min-width: 768px) {
+    @media (min-width: 1024px) {
       grid-template-columns: 1fr 1fr;
-      gap: 4rem;
     }
   }
 }
 
 .hero-content {
   z-index: 10;
+  text-align: center;
+  @media (min-width: 1024px) { text-align: left; }
 }
 
 .hero-title {
-  font-size: 2.5rem;
+  font-size: 2.75rem;
   font-weight: 800;
-  line-height: 1.2;
+  line-height: 1.1;
   margin-bottom: 1.5rem;
+  letter-spacing: -0.02em;
 
-  @media (min-width: 768px) {
-    font-size: 3.5rem;
-  }
-
-  @media (min-width: 1024px) {
-    font-size: 4rem;
-  }
+  @media (min-width: 768px) { font-size: 3.75rem; }
 }
 
-.gradient-text {
-  background: linear-gradient(135deg, $magenta, $magenta-light);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  @include glow($magenta, 0.4);
+.subtitle-mode {
+  display: block;
+  font-size: 0.5em;
+  font-weight: 600;
+  color: $primary; // Le Rouge Team Rocket
+  margin-top: 0.5rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 .hero-subtitle {
   font-size: 1.125rem;
-  line-height: 1.7;
-  margin-bottom: 2rem;
-  opacity: 0.8;
-
-  @media (min-width: 768px) {
-    font-size: 1.25rem;
-  }
+  line-height: 1.6;
+  margin-bottom: 2.5rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  @media (min-width: 1024px) { margin-left: 0; }
 }
 
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
-  margin-bottom: 3rem;
+  justify-content: center;
+  @media (min-width: 1024px) { justify-content: flex-start; }
 }
 
-.hero-stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
-  padding-top: 2rem;
-  border-top: 1px solid rgba($magenta, 0.2);
-}
-
-.stat-item {
-  text-align: center;
-
-  @media (min-width: 768px) {
-    text-align: left;
-  }
-}
-
-.stat-value {
-  font-size: 2rem;
-  font-weight: 700;
-  color: $magenta;
-  @include glow($magenta, 0.3);
-  margin-bottom: 0.5rem;
-
-  @media (min-width: 768px) {
-    font-size: 2.5rem;
-  }
-}
-
-.stat-label {
-  font-size: 0.875rem;
-  opacity: 0.7;
-}
-
-// Hero Visual
+// --- Hero Visual (Les Cartes) ---
 .hero-visual {
-  display: none;
+  display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
-  height: 500px;
-
-  @media (min-width: 1024px) {
-    display: flex;
-  }
+  height: 450px;
+  perspective: 1000px;
 }
 
 .card-showcase {
   position: relative;
-  width: 400px;
-  height: 500px;
+  width: 320px;
+  height: 450px;
+  padding: 20px;
 }
 
 .showcase-card {
   position: absolute;
-  width: 280px;
-  height: 390px;
-  border-radius: 1rem;
-  background: linear-gradient(135deg, rgba($magenta, 0.3), rgba($magenta-light, 0.2));
-  border: 2px solid rgba($magenta, 0.4);
-  @include glow($magenta, 0.3);
-  transition: transform 0.3s ease;
+  width: 260px;
+  aspect-ratio: 63 / 88;
+  height: auto;
+  border-radius: 12px;
+  object-fit: cover;
+
+  // Ombres plus dramatiques pour le style Team Rocket
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 
   &.card-1 {
-    top: 0;
+    top: 20px;
     left: 50%;
-    transform: translateX(-50%) rotate(-5deg);
+    transform: translateX(-50%) rotate(0deg);
     z-index: 3;
   }
 
   &.card-2 {
-    top: 50px;
+    top: 20px;
     left: 50%;
-    transform: translateX(-60%) rotate(-10deg);
+    transform: translateX(-50%) rotate(-6deg);
     z-index: 2;
+    filter: brightness(0.7); // Plus sombre en arrière plan
   }
 
   &.card-3 {
-    top: 50px;
+    top: 20px;
     left: 50%;
-    transform: translateX(-40%) rotate(5deg);
+    transform: translateX(-50%) rotate(6deg);
     z-index: 1;
+    filter: brightness(0.7);
   }
 }
 
 .card-showcase:hover {
   .card-1 {
-    transform: translateX(-50%) rotate(-3deg) translateY(-10px);
+    transform: translateX(-50%) translateY(-30px) scale(1.05);
+    z-index: 10;
+    box-shadow: 0 0 20px rgba($primary, 0.3); // Glow rouge subtil au hover
   }
   .card-2 {
-    transform: translateX(-60%) rotate(-8deg) translateY(-5px);
+    transform: translateX(-95%) translateY(10px) rotate(-15deg);
+    filter: brightness(1);
+    z-index: 9;
   }
   .card-3 {
-    transform: translateX(-40%) rotate(3deg) translateY(-5px);
+    transform: translateX(-5%) translateY(10px) rotate(15deg);
+    filter: brightness(1);
+    z-index: 9;
   }
 }
 
-// Sections
-.categories-section,
-.cards-section {
+// --- Sections Generales ---
+.categories-section, .cards-section {
   padding: 4rem 0;
-
-  @media (min-width: 1024px) {
-    padding: 6rem 0;
-  }
 }
 
 .section-header {
   text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: 3.5rem;
 }
 
 .section-title {
-  font-size: 2rem;
+  font-size: 2.25rem;
   font-weight: 700;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
+  color: inherit;
 
-  @media (min-width: 768px) {
-    font-size: 2.5rem;
+  &::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 4px; // Un peu plus épais
+    background-color: $primary; // Rouge
+    margin: 1rem auto 0;
+    border-radius: 2px;
   }
 }
 
-.accent-text {
-  color: $magenta;
-  @include glow($magenta, 0.3);
-}
-
-.section-subtitle {
-  font-size: 1.125rem;
-  opacity: 0.7;
-}
-
-// Categories Grid
+// --- Categories Grid ---
 .categories-grid {
   display: grid;
   grid-template-columns: 1fr;
   gap: 1.5rem;
-
-  @media (min-width: 640px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  @media (min-width: 1024px) {
-    grid-template-columns: repeat(4, 1fr);
-  }
+  @media (min-width: 640px) { grid-template-columns: repeat(2, 1fr); }
+  @media (min-width: 1024px) { grid-template-columns: repeat(4, 1fr); }
 }
 
 .category-card {
   position: relative;
-  height: 250px;
-  border-radius: 1rem;
+  height: 240px;
+  border-radius: 0.75rem; // Coins un peu plus carrés pour le style "tough"
   overflow: hidden;
   cursor: pointer;
-  transition: transform 0.3s ease;
-  border: 2px solid rgba($magenta, 0.3);
+  @include hover-lift;
+  border: 1px solid transparent;
 
-  &:hover {
-    transform: translateY(-8px);
-    @include glow-hover($magenta, 0.5);
-
-    .category-overlay {
-      background: rgba(0, 0, 0, 0.3);
-    }
-
-    .category-glow {
-      opacity: 1;
-    }
+  .dark-theme & {
+    border-color: rgba(255, 255, 255, 0.1);
+    background-color: $bg-card-dark;
+  }
+  .light-theme & {
+    border-color: rgba(0, 0, 0, 0.05);
+    background-color: $bg-card-light;
   }
 }
 
 .category-image {
-  position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
   background-size: cover;
   background-position: center;
-  transition: transform 0.3s ease;
-
-  .category-card:hover & {
-    transform: scale(1.1);
-  }
+  transition: transform 0.5s ease;
+  .category-card:hover & { transform: scale(1.08); }
 }
 
 .category-overlay {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.3));
-  transition: background 0.3s ease;
+  inset: 0;
+  // Gradient plus sombre pour le thème Team Rocket
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.3) 60%, transparent 100%);
 }
 
 .category-content {
   position: absolute;
   bottom: 0;
   left: 0;
-  right: 0;
   padding: 1.5rem;
-  z-index: 10;
+  z-index: 2;
+  width: 100%;
 }
 
 .category-name {
   font-size: 1.25rem;
   font-weight: 700;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
   color: white;
+  text-transform: uppercase; // Style plus agressif
+  letter-spacing: 0.025em;
 }
 
 .category-count {
   font-size: 0.875rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.6);
 }
 
-.category-glow {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(circle at 50% 50%, rgba($magenta, 0.2), transparent 70%);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-}
-
-// Cards Grid
+// --- Cards Grid ---
 .cards-grid {
   display: grid;
   grid-template-columns: 1fr;
   gap: 2rem;
-
-  @media (min-width: 640px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  @media (min-width: 768px) {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  @media (min-width: 1024px) {
-    grid-template-columns: repeat(4, 1fr);
-  }
+  @media (min-width: 640px) { grid-template-columns: repeat(2, 1fr); }
+  @media (min-width: 768px) { grid-template-columns: repeat(3, 1fr); }
+  @media (min-width: 1024px) { grid-template-columns: repeat(4, 1fr); }
 }
 
 .card-item {
+  border-radius: 0.75rem;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  border: 1px solid;
+
   .dark-theme & {
-    background-color: #1a1f2e;
-    border: 1px solid rgba($magenta, 0.2);
+    background-color: $bg-card-dark;
+    border-color: #27272a;
   }
 
   .light-theme & {
-    background-color: #f9fafb;
-    border: 1px solid rgba($magenta, 0.3);
+    background-color: $bg-card-light;
+    border-color: #e4e4e7;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
   }
 
-  border-radius: 1rem;
-  overflow: hidden;
-  transition: all 0.3s ease;
-
   &:hover {
-    transform: translateY(-8px);
-    @include glow-hover($magenta, 0.4);
+    transform: translateY(-5px);
+    @include shadow-lg;
+    border-color: $primary; // La bordure devient ROUGE au hover
   }
 }
 
 .card-image-wrapper {
   position: relative;
-  padding-top: 140%;
+  padding-top: 139%;
+  // Background neutre selon le thème pour combler le vide
+  .dark-theme & { background-color: #000000; }
+  .light-theme & { background-color: #f4f4f5; }
   overflow: hidden;
-  cursor: pointer;
 }
 
 .card-image {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  height: 90%;
+  object-fit: contain;
   transition: transform 0.3s ease;
-
-  .card-item:hover & {
-    transform: scale(1.05);
-  }
+  .card-item:hover & { transform: translate(-50%, -50%) scale(1.05); }
 }
 
 .card-overlay {
   position: absolute;
-  top: 0;
+  bottom: 0;
   left: 0;
   width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.7);
+  padding: 1rem;
   display: flex;
-  align-items: center;
   justify-content: center;
+  background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
   opacity: 0;
-  transition: opacity 0.3s ease;
-
-  .card-item:hover & {
-    opacity: 1;
-  }
+  transition: opacity 0.2s;
+  .card-item:hover & { opacity: 1; }
 }
 
 .quick-view-btn {
-  padding: 0.75rem 1.5rem;
-  background-color: $magenta;
+  font-size: 0.875rem;
+  padding: 0.5rem 1rem;
+  background-color: $primary; // Rouge
   color: white;
   border: none;
-  border-radius: 0.5rem;
+  border-radius: 4px; // Boutons un peu plus carrés
   font-weight: 600;
   cursor: pointer;
-  @include glow($magenta, 0.6);
-  transition: all 0.3s ease;
 
   &:hover {
-    background-color: $magenta-light;
-    @include glow-hover($magenta, 0.8);
+    background-color: $primary-dark;
   }
 }
 
@@ -433,40 +395,32 @@ $magenta-dark: #db2777;
   position: absolute;
   top: 0.75rem;
   right: 0.75rem;
-  padding: 0.25rem 0.75rem;
-  border-radius: 0.5rem;
-  font-size: 0.75rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
   font-weight: 700;
   text-transform: uppercase;
   color: white;
-  @include glow($magenta, 0.4);
+  background-color: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255,255,255,0.1);
 }
 
-.out-of-stock-badge {
-  position: absolute;
-  top: 0.75rem;
-  left: 0.75rem;
-  padding: 0.25rem 0.75rem;
-  background-color: rgba(239, 68, 68, 0.9);
-  border-radius: 0.5rem;
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: white;
-}
-
-.card-info {
-  padding: 1rem;
-}
+.card-info { padding: 1.25rem; }
 
 .card-name {
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: 600;
   margin-bottom: 0.25rem;
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .card-set {
   font-size: 0.875rem;
-  opacity: 0.7;
+  opacity: 0.6;
   margin-bottom: 1rem;
 }
 
@@ -474,151 +428,125 @@ $magenta-dark: #db2777;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: auto;
 }
 
 .card-price {
-  font-size: 1.25rem;
+  font-size: 1.125rem;
   font-weight: 700;
-  color: $magenta;
+  color: $primary; // Prix en rouge
 }
 
 .add-to-cart-btn {
-  padding: 0.5rem;
-  background-color: transparent;
-  border: 2px solid $magenta;
-  border-radius: 0.5rem;
-  color: $magenta;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 50%;
+  border: 1px solid;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s;
 
-  &:hover:not(:disabled) {
-    background-color: $magenta;
-    color: white;
-    @include glow-hover($magenta, 0.6);
+  .dark-theme & {
+    color: #ffffff;
+    border-color: #3f3f46;
+  }
+  .light-theme & {
+    color: #18181b;
+    border-color: #e4e4e7;
   }
 
-  &:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
+  &:hover {
+    background-color: $primary;
+    color: white;
+    border-color: $primary;
+  }
+}
+
+// --- Buttons ---
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+  text-decoration: none;
+
+  &.btn-primary {
+    background-color: $primary; // Rouge
+    color: white;
+    @include shadow-md;
+
+    &:hover {
+      background-color: $primary-dark;
+      transform: translateY(-1px);
+    }
+  }
+
+  &.btn-secondary {
+    background-color: transparent;
+    border: 1px solid;
+
+    .dark-theme & {
+      border-color: #3f3f46;
+      color: white;
+    }
+    .light-theme & {
+      border-color: #d4d4d8;
+      color: #18181b;
+    }
+
+    &:hover {
+      border-color: $primary;
+      color: $primary;
+    }
+  }
+
+  &.btn-outline {
+    background: transparent;
+    border: 1px solid $primary;
+    color: $primary;
+    &:hover {
+      background-color: $primary;
+      color: white;
+    }
   }
 }
 
 .view-all-wrapper {
   display: flex;
   justify-content: center;
-  margin-top: 3rem;
+  margin-top: 4rem;
 }
 
-// CTA Section
+// --- CTA Section ---
 .cta-section {
-  padding: 4rem 0;
+  padding: 6rem 0;
   position: relative;
-  overflow: hidden;
-
-  @media (min-width: 1024px) {
-    padding: 6rem 0;
-  }
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: radial-gradient(circle at 50% 50%, rgba($magenta, 0.1), transparent 70%);
-    pointer-events: none;
-  }
-}
-
-.cta-content {
   text-align: center;
-  position: relative;
-  z-index: 10;
-}
+  // Gradient rouge très subtil en bas de page
+  background: linear-gradient(180deg, transparent 0%, rgba($primary, 0.08) 100%);
 
-.cta-title {
-  font-size: 2rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-
-  @media (min-width: 768px) {
-    font-size: 3rem;
-  }
-}
-
-.cta-subtitle {
-  font-size: 1.125rem;
-  opacity: 0.8;
-  margin-bottom: 2rem;
-
-  @media (min-width: 768px) {
-    font-size: 1.25rem;
-  }
-}
-
-// Buttons
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border: none;
-  text-decoration: none;
-
-  &.btn-primary {
-    background-color: $magenta;
-    color: white;
-    @include glow($magenta, 0.5);
-
-    &:hover {
-      background-color: $magenta-light;
-      @include glow-hover($magenta, 0.7);
-      transform: translateY(-2px);
-    }
+  .cta-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    @media (min-width: 768px) { font-size: 2.5rem; }
   }
 
-  &.btn-secondary {
-    .dark-theme & {
-      background-color: rgba(255, 255, 255, 0.1);
-      color: white;
-      border: 2px solid rgba($magenta, 0.5);
-    }
-
-    .light-theme & {
-      background-color: white;
-      color: $magenta;
-      border: 2px solid $magenta;
-    }
-
-    &:hover {
-      background-color: rgba($magenta, 0.1);
-      border-color: $magenta;
-      @include glow($magenta, 0.3);
-    }
-  }
-
-  &.btn-outline {
-    background-color: transparent;
-    border: 2px solid $magenta;
-    color: $magenta;
-
-    &:hover {
-      background-color: $magenta;
-      color: white;
-      @include glow-hover($magenta, 0.6);
-    }
-  }
-
-  &.btn-large {
-    padding: 1rem 2rem;
+  .cta-subtitle {
     font-size: 1.125rem;
+    opacity: 0.7;
+    margin-bottom: 2rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
   }
 }

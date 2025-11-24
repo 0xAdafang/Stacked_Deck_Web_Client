@@ -53,6 +53,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   featuredCards: any[] = [];
 
 
+
+
   constructor(
     private themeService: ThemeService,
     private http: HttpClient

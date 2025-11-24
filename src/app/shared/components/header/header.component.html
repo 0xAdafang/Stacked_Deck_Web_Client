@@ -4,7 +4,6 @@
   <div class="top-bar">
     <div class="container">
       <div class="promo-text">
-        🎴 Free shipping on orders over $50
       </div>
       <button class="theme-toggle" (click)="toggleTheme()" [attr.aria-label]="isDark ? 'Switch to light mode' : 'Switch to dark mode'">
         <svg *ngIf="isDark" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -90,10 +89,11 @@
       <!-- Navigation - Desktop -->
       <nav class="desktop-nav">
         <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">Home</a>
-        <a routerLink="/products" routerLinkActive="active" class="nav-link">Pokémon</a>
-        <a routerLink="/new-releases" routerLinkActive="active" class="nav-link">New Releases</a>
-        <a routerLink="/best-sellers" routerLinkActive="active" class="nav-link">Best Sellers</a>
-        <a routerLink="/graded" routerLinkActive="active" class="nav-link">Graded Cards</a>
+        <a routerLink="/category/singles" routerLinkActive="active" class="nav-link">Single Cards</a>
+        <a routerLink="/category/etb" routerLinkActive="active" class="nav-link">Elite Trainer Box</a>
+        <a routerLink="/category/booster-box" routerLinkActive="active" class="nav-link">Booster Boxes</a>
+        <a routerLink="/category/bundles" routerLinkActive="active" class="nav-link">Bundles</a>
+        <a routerLink="/category/boosters" routerLinkActive="active" class="nav-link">Booster Packs</a>
       </nav>
 
       <!-- Search Bar - Mobile -->

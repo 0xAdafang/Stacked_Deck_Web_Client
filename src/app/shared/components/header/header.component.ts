@@ -15,7 +15,7 @@ import { Subscription } from 'rxjs';
 export class HeaderComponent implements OnInit, OnDestroy {
   isDark = true;
   mobileMenuOpen = false;
-  cartCount = 3;
+  cartCount = 0;
   searchQuery = '';
 
   private themeSubscription?: Subscription;
