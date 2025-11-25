@@ -1,6 +1,5 @@
 <div [class.dark-theme]="isDark" [class.light-theme]="!isDark" class="header-wrapper">
 
-  <!-- Top Bar -->
   <div class="top-bar">
     <div class="container">
       <div class="promo-text">
@@ -24,19 +23,16 @@
     </div>
   </div>
 
-  <!-- Main Header -->
   <header class="main-header">
     <div class="container">
       <div class="header-content">
 
-        <!-- Logo -->
         <a routerLink="/" class="logo">
           <span class="logo-primary">STACKED</span>
           <span class="logo-accent">DECK</span>
           <div class="logo-underline"></div>
         </a>
 
-        <!-- Search Bar - Desktop -->
         <div class="search-wrapper desktop-search">
           <input
             type="text"
@@ -51,9 +47,7 @@
           </svg>
         </div>
 
-        <!-- Actions -->
         <div class="header-actions">
-          <!-- Cart -->
           <button class="action-btn cart-btn" routerLink="/cart">
             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="8" cy="21" r="1"></circle>
@@ -63,7 +57,6 @@
             <span *ngIf="cartCount > 0" class="cart-badge">{{ cartCount }}</span>
           </button>
 
-          <!-- Account -->
           <button class="action-btn account-btn desktop-only" routerLink="/account">
             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
@@ -71,7 +64,6 @@
             </svg>
           </button>
 
-          <!-- Mobile Menu Toggle -->
           <button class="action-btn mobile-menu-btn mobile-only" (click)="toggleMobileMenu()">
             <svg *ngIf="!mobileMenuOpen" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="4" x2="20" y1="12" y2="12"></line>
@@ -86,17 +78,19 @@
         </div>
       </div>
 
-      <!-- Navigation - Desktop -->
       <nav class="desktop-nav">
-        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">Home</a>
-        <a routerLink="/category/singles" routerLinkActive="active" class="nav-link">Single Cards</a>
-        <a routerLink="/category/etb" routerLinkActive="active" class="nav-link">Elite Trainer Box</a>
-        <a routerLink="/category/booster-box" routerLinkActive="active" class="nav-link">Booster Boxes</a>
-        <a routerLink="/category/bundles" routerLinkActive="active" class="nav-link">Bundles</a>
-        <a routerLink="/category/boosters" routerLinkActive="active" class="nav-link">Booster Packs</a>
+        <a
+          *ngFor="let item of navItems"
+          [routerLink]="item.route"
+          [queryParams]="item.queryParams"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{exact: item.exact || false}"
+          class="nav-link"
+        >
+          {{ item.label }}
+        </a>
       </nav>
 
-      <!-- Search Bar - Mobile -->
       <div class="search-wrapper mobile-search">
         <input
           type="text"
@@ -112,13 +106,19 @@
       </div>
     </div>
 
-    <!-- Mobile Menu -->
     <nav *ngIf="mobileMenuOpen" class="mobile-nav">
-      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="mobile-nav-link" (click)="toggleMobileMenu()">Home</a>
-      <a routerLink="/products" routerLinkActive="active" class="mobile-nav-link" (click)="toggleMobileMenu()">Pokémon</a>
-      <a routerLink="/new-releases" routerLinkActive="active" class="mobile-nav-link" (click)="toggleMobileMenu()">New Releases</a>
-      <a routerLink="/best-sellers" routerLinkActive="active" class="mobile-nav-link" (click)="toggleMobileMenu()">Best Sellers</a>
-      <a routerLink="/graded" routerLinkActive="active" class="mobile-nav-link" (click)="toggleMobileMenu()">Graded Cards</a>
+      <a
+        *ngFor="let item of navItems"
+        [routerLink]="item.route"
+        [queryParams]="item.queryParams"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{exact: item.exact || false}"
+        class="mobile-nav-link"
+        (click)="toggleMobileMenu()"
+      >
+        {{ item.label }}
+      </a>
+
       <a routerLink="/account" routerLinkActive="active" class="mobile-nav-link account-link" (click)="toggleMobileMenu()">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>

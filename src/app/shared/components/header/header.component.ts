@@ -20,6 +20,30 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   private themeSubscription?: Subscription;
 
+  navItems = [
+    { label: 'Home', route: '/', exact: true },
+    {
+      label: 'Single Cards',
+      route: '/products',
+      queryParams: { type: 'SINGLE' }
+    },
+    {
+      label: 'Booster Packs',
+      route: '/products',
+      queryParams: { type: 'BOOSTER_PACK' }
+    },
+    {
+      label: 'Elite Trainer Boxes',
+      route: '/products',
+      queryParams: { type: 'ETB' }
+    },
+    {
+      label: 'Boxes & Bundles',
+      route: '/products',
+      queryParams: { type: 'BOOSTER_BOX' }
+    }
+  ];
+
   constructor(private themeService: ThemeService) {}
 
   ngOnInit(): void {
@@ -43,7 +67,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   onSearch(): void {
     if (this.searchQuery.trim()) {
       console.log('Searching for:', this.searchQuery);
-      // TODO: Implémenter la recherche
+      // TODO: Redirection vers la page recherche
     }
   }
 }

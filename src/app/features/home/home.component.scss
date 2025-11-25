@@ -1,20 +1,20 @@
 // --- Variables (Palette "Team Rocket" & "Soft Zinc") ---
 
 // TEAM ROCKET RED (Accents)
-$primary: #ef4444;       // Rouge vibrant (Red 500) - L'emblème R
-$primary-dark: #dc2626;  // Rouge sang pour le hover (Red 600)
-$primary-light: #fca5a5; // Rouge pâle pour les détails subtils
-$accent: #ffffff;        // Blanc pur pour le contraste sur fond noir
+$primary: #ef4444;
+$primary-dark: #dc2626;
+$primary-light: #fca5a5;
+$accent: #ffffff;
 
 // BACKGROUNDS
 
 // Dark Theme (Team Rocket Base)
-$bg-dark: #09090b;       // Noir presque pur (Zinc 950) - Profond et sérieux
-$bg-card-dark: #18181b;  // Gris anthracite très sombre (Zinc 900) pour les cartes
+$bg-dark: #09090b;
+$bg-card-dark: #18181b;
 
 // Light Theme (Soft & Eye-friendly)
-$bg-light: #f4f4f5;      // Gris Zinc très léger (plus doux que le blanc #ffffff)
-$bg-card-light: #ffffff; // Blanc pur pour que les produits "pop" sur le fond gris
+$bg-light: #f4f4f5;
+$bg-card-light: #ffffff;
 
 // --- Mixins (Ombres et Effets) ---
 @mixin shadow-sm {
@@ -51,25 +51,25 @@ $bg-card-light: #ffffff; // Blanc pur pour que les produits "pop" sur le fond gr
   // Configuration TEAM ROCKET (Dark)
   &.dark-theme {
     background-color: $bg-dark;
-    color: #f4f4f5; // Texte presque blanc
+    color: #f4f4f5;
 
     .section-subtitle, .hero-subtitle {
-      color: #a1a1aa; // Gris moyen pour le texte secondaire
+      color: #a1a1aa;
     }
 
     // Ajustement spécifique pour les bordures en mode sombre
     .card-item, .category-card {
-      border-color: #27272a; // Bordure subtile grise
+      border-color: #27272a;
     }
   }
 
   // Configuration SOFT LIGHT
   &.light-theme {
-    background-color: $bg-light; // Le fameux "blanc pas trop blanc"
-    color: #18181b; // Texte presque noir pour le confort de lecture
+    background-color: $bg-light;
+    color: #18181b;
 
     .section-subtitle, .hero-subtitle {
-      color: #52525b; // Gris Zinc moyen
+      color: #52525b;
     }
   }
 }
@@ -117,7 +117,7 @@ $bg-card-light: #ffffff; // Blanc pur pour que les produits "pop" sur le fond gr
   display: block;
   font-size: 0.5em;
   font-weight: 600;
-  color: $primary; // Le Rouge Team Rocket
+  color: $primary;
   margin-top: 0.5rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -183,7 +183,7 @@ $bg-card-light: #ffffff; // Blanc pur pour que les produits "pop" sur le fond gr
     left: 50%;
     transform: translateX(-50%) rotate(-6deg);
     z-index: 2;
-    filter: brightness(0.7); // Plus sombre en arrière plan
+    filter: brightness(0.7);
   }
 
   &.card-3 {
@@ -199,7 +199,7 @@ $bg-card-light: #ffffff; // Blanc pur pour que les produits "pop" sur le fond gr
   .card-1 {
     transform: translateX(-50%) translateY(-30px) scale(1.05);
     z-index: 10;
-    box-shadow: 0 0 20px rgba($primary, 0.3); // Glow rouge subtil au hover
+    box-shadow: 0 0 20px rgba($primary, 0.3);
   }
   .card-2 {
     transform: translateX(-95%) translateY(10px) rotate(-15deg);
@@ -233,78 +233,133 @@ $bg-card-light: #ffffff; // Blanc pur pour que les produits "pop" sur le fond gr
     content: '';
     display: block;
     width: 60px;
-    height: 4px; // Un peu plus épais
-    background-color: $primary; // Rouge
+    height: 4px;
+    background-color: $primary;
     margin: 1rem auto 0;
     border-radius: 2px;
   }
 }
 
 // --- Categories Grid ---
-.categories-grid {
-  display: grid;
-  grid-template-columns: 1fr;
+.product-type-grid {
+  display: flex;
   gap: 1.5rem;
-  @media (min-width: 640px) { grid-template-columns: repeat(2, 1fr); }
-  @media (min-width: 1024px) { grid-template-columns: repeat(4, 1fr); }
+  overflow-x: auto;
+  padding-bottom: 1.5rem;
+  scroll-snap-type: x mandatory;
+
+  // Cache la scrollbar moche mais garde le scroll
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+
+  @media (min-width: 1024px) {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    overflow-x: visible;
+  }
 }
 
-.category-card {
+.type-card {
+  flex: 0 0 280px;
+  scroll-snap-align: start;
   position: relative;
-  height: 240px;
-  border-radius: 0.75rem; // Coins un peu plus carrés pour le style "tough"
+  height: 320px;
+  border-radius: 1rem;
   overflow: hidden;
-  cursor: pointer;
-  @include hover-lift;
+  text-decoration: none;
   border: 1px solid transparent;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  background-color: #000; // Fallback
 
   .dark-theme & {
     border-color: rgba(255, 255, 255, 0.1);
-    background-color: $bg-card-dark;
   }
   .light-theme & {
-    border-color: rgba(0, 0, 0, 0.05);
-    background-color: $bg-card-light;
+    border-color: rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  }
+
+  &:hover {
+    transform: translateY(-8px);
+    border-color: $primary;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 0 15px rgba($primary, 0.3);
+
+    .type-image {
+      transform: scale(1.1);
+    }
+
+    .type-arrow {
+      background-color: $primary;
+      color: white;
+      transform: translateX(5px);
+    }
   }
 }
 
-.category-image {
+.type-image-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  background-size: cover;
-  background-position: center;
-  transition: transform 0.5s ease;
-  .category-card:hover & { transform: scale(1.08); }
+  z-index: 1;
 }
 
-.category-overlay {
+.type-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.type-overlay {
   position: absolute;
   inset: 0;
-  // Gradient plus sombre pour le thème Team Rocket
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.3) 60%, transparent 100%);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.4) 50%, rgba(0,0,0,0.1) 100%);
+  z-index: 2;
 }
 
-.category-content {
+.type-content {
   position: absolute;
   bottom: 0;
   left: 0;
-  padding: 1.5rem;
-  z-index: 2;
   width: 100%;
-}
-
-.category-name {
-  font-size: 1.25rem;
-  font-weight: 700;
-  margin-bottom: 0.25rem;
+  padding: 1.5rem;
+  z-index: 3;
   color: white;
-  text-transform: uppercase; // Style plus agressif
-  letter-spacing: 0.025em;
 }
 
-.category-count {
-  font-size: 0.875rem;
-  color: rgba(255, 255, 255, 0.6);
+.type-name {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.type-desc {
+  font-size: 0.9rem;
+  opacity: 0.8;
+  margin-bottom: 1.5rem;
+  font-weight: 400;
+  display: block;
+}
+
+.type-arrow {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
 }
 
 // --- Cards Grid ---
@@ -337,14 +392,13 @@ $bg-card-light: #ffffff; // Blanc pur pour que les produits "pop" sur le fond gr
   &:hover {
     transform: translateY(-5px);
     @include shadow-lg;
-    border-color: $primary; // La bordure devient ROUGE au hover
+    border-color: $primary;
   }
 }
 
 .card-image-wrapper {
   position: relative;
   padding-top: 139%;
-  // Background neutre selon le thème pour combler le vide
   .dark-theme & { background-color: #000000; }
   .light-theme & { background-color: #f4f4f5; }
   overflow: hidden;
@@ -382,7 +436,7 @@ $bg-card-light: #ffffff; // Blanc pur pour que les produits "pop" sur le fond gr
   background-color: $primary; // Rouge
   color: white;
   border: none;
-  border-radius: 4px; // Boutons un peu plus carrés
+  border-radius: 4px;
   font-weight: 600;
   cursor: pointer;
 
@@ -434,7 +488,7 @@ $bg-card-light: #ffffff; // Blanc pur pour que les produits "pop" sur le fond gr
 .card-price {
   font-size: 1.125rem;
   font-weight: 700;
-  color: $primary; // Prix en rouge
+  color: $primary;
 }
 
 .add-to-cart-btn {
@@ -480,7 +534,7 @@ $bg-card-light: #ffffff; // Blanc pur pour que les produits "pop" sur le fond gr
   text-decoration: none;
 
   &.btn-primary {
-    background-color: $primary; // Rouge
+    background-color: $primary;
     color: white;
     @include shadow-md;
 
