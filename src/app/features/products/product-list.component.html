@@ -1,0 +1,97 @@
+<app-header></app-header>
+<div class="catalog-wrapper" [class.dark-theme]="isDark" [class.light-theme]="!isDark">
+  <div class="container">
+
+    <div class="catalog-header">
+      <h1 class="page-title">Catalog</h1>
+      <p class="result-count">Showing {{ products.length }} items</p>
+
+      <button class="btn-filter-mobile" (click)="toggleMobileFilters()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="4" y1="21" y2="14"/><line x1="4" x2="4" y1="10" y2="3"/><line x1="12" x2="12" y1="21" y2="12"/><line x1="12" x2="12" y1="8" y2="3"/><line x1="20" x2="20" y1="21" y2="16"/><line x1="20" x2="20" y1="12" y2="3"/><line x1="1" x2="7" y1="14" y2="14"/><line x1="9" x2="15" y1="8" y2="8"/><line x1="17" x2="23" y1="16" y2="16"/></svg>
+        Filters
+      </button>
+    </div>
+
+    <div class="catalog-layout">
+
+      <aside class="filters-sidebar" [class.open]="showMobileFilters">
+        <div class="sidebar-header mobile-only">
+          <h3>Filters</h3>
+          <button (click)="toggleMobileFilters()">✕</button>
+        </div>
+
+        <form [formGroup]="filterForm" class="filters-form">
+
+          <div class="filter-group">
+            <h3 class="filter-title">Product Type</h3>
+            <div class="radio-group">
+              <label class="radio-label">
+                <input type="radio" formControlName="type" value="">
+                <span class="radio-custom"></span>
+                All Products
+              </label>
+              <label *ngFor="let type of productTypes" class="radio-label">
+                <input type="radio" formControlName="type" [value]="type.value">
+                <span class="radio-custom"></span>
+                {{ type.label }}
+              </label>
+            </div>
+          </div>
+
+          <div class="filter-group">
+            <h3 class="filter-title">Price Range</h3>
+            <div class="price-inputs">
+              <input type="number" formControlName="minPrice" placeholder="Min" class="form-input">
+              <span class="separator">-</span>
+              <input type="number" formControlName="maxPrice" placeholder="Max" class="form-input">
+            </div>
+          </div>
+
+          <div class="filter-group">
+            <h3 class="filter-title">Sort By</h3>
+            <select formControlName="sort" class="form-select">
+              <option *ngFor="let opt of sortOptions" [value]="opt.value">{{ opt.label }}</option>
+            </select>
+          </div>
+
+        </form>
+      </aside>
+
+      <main class="products-main">
+
+        <div *ngIf="loading" class="loading-grid">
+          <div class="spinner"></div>
+        </div>
+
+        <div *ngIf="!loading && products.length === 0" class="empty-state">
+          <p>No products found in the shadows.</p>
+          <button class="btn-reset" (click)="filterForm.reset()">Clear Filters</button>
+        </div>
+
+        <div *ngIf="!loading && products.length > 0" class="cards-grid">
+          <div *ngFor="let card of products" class="card-item">
+            <div class="card-image-wrapper" [routerLink]="['/products', card.id]">
+              <img [src]="card.image" [alt]="card.name" class="card-image" />
+              <div *ngIf="card.rarity" class="rarity-badge" [style.background-color]="getRarityColor(card.rarity)">
+                {{ card.rarity }}
+              </div>
+            </div>
+
+            <div class="card-info">
+              <h3 class="card-name">{{ card.name }}</h3>
+              <p class="card-set">{{ card.set }}</p>
+              <div class="card-footer">
+                <div class="card-price">${{ card.price.toFixed(2) }}</div>
+                <button class="add-to-cart-btn">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+</div>
+<app-footer></app-footer>

@@ -1,0 +1,414 @@
+// --- Variables
+$primary: #ef4444;
+$primary-dark: #dc2626;
+
+// Backgrounds
+$bg-dark: #09090b;
+$card-dark: #18181b;
+$border-dark: #27272a;
+$sidebar-dark: #000000;
+
+$bg-light: #f4f4f5;
+$card-light: #ffffff;
+$border-light: #e4e4e7;
+$sidebar-light: #ffffff;
+
+// --- Mixins ---
+@mixin shadow-sm { box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); }
+@mixin shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+
+// --- Global Layout ---
+.catalog-wrapper {
+  min-height: 100vh;
+  transition: background-color 0.3s ease;
+
+  // Thème SOMBRE
+  &.dark-theme {
+    background-color: $bg-dark;
+    color: #f4f4f5;
+
+    .page-title { color: #ffffff; }
+    .result-count { color: #a1a1aa; }
+
+    .filters-sidebar {
+      background-color: $sidebar-dark;
+      border-right: 1px solid $border-dark;
+    }
+
+    .filter-title { color: #ffffff; }
+    .radio-label { color: #d4d4d8; }
+
+    .form-input, .form-select {
+      background-color: #18181b;
+      border-color: #3f3f46;
+      color: white;
+      &::placeholder { color: #71717a; }
+    }
+
+    .btn-filter-mobile {
+      background-color: #18181b;
+      border: 1px solid #3f3f46;
+      color: white;
+    }
+
+    .card-item {
+      background-color: $card-dark;
+      border-color: #27272a;
+    }
+  }
+
+  // Thème CLAIR
+  &.light-theme {
+    background-color: $bg-light;
+    color: #18181b;
+
+    .page-title { color: #18181b; }
+    .result-count { color: #52525b; }
+
+    .filters-sidebar {
+      background-color: $sidebar-light;
+      border-right: 1px solid $border-light;
+    }
+
+    .filter-title { color: #18181b; }
+    .radio-label { color: #52525b; }
+
+    .form-input, .form-select {
+      background-color: #ffffff;
+      border-color: #d4d4d8;
+      color: #18181b;
+    }
+
+    .btn-filter-mobile {
+      background-color: white;
+      border: 1px solid #d4d4d8;
+      color: #18181b;
+    }
+
+    .card-item {
+      background-color: $card-light;
+      border-color: #e4e4e7;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+  }
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+// --- Header Section ---
+.catalog-header {
+  padding: 2rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid transparent;
+
+  .dark-theme & { border-color: $border-dark; }
+  .light-theme & { border-color: $border-light; }
+}
+
+.page-title {
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.result-count {
+  font-size: 0.9rem;
+  margin-top: 0.25rem;
+}
+
+.btn-filter-mobile {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+
+  @media (min-width: 1024px) { display: none; }
+}
+
+// --- Layout Grid (Sidebar + Main) ---
+.catalog-layout {
+  display: flex;
+  gap: 2rem;
+  padding-top: 2rem;
+  padding-bottom: 4rem;
+  position: relative;
+}
+
+// --- Sidebar Filters ---
+.filters-sidebar {
+  width: 260px;
+  flex-shrink: 0;
+
+  // Sticky behavior on Desktop
+  @media (min-width: 1024px) {
+    position: sticky;
+    top: 100px;
+    height: calc(100vh - 120px);
+    overflow-y: auto;
+    padding-right: 1rem;
+
+    // Custom Scrollbar fine
+    &::-webkit-scrollbar { width: 4px; }
+    &::-webkit-scrollbar-thumb { background-color: $border-dark; border-radius: 4px; }
+  }
+
+  // Mobile behavior (Drawer / Off-canvas)
+  @media (max-width: 1023px) {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 200;
+    padding: 1.5rem;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+
+    &.open { transform: translateX(0); }
+  }
+}
+
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+
+  h3 { font-size: 1.5rem; font-weight: 700; }
+  button { background: none; border: none; font-size: 1.5rem; color: inherit; cursor: pointer; }
+}
+
+.mobile-only {
+  @media (min-width: 1024px) { display: none; }
+}
+
+// Filter Groups
+.filter-group {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.1);
+
+  &:last-child { border-bottom: none; }
+}
+
+.filter-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 1rem;
+}
+
+// Radio Inputs Custom
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.radio-label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+
+  input { display: none; }
+
+  .radio-custom {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 2px solid #52525b;
+    position: relative;
+    transition: all 0.2s;
+  }
+
+  input:checked + .radio-custom {
+    border-color: $primary;
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background-color: $primary;
+    }
+  }
+
+  &:hover .radio-custom { border-color: $primary; }
+}
+
+// Price Inputs
+.price-inputs {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  .separator { color: #71717a; }
+}
+
+.form-input, .form-select {
+  width: 100%;
+  padding: 0.6rem;
+  border-radius: 0.4rem;
+  border: 1px solid;
+  font-size: 0.9rem;
+  outline: none;
+
+  &:focus { border-color: $primary; }
+}
+
+// --- Main Content (Products Grid) ---
+.products-main {
+  flex: 1;
+}
+
+.loading-grid {
+  display: flex;
+  justify-content: center;
+  padding: 4rem;
+}
+
+.spinner {
+  width: 40px; height: 40px;
+  border: 3px solid rgba($primary, 0.3);
+  border-top-color: $primary;
+  border-radius: 50%;
+  animation: spin 1s infinite linear;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 4rem 0;
+
+  p { font-size: 1.2rem; margin-bottom: 1.5rem; opacity: 0.7; }
+
+  .btn-reset {
+    padding: 0.75rem 1.5rem;
+    background-color: $primary;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-weight: 600;
+  }
+}
+
+// --- Product Cards (Grid Layout) ---
+.cards-grid {
+  display: grid;
+  grid-template-columns: 1fr; // Mobile 1 colonne
+  gap: 1.5rem;
+
+  @media (min-width: 640px) { grid-template-columns: repeat(2, 1fr); }
+  @media (min-width: 1024px) { grid-template-columns: repeat(3, 1fr); }
+  @media (min-width: 1280px) { grid-template-columns: repeat(4, 1fr); } // Grand écran 4 cols
+}
+
+// --- Product Card Style (Réutilisation Home) ---
+.card-item {
+  border-radius: 0.75rem;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+  position: relative;
+
+  &:hover {
+    transform: translateY(-5px);
+    @include shadow-lg;
+    border-color: $primary;
+  }
+}
+
+.card-image-wrapper {
+  position: relative;
+  padding-top: 139%; // Ratio Pokemon Card
+  background-color: #000;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.card-image {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%; height: 90%;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+
+  .card-item:hover & { transform: translate(-50%, -50%) scale(1.05); }
+}
+
+.rarity-badge {
+  position: absolute;
+  top: 0.5rem; right: 0.5rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: white;
+  background-color: rgba(0,0,0,0.8);
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.card-info { padding: 1rem; }
+
+.card-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-set {
+  font-size: 0.8rem;
+  opacity: 0.6;
+  margin-bottom: 0.75rem;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-price {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: $primary;
+}
+
+.add-to-cart-btn {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  border: 1px solid;
+  background: transparent;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  .dark-theme & { border-color: #3f3f46; color: white; }
+  .light-theme & { border-color: #e4e4e7; color: #18181b; }
+
+  &:hover {
+    background-color: $primary;
+    border-color: $primary;
+    color: white;
+  }
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
