@@ -411,4 +411,78 @@ $sidebar-light: #ffffff;
   }
 }
 
+// --- Pagination ---
+.pagination-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(128, 128, 128, 0.1);
+}
+
+.page-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  .dark-theme & {
+    border-color: #3f3f46;
+    color: white;
+    &:hover:not(:disabled) { border-color: $primary; color: $primary; }
+    &:disabled { opacity: 0.3; cursor: not-allowed; }
+  }
+
+  .light-theme & {
+    border-color: #e4e4e7;
+    color: #18181b;
+    &:hover:not(:disabled) { border-color: $primary; color: $primary; }
+    &:disabled { opacity: 0.3; cursor: not-allowed; }
+  }
+}
+
+.page-numbers {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.page-num {
+  min-width: 36px;
+  height: 36px;
+  padding: 0 0.5rem;
+  border-radius: 0.5rem;
+  border: none;
+  background: transparent;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  .dark-theme & {
+    color: #a1a1aa;
+    &:hover { color: white; background-color: rgba(255, 255, 255, 0.05); }
+  }
+
+  .light-theme & {
+    color: #52525b;
+    &:hover { color: #18181b; background-color: rgba(0, 0, 0, 0.05); }
+  }
+
+  // Page Active (Rouge Team Rocket)
+  &.active {
+    background-color: $primary !important;
+    color: white !important;
+    box-shadow: 0 4px 6px -1px rgba($primary, 0.4);
+  }
+}
+
 @keyframes spin { to { transform: rotate(360deg); } }

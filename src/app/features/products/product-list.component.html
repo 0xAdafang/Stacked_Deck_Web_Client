@@ -70,7 +70,7 @@
 
         <div *ngIf="!loading && products.length > 0" class="cards-grid">
           <div *ngFor="let card of products" class="card-item">
-            <div class="card-image-wrapper" [routerLink]="['/products', card.id]">
+            <div class="card-image-wrapper" [routerLink]="['/products', card.slug]">
               <img [src]="card.image" [alt]="card.name" class="card-image" />
               <div *ngIf="card.rarity" class="rarity-badge" [style.background-color]="getRarityColor(card.rarity)">
                 {{ card.rarity }}
@@ -87,8 +87,31 @@
                 </button>
               </div>
             </div>
-          </div>
+          </div> </div> <div class="pagination-wrapper" *ngIf="totalPages > 1">
+        <button
+          class="page-btn prev"
+          [disabled]="currentPage === 0"
+          (click)="changePage(currentPage - 1)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+        </button>
+
+        <div class="page-numbers">
+          <button
+            *ngFor="let p of pageNumbers"
+            class="page-num"
+            [class.active]="p === currentPage"
+            (click)="changePage(p)">
+            {{ p + 1 }}
+          </button>
         </div>
+
+        <button
+          class="page-btn next"
+          [disabled]="currentPage === totalPages - 1"
+          (click)="changePage(currentPage + 1)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
+      </div>
 
       </main>
     </div>

@@ -25,6 +25,10 @@ export class ProductListComponent implements OnInit, OnDestroy {
   products: Product[] = [];
   loading = false;
 
+  currentPage = 0;
+  totalPages = 0;
+  pageSize = 12;
+
 
   productTypes = [
     { label: 'Single Cards', value: 'SINGLE' },
@@ -92,26 +96,53 @@ export class ProductListComponent implements OnInit, OnDestroy {
       next: (response) => {
         this.products = response.content || [];
 
+        if (response.page) {
+          this.currentPage = response.page.number;
+          this.totalPages = response.page.totalPages;
+        }
+
         this.loading = false;
       },
       error: (err) => {
         console.error('API Error:', err);
         this.loading = false;
       }
+
     });
   }
 
-  updateUrl(filters: any): void {
+  changePage(page: number): void {
+    if (page < 0 || page >= this.totalPages || page === this.currentPage) {
+      return;
+    }
+
+    this.updateUrl({ page: page});
+
+    window.scrollTo({ top: 0, behavior: 'smooth'});
+  }
+
+  get pageNumbers(): number[] {
+
+    return Array(this.totalPages).fill(0).map((x, i) => i);
+  }
+
+  updateUrl(changes: any): void {
     const queryParams: any = {};
 
 
-    queryParams.type = filters.type || null;
+    const formValues = this.filterForm.value;
 
-    queryParams.sort = filters.sort;
-    queryParams.minPrice = filters.minPrice || null;
-    queryParams.maxPrice = filters.maxPrice || null;
-    queryParams.q = filters.search || null;
+    queryParams.type = formValues.type || null;
+    queryParams.sort = formValues.sort;
+    queryParams.minPrice = formValues.minPrice || null;
+    queryParams.maxPrice = formValues.maxPrice || null;
+    queryParams.q = formValues.search || null;
 
+    if (changes.page !== undefined) {
+      queryParams.page = changes.page; // 0, 1, 2...
+    } else {
+      queryParams.page = 0;
+    }
 
     const currentParams = this.route.snapshot.queryParams;
 

@@ -14,9 +14,11 @@ export interface Product {
   price: number;
   currency: string;
   rarity?: string;
+  condition?: string;
   type: 'SINGLE' | 'BOOSTER_PACK' | 'ETB' | 'BOOSTER_BOX' | 'BUNDLE';
   categoryName?: string;
   set?: string;
+  stockQuantity: number;
   inStock?: boolean;
 }
 
@@ -77,7 +79,9 @@ export class ProductService {
             ...dto,
             price: dto.price ? dto.price / 100 : 0,
             set: dto.categoryName,
-            inStock: dto.active
+            stockQuantity: dto.stockQuantity,
+            condition: dto.condition,
+            inStock: dto.stockQuantity > 0 && dto.active
           })),
           page: response.page || {}
         };
@@ -90,7 +94,9 @@ export class ProductService {
       map(dto => ({
         ...dto,
         price: dto.price ? dto.price / 100 : 0,
-        set: dto.categoryName
+        set: dto.categoryName,
+        stockQuantity: dto.stockQuantity,
+        inStock: dto.stockQuantity > 0 && dto.active
       }))
     );
   }
