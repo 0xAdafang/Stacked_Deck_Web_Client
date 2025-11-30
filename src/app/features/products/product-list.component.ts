@@ -105,16 +105,18 @@ export class ProductListComponent implements OnInit, OnDestroy {
     const queryParams: any = {};
 
 
-    if (filters.type) queryParams.type = filters.type;
-    if (filters.sort) queryParams.sort = filters.sort;
-    if (filters.minPrice) queryParams.minPrice = filters.minPrice;
-    if (filters.maxPrice) queryParams.maxPrice = filters.maxPrice;
-    if (filters.search) queryParams.q = filters.search;
+    queryParams.type = filters.type || null;
+
+    queryParams.sort = filters.sort;
+    queryParams.minPrice = filters.minPrice || null;
+    queryParams.maxPrice = filters.maxPrice || null;
+    queryParams.q = filters.search || null;
 
 
     const currentParams = this.route.snapshot.queryParams;
+
     if (JSON.stringify(queryParams) === JSON.stringify(currentParams)) {
-      return; // STOP : On ne fait rien si c'est pareil
+      return;
     }
 
     this.router.navigate([], {
