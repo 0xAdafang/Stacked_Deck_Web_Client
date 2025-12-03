@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ThemeService } from '../../../core/services/theme.service';
+import { CartService} from '../../../core/services/cart.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -19,6 +20,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   searchQuery = '';
 
   private themeSubscription?: Subscription;
+  private cartSubscription?: Subscription;
 
   navItems = [
     { label: 'Home', route: '/', exact: true },
@@ -44,16 +46,25 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
   ];
 
-  constructor(private themeService: ThemeService) {}
+  constructor(
+    private themeService: ThemeService,
+    private cartService: CartService
+  ) {}
 
   ngOnInit(): void {
+
     this.themeSubscription = this.themeService.isDark$.subscribe(
       isDark => this.isDark = isDark
+    );
+
+    this.cartSubscription = this.cartService.cartCount$.subscribe(
+      count => this.cartCount = count
     );
   }
 
   ngOnDestroy(): void {
     this.themeSubscription?.unsubscribe();
+    this.cartSubscription?.unsubscribe();
   }
 
   toggleTheme(): void {

@@ -6,12 +6,13 @@ import { ThemeService } from '../../core/services/theme.service';
 import { HeaderComponent } from '../../shared/components/header/header.component';
 import { FooterComponent } from '../../shared/components/footer/footer.component';
 import { Subscription } from 'rxjs';
+import {FormsModule} from '@angular/forms';
 
 
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [CommonModule, RouterModule, HeaderComponent, FooterComponent],
+  imports: [CommonModule, RouterModule, HeaderComponent, FooterComponent, FormsModule],
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.scss']
 })
@@ -19,9 +20,12 @@ export class CartComponent implements OnInit, OnDestroy {
   isDark = true;
   private themeSub?: Subscription;
 
+
   cart?: Cart;
   activeItems: CartItem[] = [];
   savedItems: CartItem[] = [];
+  promoCodeInput = '';
+  promoError = '';
   loading = true;
 
   constructor(
@@ -56,6 +60,24 @@ export class CartComponent implements OnInit, OnDestroy {
       alert(`Max quantity available is ${item.product.stockQuantity}`);
       return;
     }
+
+    this.cartService.updateQuantity(item.id, newQty).subscribe({
+      error: (err) => console.error('Error : update stock', err)
+    })
+  }
+
+  applyPromo(): void {
+    this.promoError = '';
+    if (!this.promoCodeInput.trim()) return;
+
+    this.cartService.applyPromo(this.promoCodeInput).subscribe({
+      next:() => {
+        this.promoCodeInput = '';
+      },
+      error: (err) => {
+        this.promoError = 'Invalid or expired promo code.';
+      }
+    })
   }
 
   removeItem(item: CartItem): void {

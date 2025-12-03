@@ -7,6 +7,8 @@ import { HeaderComponent } from '../../shared/components/header/header.component
 import { FooterComponent } from '../../shared/components/footer/footer.component';
 import { Subscription } from 'rxjs';
 import { FormsModule } from '@angular/forms';
+import {CartService} from '../../core/services/cart.service';
+import {AuthService} from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-product-detail',
@@ -27,12 +29,15 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
 
   quantity: number = 1;
   maxQuantity: number = 10;
+  showSuccessMessage = false;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private themeService: ThemeService,
-    private productService: ProductService
+    private productService: ProductService,
+    private cartService: CartService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -96,12 +101,40 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
   }
 
   addToCart(): void {
-  if (!this.product || !this.product.inStock || this.quantity <= 0) return;
 
-  console.log(`Adding ${this.quantity} x ${this.product.name} to cart.`);
+    if (!this.authService.isAuthenticated()) {
+      this.router.navigate(['/auth/login'], { queryParams: { returnUrl: this.router.url } });
+      return;
+    }
 
-  alert('Added to cart!');
-}
+    if (!this.product || !this.product.inStock || this.quantity <= 0) return;
+
+
+    this.cartService.addToCart(this.product.sku, this.quantity).subscribe({
+      next: () => {
+
+        console.log('✅ Product added');
+
+
+        this.showSuccessMessage = true;
+
+
+        setTimeout(() => this.showSuccessMessage = false, 3000);
+      },
+      error: (err) => {
+        console.error('❌ Error adding cart', err);
+
+
+        if (err.status === 401 || err.status === 403) {
+          this.router.navigate(['/auth/login'], {
+            queryParams: { returnUrl: this.router.url }
+          });
+        } else {
+          alert('An error has occurred. Check your stock or your connection.');
+        }
+      }
+    });
+  }
 
   getRarityColor(rarity: string): string {
     const colors: Record<string, string> = {

@@ -27,6 +27,7 @@ export class LoginComponent implements OnInit {
   verifyError = false;
   checkEmail = false;
 
+
   constructor(
     private fb: FormBuilder,
     private auth: AuthService,
@@ -75,7 +76,13 @@ export class LoginComponent implements OnInit {
     this.unverifiedEmail = '';
 
     this.auth.login({ identifier: username!, password: password! }).subscribe({
-      next: () => this.router.navigate(['/home']),
+      next: () => {
+
+        const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/home';
+
+
+        this.router.navigateByUrl(returnUrl);
+      },
       error: (err) => {
         const msg = err?.error?.message ?? 'Connection failed';
         if (msg.toLowerCase().includes('not verified')) {

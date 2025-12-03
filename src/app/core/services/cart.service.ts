@@ -16,8 +16,11 @@ export interface CartItem {
 export interface Cart {
   id: string;
   items: CartItem[];
+  subtotal: number;
+  discountAmount: number;
   totalAmount: number;
-  totalItems: string;
+  appliedCode?: string;
+  totalItems: number;
 }
 
 @Injectable ({
@@ -30,48 +33,54 @@ export class CartService {
   private cartCountSubject = new BehaviorSubject<number>(0);
   cartCount$ = this.cartCountSubject.asObservable();
 
-  constructor (private http: HttpClient, private auth: AuthService) {
-    this.refreshCart();
-  }
+  constructor (private http: HttpClient, private auth: AuthService) {}
 
 
-  private getUserId(): string {
-      // TODO: Connecter au vrai user ID de l'auth
-      return 'c1c7c534-e519-431c-9b7d-e69c63a29e19'; // UUID Mock temporaire
-  }
 
   getCart(): Observable<Cart> {
-    return this.http.get<Cart>(`${this.apiUrl}?userId=${this.getUserId()}`).pipe(
-      tap(cart => this.cartCountSubject.next(Number(cart.totalItems)))
+    return this.http.get<Cart>(this.apiUrl).pipe(
+      tap(cart => this.cartCountSubject.next(cart.totalItems || 0))
     );
   }
 
 
   addToCart(sku: string, quantity: number): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/add?userId=${this.getUserId()}`, { sku, quantity }).pipe(
+    return this.http.post<void>(`${this.apiUrl}/add`, { sku, quantity }).pipe(
       tap(() => this.refreshCart())
     );
   }
 
   updateQuantity(itemId: string, quantity: number): Observable<void> {
-    return this.http.put<void>(`${this.apiUrl}/item/${itemId}?userId=${this.getUserId()}&quantity=${quantity}`, {}).pipe(
+    return this.http.put<void>(`${this.apiUrl}/item/${itemId}`, null, {
+      params: { quantity: quantity.toString() }
+    }).pipe(
       tap(() => this.refreshCart())
     );
   }
 
   toggleSavedForLater(itemId: string): Observable<void> {
-    return this.http.put<void>(`${this.apiUrl}/item/${itemId}/toggle-save?userId=${this.getUserId()}`, {}).pipe(
+    return this.http.put<void>(`${this.apiUrl}/item/${itemId}/toggle-save`, {}).pipe(
       tap(() => this.refreshCart())
     );
   }
 
   removeItem(itemId: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/item/${itemId}?userId=${this.getUserId()}`).pipe(
+    return this.http.delete<void>(`${this.apiUrl}/item/${itemId}`).pipe(
+      tap(() => this.refreshCart())
+    );
+  }
+
+  applyPromo(code: string): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/promo`, { code }).pipe(
       tap(() => this.refreshCart())
     );
   }
 
   refreshCart(): void {
-    this.getCart().subscribe();
+    this.getCart().subscribe({
+      error: () => {
+        this.cartCountSubject.next(0);
+      }
+    });
   }
 }

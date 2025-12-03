@@ -365,3 +365,20 @@ $card-light: #ffffff;
 }
 
 @keyframes spin { to { transform: rotate(360deg); } }
+
+.success-toast {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background-color: #dcfce7;
+  color: #166534;
+  border: 1px solid #86efac;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  text-align: center;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}

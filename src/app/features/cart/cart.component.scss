@@ -115,3 +115,39 @@ $border-light: #e4e4e7;
 
 .empty-cart { text-align: center; padding: 4rem; }
 .btn-primary { padding: 0.75rem 1.5rem; background: $primary; color: white; border-radius: 0.5rem; text-decoration: none; }
+
+.promo-section {
+  margin: 1rem 0;
+
+  .input-group {
+    display: flex;
+    gap: 0.5rem;
+
+    input {
+      flex: 1;
+      padding: 0.5rem;
+      border: 1px solid rgba(128,128,128,0.3);
+      border-radius: 0.25rem;
+      background: transparent;
+      color: inherit;
+    }
+
+    button {
+      padding: 0.5rem 1rem;
+      background: #27272a; // Dark gray
+      color: white;
+      border: none;
+      border-radius: 0.25rem;
+      cursor: pointer;
+      &:hover { opacity: 0.9; }
+    }
+  }
+
+  .error-msg {
+    color: #ef4444;
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+  }
+}
+
+.text-green { color: #22c55e; }

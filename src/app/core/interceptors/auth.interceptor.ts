@@ -25,25 +25,31 @@ export class AuthInterceptor implements HttpInterceptor {
   constructor(private auth: AuthService) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-
     console.log('🔧 Interceptor - URL:', req.url);
-    console.log('🔧 Interceptor - Est public?', this.isPublicEndpoint(req.url));
 
 
     if (this.isPublicEndpoint(req.url)) {
-      console.log('✅ Interceptor - Endpoint public, pas de token ajouté');
       return next.handle(req);
     }
 
 
     const token = this.auth.getToken();
+
+
+    if (token) {
+      console.log('🔑 Token TROUVÉ. Injection dans le header Authorization.');
+    } else {
+      console.warn('cX ALERTE ROUGE : Route privée demandée MAIS aucun token trouvé dans le stockage !');
+    }
+
+
     const authReq = token
       ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
       : req;
 
     return next.handle(authReq).pipe(
       catchError((err: HttpErrorResponse) => {
-
+        console.error('❌ Erreur HTTP retournée par le backend:', err.status);
         if (err.status === 401 && !this.isRefreshing && !this.isPublicEndpoint(req.url)) {
           this.isRefreshing = true;
 

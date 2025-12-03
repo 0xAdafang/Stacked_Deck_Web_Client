@@ -69,10 +69,28 @@
           <span>${{ ((cart?.totalAmount || 0) / 100).toFixed(2) }}</span>
         </div>
         <div class="summary-row">
-          <span>Shipping</span>
-          <span class="free">FREE</span>
+          <span>Subtotal</span>
+          <span>${{ ((cart?.subtotal || 0) / 100).toFixed(2) }}</span>
         </div>
+
+        <div class="summary-row discount" *ngIf="cart?.discountAmount">
+          <span>Discount ({{ cart?.appliedCode }})</span>
+          <span class="text-green">-${{ ((cart?.discountAmount || 0) / 100).toFixed(2) }}</span>
+        </div>
+
+        <div class="promo-section">
+          <div class="input-group">
+            <input type="text"
+                   [(ngModel)]="promoCodeInput"
+                   placeholder="Promo code"
+                   (keyup.enter)="applyPromo()">
+            <button (click)="applyPromo()">Apply</button>
+          </div>
+          <p class="error-msg" *ngIf="promoError">{{ promoError }}</p>
+        </div>
+
         <div class="divider"></div>
+
         <div class="summary-row total">
           <span>Total</span>
           <span>${{ ((cart?.totalAmount || 0) / 100).toFixed(2) }}</span>
