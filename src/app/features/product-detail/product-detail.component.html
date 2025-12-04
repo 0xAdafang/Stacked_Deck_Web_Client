@@ -89,13 +89,13 @@
         </div>
 
         <div class="actions">
-          <button (click)="addToCart()" [disabled]="!product?.inStock" class="btn-add">
+          <button (click)="addToCart()" [disabled]="!product.inStock" class="btn-add">
             Add to Cart
           </button>
         </div>
 
         <div *ngIf="showSuccessMessage" class="success-toast">
-          ✅ Added {{ quantity }} x {{ product?.name }} to cart!
+          ✅ Added {{ quantity }} x {{ product.name }} to cart!
         </div>
 
         <div class="secure-info">

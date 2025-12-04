@@ -44,8 +44,13 @@ export class CartComponent implements OnInit, OnDestroy {
       next: (cart) => {
         this.cart = cart;
 
-        this.activeItems = cart.items.filter(i => !i.savedForLater);
-        this.savedItems = cart.items.filter(i => i.savedForLater);
+        this.activeItems = cart.items
+          .filter(i => !i.savedForLater)
+          .sort((a, b) => a.product.name.localeCompare(b.product.name));
+
+        this.savedItems = cart.items
+          .filter(i => i.savedForLater)
+          .sort((a, b) => a.product.name.localeCompare(b.product.name));
         this.loading = false;
       },
       error: () => this.loading = false
@@ -56,14 +61,20 @@ export class CartComponent implements OnInit, OnDestroy {
     const newQty = item.quantity + delta;
     if (newQty < 1) return;
 
-    if (item.product.stockQuantity && newQty > item.product.stockQuantity) {
-      alert(`Max quantity available is ${item.product.stockQuantity}`);
+    const stock = item.product.stockQuantity !== undefined ? item.product.stockQuantity : 100;
+
+    if (newQty > stock) {
+      alert(`Max quantity available is ${stock}`);
+
       return;
     }
 
     this.cartService.updateQuantity(item.id, newQty).subscribe({
+      next: () => {
+        this.loadCart();
+      },
       error: (err) => console.error('Error : update stock', err)
-    })
+    });
   }
 
   applyPromo(): void {

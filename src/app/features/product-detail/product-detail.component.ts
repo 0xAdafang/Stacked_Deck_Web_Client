@@ -80,12 +80,16 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
   updateQuantity(delta: number): void {
     if (!this.product?.inStock) return;
 
-    const realMax = Math.min(this.maxQuantity, this.product.stockQuantity);
+    const maxStock = this.product.stockQuantity || 0;
+
+    const realMax = Math.min(this.maxQuantity, maxStock);
 
     const newQty = this.quantity + delta;
 
     if (newQty >= 1 && newQty <= realMax) {
       this.quantity = newQty;
+    } else if (newQty > realMax) {
+      this.quantity = realMax;
     }
   }
 

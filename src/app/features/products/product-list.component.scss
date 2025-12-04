@@ -486,3 +486,47 @@ $sidebar-light: #ffffff;
 }
 
 @keyframes spin { to { transform: rotate(360deg); } }
+
+// Toast Styles
+.toast-notification {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background-color: #10b981;
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 50px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  z-index: 1000;
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+  &.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+
+  .check-icon {
+    background: white;
+    color: #10b981;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.8rem;
+  }
+}
+
+// Style désactivé pour le bouton
+.add-to-cart-btn.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  &:hover { background-color: transparent; color: inherit; }
+}

@@ -8,6 +8,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ProductService, Product } from '../../core/services/product.service';
 import {HeaderComponent} from '../../shared/components/header/header.component';
 import {FooterComponent} from '../../shared/components/footer/footer.component';
+import { CartService } from '../../core/services/cart.service';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-product-list',
@@ -28,6 +30,9 @@ export class ProductListComponent implements OnInit, OnDestroy {
   currentPage = 0;
   totalPages = 0;
   pageSize = 12;
+
+  showSuccessToast = false;
+  addedProductName = '';
 
 
   productTypes = [
@@ -50,7 +55,9 @@ export class ProductListComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private fb: FormBuilder,
-    private productService: ProductService
+    private productService: ProductService,
+    private cartService: CartService,
+    private authService: AuthService
   ) {
     this.filterForm = this.fb.group({
       type: [''],
@@ -139,7 +146,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
     queryParams.q = formValues.search || null;
 
     if (changes.page !== undefined) {
-      queryParams.page = changes.page; // 0, 1, 2...
+      queryParams.page = changes.page;
     } else {
       queryParams.page = 0;
     }
@@ -156,6 +163,35 @@ export class ProductListComponent implements OnInit, OnDestroy {
       queryParamsHandling: 'merge',
     });
   }
+
+  addToCart(product: Product, event: Event): void {
+    event.stopPropagation();
+
+    if (!this.authService.isAuthenticated()) {
+      this.router.navigate(['/auth/login'], { queryParams: { returnUrl: this.router.url } });
+      return;
+    }
+
+    if (!product.inStock) return;
+
+    this.cartService.addToCart(product.sku, 1).subscribe({
+      next: () => {
+        console.log(`✅ ${product.name} added to cart`);
+
+        this.addedProductName = product.name;
+        this.showSuccessToast = true;
+        setTimeout(() => this.showSuccessToast = false, 3000);
+      },
+      error: (err) => {
+        if (err.status === 401 || err.status === 403) {
+          this.router.navigate(['/auth/login'], { queryParams: { returnUrl: this.router.url } });
+        } else {
+          alert('Could not add item to cart.');
+        }
+      }
+    });
+  }
+
 
   toggleMobileFilters(): void {
     this.showMobileFilters = !this.showMobileFilters;
