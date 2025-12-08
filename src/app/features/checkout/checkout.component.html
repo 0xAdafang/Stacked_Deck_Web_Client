@@ -1,0 +1,138 @@
+<app-header></app-header>
+<div class="checkout-container" [class.light-theme]="!isDark">
+
+  <div class="checkout-main">
+    <div class="header">
+      <a routerLink="/cart" class="back-link">← Back to Cart</a>
+      <h1>Checkout</h1>
+    </div>
+
+    <form [formGroup]="checkoutForm" (ngSubmit)="onSubmit()">
+
+      <section class="form-section">
+        <h2>Contact Information</h2>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" formControlName="email" placeholder="you@example.com">
+        </div>
+      </section>
+
+      <section class="form-section">
+        <h2>Shipping Address</h2>
+        <div class="row">
+          <div class="form-group half">
+            <label>First Name</label>
+            <input type="text" formControlName="firstName">
+          </div>
+          <div class="form-group half">
+            <label>Last Name</label>
+            <input type="text" formControlName="lastName">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Address</label>
+          <input type="text" formControlName="addressLine1" placeholder="123 Street Name">
+        </div>
+
+        <div class="form-group">
+          <label>Apartment, suite, etc. (optional)</label>
+          <input type="text" formControlName="addressLine2">
+        </div>
+
+        <div class="row">
+          <div class="form-group half">
+            <label>City</label>
+            <input type="text" formControlName="city">
+          </div>
+          <div class="form-group half">
+            <label>Postal Code</label>
+            <input type="text" formControlName="postalCode">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Country</label>
+          <select formControlName="country">
+            <option value="CA">Canada</option>
+            <option value="US">United States</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Phone</label>
+          <input type="tel" formControlName="phone">
+        </div>
+      </section>
+
+      <section class="form-section">
+        <h2>Shipping Method</h2>
+
+        <div class="shipping-alert" *ngIf="(summary?.subtotal || 0) > 0">
+          <div *ngIf="isFreeShippingEligible" class="alert-success">
+            🎉 <strong>Free Shipping</strong> available on Standard delivery!
+          </div>
+          <div *ngIf="!isFreeShippingEligible" class="alert-info">
+            Add <strong>${{ (amountUntilFreeShipping / 100).toFixed(2) }}</strong> more for free shipping.
+          </div>
+        </div>
+        <div class="radio-group">
+          <label *ngFor="let method of shippingMethods"
+                 class="radio-card"
+                 [class.selected]="checkoutForm.get('shippingMethod')?.value === method.value">
+            <div class="radio-input">
+              <input type="radio" formControlName="shippingMethod" [value]="method.value">
+              <span>{{ method.label }}</span>
+            </div>
+
+            <span class="price">
+              <ng-container *ngIf="method.value === 'STANDARD' && isFreeShippingEligible; else normalPrice">
+                FREE
+              </ng-container>
+              <ng-template #normalPrice>
+                ${{ (method.price / 100).toFixed(2) }}
+              </ng-template>
+            </span>
+
+          </label>
+        </div>
+      </section>
+
+      <button type="submit" class="btn-submit">Continue to Payment</button>
+    </form>
+  </div>
+
+  <aside class="checkout-sidebar">
+    <div class="summary-card">
+      <h2>Order Summary</h2>
+
+      <div class="summary-line">
+        <span>Subtotal</span>
+        <span>${{ ((summary?.subtotal || 0) / 100).toFixed(2) }}</span>
+      </div>
+
+      <div class="summary-line" *ngIf="summary?.discount">
+        <span>Discount</span>
+        <span class="text-green">-${{ ((summary?.discount || 0) / 100).toFixed(2) }}</span>
+      </div>
+
+      <div class="summary-line">
+        <span>Shipping</span>
+        <span>${{ ((summary?.shippingCost || 0) / 100).toFixed(2) }}</span>
+      </div>
+
+      <div class="summary-line">
+        <span>Estimated Taxes</span>
+        <span>${{ ((summary?.taxAmount || 0) / 100).toFixed(2) }}</span>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="summary-line total">
+        <span>Total</span>
+        <span class="total-price">CAD ${{ ((summary?.total || 0) / 100).toFixed(2) }}</span>
+      </div>
+    </div>
+  </aside>
+</div>
+<app-footer></app-footer>
