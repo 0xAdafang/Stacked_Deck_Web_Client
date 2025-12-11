@@ -1,7 +1,6 @@
-// --- Variables de Couleurs ---
+// --- Variables  ---
 $primary: #ef4444;
-$primary-dark: #dc2626;
-$primary-light: #fca5a5;
+$primary-hover: #dc2626;
 
 // Dark Theme Colors
 $bg-dark: #09090b;
@@ -17,80 +16,31 @@ $border-light: #e4e4e7;
 $text-light: #18181b;
 $text-muted-light: #52525b;
 
+
+$rocket-border-main: linear-gradient(135deg, $primary 0%, #000000 50%, $primary 100%);
+
+// Bordure de sélection (pour les radios) : Rouge vif
+$rocket-border-accent: linear-gradient(to right, $primary, darken($primary, 10%));
+
+// Ligne de séparation subtile : Fondu rouge
+$rocket-divider-bottom: linear-gradient(to right, transparent, $primary, transparent);
+
 // --- Global Layout ---
 :host {
   display: block;
   min-height: 100vh;
-
+  background-color: $bg-dark;
+  color: $text-dark;
 }
 
 .checkout-container {
-  min-height: 100vh;
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem 1.5rem;
   display: grid;
   gap: 3rem;
 
-  // Transition douce comme sur la Home
-  transition: background-color 0.3s ease, color 0.3s ease;
-
-  // --- CONFIGURATION PAR DÉFAUT (DARK - TEAM ROCKET) ---
-  background-color: $bg-dark;
-  color: $text-dark;
-
-  .back-link { color: $text-muted-dark; }
-  .form-section h2 { border-bottom: 1px solid $border-dark; }
-
-  input, select {
-    background-color: $card-dark;
-    border: 1px solid $border-dark;
-    color: $text-dark;
-    &::placeholder { opacity: 0.5; color: $text-dark; }
-  }
-
-  .radio-card, .summary-card {
-    background-color: $card-dark;
-    border: 1px solid $border-dark;
-  }
-
-  .summary-line { color: $text-muted-dark; }
-  .divider { background-color: $border-dark; }
-
-  // --- OVERRIDE (LIGHT - SOFT ZINC) ---
-  &.light-theme {
-    background-color: $bg-light;
-    color: $text-light;
-
-    .back-link { color: $text-muted-light; }
-    .form-section h2 { border-bottom-color: $border-light; }
-
-    input, select {
-      background-color: $card-light;
-      border-color: $border-light;
-      color: $text-light;
-      &::placeholder { color: $text-muted-light; }
-    }
-
-    .radio-card, .summary-card {
-      background-color: $card-light;
-      border-color: $border-light;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-
-      &:hover { border-color: darken($border-light, 10%); }
-    }
-
-    .radio-card.selected {
-      background-color: rgba($primary, 0.05);
-      border-color: $primary;
-    }
-
-    .summary-line { color: $text-muted-light; }
-    .summary-line.total { color: $text-light; }
-    .divider { background-color: $border-light; }
-  }
-
-  // Layout Grid
+  // Desktop : 2 colonnes
   @media (min-width: 1024px) {
     grid-template-columns: 1fr 380px;
     align-items: start;
@@ -105,9 +55,9 @@ $text-muted-light: #52525b;
     .back-link {
       display: inline-block;
       margin-bottom: 1rem;
+      color: $text-muted-dark;
       text-decoration: none;
       font-size: 0.9rem;
-      transition: color 0.2s;
       &:hover { color: $primary; }
     }
 
@@ -115,7 +65,9 @@ $text-muted-light: #52525b;
       font-size: 2rem;
       font-weight: 800;
       margin: 0;
-      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: $primary;
     }
   }
 }
@@ -128,6 +80,9 @@ $text-muted-light: #52525b;
     font-weight: 600;
     margin-bottom: 1.25rem;
     padding-bottom: 0.5rem;
+
+    border-bottom: 2px solid transparent;
+    border-image: linear-gradient(to right, $primary, transparent) 1 0 0 0;
   }
 }
 
@@ -140,32 +95,42 @@ $text-muted-light: #52525b;
     font-size: 0.9rem;
     font-weight: 500;
     margin-bottom: 0.5rem;
-    opacity: 0.8;
+    color: $text-muted-dark;
   }
 
   input, select {
     width: 100%;
     padding: 0.75rem;
-    border-radius: 0.5rem;
+
+    background-color: $card-dark;
+    border: 1px solid $border-dark;
+    color: white;
     font-size: 1rem;
     transition: all 0.2s;
 
     &:focus {
       outline: none;
       border-color: $primary;
-      box-shadow: 0 0 0 1px $primary;
+
+      box-shadow: 0 0 8px rgba($primary, 0.5);
     }
+
+    &::placeholder { opacity: 0.5; }
   }
 }
 
+// Helper pour inputs côte à côte
 .row {
   display: flex;
   gap: 1rem;
   .half { flex: 1; }
-  @media (max-width: 640px) { flex-direction: column; gap: 0; }
+  @media (max-width: 640px) {
+    flex-direction: column;
+    gap: 0;
+  }
 }
 
-// --- Radio Cards (Shipping) ---
+// --- Radio Cards (Shipping Method) ---
 .radio-group {
   display: flex;
   flex-direction: column;
@@ -177,18 +142,25 @@ $text-muted-light: #52525b;
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
-  border-radius: 0.5rem;
+  background-color: $card-dark;
   cursor: pointer;
   transition: all 0.2s;
 
+
+  border: 2px solid transparent;
+  border-image: linear-gradient(to right, #3f3f46, #27272a) 1;
+
   &:hover {
-    transform: translateY(-2px);
+
+    border-image: linear-gradient(to right, #71717a, #52525b) 1;
+    background-color: lighten($card-dark, 2%);
   }
 
   &.selected {
-    border-color: $primary;
-    background-color: rgba($primary, 0.1);
-    box-shadow: 0 0 0 1px $primary inset;
+
+    border-image: $rocket-border-accent 1;
+    background-color: rgba($primary, 0.05);
+
   }
 
   .radio-input {
@@ -203,63 +175,31 @@ $text-muted-light: #52525b;
     }
     span { font-weight: 500; }
   }
+
   .price { font-weight: 700; }
-}
-
-// --- ALERTS (Livraison Gratuite) ---
-.shipping-alert {
-  margin-bottom: 1.5rem;
-  font-size: 0.95rem;
-
-  .alert-success {
-    background-color: rgba(34, 197, 94, 0.15);
-    color: #4ade80;
-    padding: 1rem;
-    border-radius: 0.5rem;
-    border: 1px solid rgba(34, 197, 94, 0.2);
-  }
-
-  .alert-info {
-    background-color: rgba(59, 130, 246, 0.15);
-    color: #60a5fa;
-    padding: 1rem;
-    border-radius: 0.5rem;
-    border: 1px solid rgba(59, 130, 246, 0.2);
-  }
-}
-
-// Override Alertes pour Light Theme
-.checkout-container.light-theme .shipping-alert {
-  .alert-success {
-    background-color: #dcfce7;
-    color: #166534;
-    border-color: #bbf7d0;
-  }
-  .alert-info {
-    background-color: #dbeafe;
-    color: #1e40af;
-    border-color: #bfdbfe;
-  }
 }
 
 // --- Button ---
 .btn-submit {
   width: 100%;
   padding: 1rem;
-  background-color: $primary;
+  background: linear-gradient(to right, $primary, darken($primary, 5%));
   color: white;
   border: none;
-  border-radius: 0.5rem;
+
   font-size: 1.1rem;
   font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
   cursor: pointer;
-  transition: background 0.2s, transform 0.2s;
+  transition: all 0.2s;
   margin-top: 1rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border: 2px solid transparent;
 
   &:hover {
-    background-color: $primary-dark;
-    transform: translateY(-1px);
+    background: linear-gradient(to right, darken($primary, 5%), $primary);
+    box-shadow: 0 0 15px rgba($primary, 0.4);
+    border-color: lighten($primary, 10%);
   }
   &:disabled { opacity: 0.7; cursor: not-allowed; }
 }
@@ -274,13 +214,26 @@ $text-muted-light: #52525b;
 }
 
 .summary-card {
-  border-radius: 0.75rem;
+  background-color: $card-dark;
   padding: 1.5rem;
+
+
+
+  // Configuration de la bordure image
+  border: 4px solid transparent;
+  border-image: $rocket-border-main;
+
+  border-image-slice: 1;
+
+  box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
 
   h2 {
     font-size: 1.25rem;
     font-weight: 700;
     margin-bottom: 1.5rem;
+    text-transform: uppercase;
+    color: white;
+    letter-spacing: 0.5px;
   }
 
   .summary-line {
@@ -288,20 +241,29 @@ $text-muted-light: #52525b;
     justify-content: space-between;
     margin-bottom: 1rem;
     font-size: 0.95rem;
+    color: $text-muted-dark;
 
     &.total {
       margin-top: 1rem;
       font-size: 1.25rem;
       font-weight: 800;
+      color: $primary; // Total en rouge
       align-items: center;
-
+      text-transform: uppercase;
     }
   }
 
   .text-green { color: #22c55e; }
 
   .divider {
-    height: 1px;
+
+    height: 2px;
+
+    background: none;
+    border-bottom: 2px solid transparent;
+
+    border-image: linear-gradient(to right, transparent, $primary, transparent) 1 0 0 0;
     margin: 1.5rem 0;
+    opacity: 0.7;
   }
 }
