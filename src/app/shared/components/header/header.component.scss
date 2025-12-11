@@ -420,3 +420,107 @@ $border-light: #e4e4e7;
   display: flex;
   @media (min-width: 768px) { display: none; }
 }
+
+// --- User Dropdown (Desktop) ---
+.user-dropdown-wrapper {
+  position: relative;
+}
+
+.user-dropdown {
+  position: absolute;
+  top: 120%;
+  right: 0;
+  width: 220px;
+  border-radius: 0.75rem;
+  padding: 0.5rem 0;
+  z-index: 1000;
+  @include shadow-md;
+  animation: slideDown 0.2s ease-out;
+  overflow: hidden;
+
+  // Theme Colors
+  .dark-theme & {
+    background-color: #18181b; // Card Dark
+    border: 1px solid $border-dark;
+    color: #f4f4f5;
+  }
+  .light-theme & {
+    background-color: white;
+    border: 1px solid $border-light;
+    color: #18181b;
+  }
+
+  // Header (Username/Email)
+  .dropdown-header {
+    padding: 0.75rem 1rem;
+    display: flex;
+    flex-direction: column;
+
+    .username { font-weight: 700; font-size: 0.95rem; }
+    .email { font-size: 0.8rem; opacity: 0.7; }
+  }
+
+  .dropdown-divider {
+    height: 1px;
+    margin: 0.25rem 0;
+    .dark-theme & { background-color: $border-dark; }
+    .light-theme & { background-color: $border-light; }
+  }
+
+  // Links & Buttons
+  .dropdown-item {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+    text-decoration: none;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    color: inherit;
+    transition: background 0.2s;
+    font-family: inherit; // Pour le bouton logout
+
+    &:hover {
+      .dark-theme & { background-color: #27272a; }
+      .light-theme & { background-color: #f4f4f5; }
+    }
+
+    &.logout {
+      color: $primary;
+      font-weight: 600;
+      &:hover {
+        background-color: rgba($primary, 0.1);
+      }
+    }
+  }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+
+// --- Mobile User Section ---
+.mobile-user-info {
+  padding: 1rem 1.5rem;
+  font-size: 0.9rem;
+  opacity: 0.8;
+  border-bottom: 1px solid;
+
+  .dark-theme & { border-color: $border-dark; }
+  .light-theme & { border-color: $border-light; }
+}
+
+.logout-link {
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  font-family: inherit;
+  font-size: 1rem;
+  cursor: pointer;
+  color: $primary !important;
+}

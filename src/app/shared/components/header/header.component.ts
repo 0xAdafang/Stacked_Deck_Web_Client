@@ -1,10 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import {Router, RouterModule} from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ThemeService } from '../../../core/services/theme.service';
 import { CartService} from '../../../core/services/cart.service';
+import { UserService } from '../../../core/services/user.service';
+import { AuthService } from '../../../core/services/auth.service';
 import { Subscription } from 'rxjs';
+import {User} from '../../../core/models/user.model';
 
 @Component({
   selector: 'app-header',
@@ -16,11 +19,15 @@ import { Subscription } from 'rxjs';
 export class HeaderComponent implements OnInit, OnDestroy {
   isDark = true;
   mobileMenuOpen = false;
+  userMenuOpen = false;
+
   cartCount = 0;
   searchQuery = '';
+  currentUser: User | null = null;
 
   private themeSubscription?: Subscription;
   private cartSubscription?: Subscription;
+  private userSubscription?: Subscription;
 
   navItems = [
     { label: 'Home', route: '/', exact: true },
@@ -48,7 +55,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   constructor(
     private themeService: ThemeService,
-    private cartService: CartService
+    private cartService: CartService,
+    private userService: UserService,
+    private authService: AuthService,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -60,11 +70,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.cartSubscription = this.cartService.cartCount$.subscribe(
       count => this.cartCount = count
     );
+
+    this.userSubscription = this.userService.getCurrentUser().subscribe(
+      user => this.currentUser = user
+    );
   }
 
   ngOnDestroy(): void {
     this.themeSubscription?.unsubscribe();
     this.cartSubscription?.unsubscribe();
+    this.userSubscription?.unsubscribe();
   }
 
   toggleTheme(): void {
@@ -75,10 +90,35 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.mobileMenuOpen = !this.mobileMenuOpen;
   }
 
+  toggleUserMenu(): void {
+    this.userMenuOpen = !this.userMenuOpen;
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.userMenuOpen = false;
+    this.mobileMenuOpen = false;
+    this.router.navigate(['/home']);
+  }
+
+  closeUserMenu(): void {
+    this.userMenuOpen = false;
+  }
+
   onSearch(): void {
     if (this.searchQuery.trim()) {
+
+      this.mobileMenuOpen = false;
+
       console.log('Searching for:', this.searchQuery);
-      // TODO: Redirection vers la page recherche
+
+
+      this.router.navigate(['/products'], {
+        queryParams: { q: this.searchQuery }
+      });
+
+
     }
   }
 }
+
