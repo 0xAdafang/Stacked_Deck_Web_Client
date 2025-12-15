@@ -25,6 +25,11 @@ export const routes: Routes = [
     loadComponent: () => import('./features/checkout/checkout.component').then(m => m.CheckoutComponent)
   },
   {
+    path: 'orders',
+    canActivate: [AuthGuard],
+    loadComponent: () => import('./features/orders/order-history.component').then(m => m.OrderHistoryComponent)
+  },
+  {
     path: 'products',
     component: ProductListComponent,
 

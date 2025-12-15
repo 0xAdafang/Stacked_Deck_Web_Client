@@ -1,0 +1,39 @@
+<div class="orders-container">
+  <h1>My Orders</h1>
+
+  <div *ngIf="loading" class="loading-state">
+    Loading your orders...
+  </div>
+
+  <div *ngIf="!loading && orders.length === 0" class="empty-state">
+    <p>You haven't placed any orders yet.</p>
+    <a routerLink="/products" class="btn-shop">Start Shopping</a>
+  </div>
+
+  <div *ngIf="!loading && orders.length > 0" class="orders-list">
+    <div *ngFor="let order of orders" class="order-card">
+
+      <div class="order-header">
+        <div class="order-info">
+          <span class="order-id">#{{ order.id.split('-')[0] }}</span> <span class="order-date">{{ order.date | date:'mediumDate' }}</span>
+        </div>
+        <div class="order-status" [ngClass]="getStatusClass(order.status)">
+          {{ order.status }}
+        </div>
+      </div>
+
+      <div class="order-items">
+        <div *ngFor="let item of order.items" class="item-row">
+          <span>{{ item.quantity }}x {{ item.sku }}</span>
+          <span>{{ (item.price / 100) | currency:'CAD':'symbol':'1.2-2' }}</span>
+        </div>
+      </div>
+
+      <div class="order-footer">
+        <span class="total-label">Total</span>
+        <span class="total-amount">{{ (order.totalAmount / 100) | currency:'CAD':'symbol':'1.2-2' }}</span>
+      </div>
+
+    </div>
+  </div>
+</div>

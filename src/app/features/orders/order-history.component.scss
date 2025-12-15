@@ -1,0 +1,122 @@
+$primary: #ef4444;
+$bg-dark: #09090b;
+$card-dark: #18181b;
+$border-dark: #27272a;
+$text-muted: #a1a1aa;
+
+:host {
+  display: block;
+  min-height: 80vh;
+  padding: 2rem 1.5rem;
+  background-color: $bg-dark;
+  color: #fff;
+}
+
+.orders-container {
+  max-width: 800px;
+  margin: 0 auto;
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 2rem;
+    color: $primary;
+    text-transform: uppercase;
+  }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 4rem 0;
+  color: $text-muted;
+
+  .btn-shop {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.75rem 1.5rem;
+    background-color: $primary;
+    color: white;
+    text-decoration: none;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    &:hover { background-color: darken($primary, 10%); }
+  }
+}
+
+.orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.order-card {
+  background-color: $card-dark;
+  border: 1px solid $border-dark;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  transition: transform 0.2s;
+
+  &:hover {
+    border-color: lighten($border-dark, 10%);
+  }
+}
+
+.order-header {
+  padding: 1rem 1.5rem;
+  background-color: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid $border-dark;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .order-id {
+    font-weight: 700;
+    font-family: monospace;
+    font-size: 1.1rem;
+    color: $primary;
+  }
+
+  .order-date {
+    margin-left: 1rem;
+    color: $text-muted;
+    font-size: 0.9rem;
+  }
+}
+
+.order-status {
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+
+  &.status-pending { background: rgba(#fbbf24, 0.2); color: #fbbf24; }
+  &.status-paid { background: rgba(#34d399, 0.2); color: #34d399; }
+  &.status-shipped { background: rgba(#60a5fa, 0.2); color: #60a5fa; }
+  &.status-cancelled { background: rgba(#ef4444, 0.2); color: #ef4444; }
+}
+
+.order-items {
+  padding: 1rem 1.5rem;
+
+  .item-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+    color: #e4e4e7;
+
+    &:last-child { margin-bottom: 0; }
+  }
+}
+
+.order-footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid $border-dark;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .total-label { font-weight: 500; color: $text-muted; }
+  .total-amount { font-size: 1.1rem; font-weight: 800; color: white; }
+}
