@@ -1,4 +1,5 @@
-<div class="orders-container">
+<app-header></app-header>
+<div class="orders-container" [class.light-theme]="!isDark">
   <h1>My Orders</h1>
 
   <div *ngIf="loading" class="loading-state">
@@ -15,7 +16,8 @@
 
       <div class="order-header">
         <div class="order-info">
-          <span class="order-id">#{{ order.id.split('-')[0] }}</span> <span class="order-date">{{ order.date | date:'mediumDate' }}</span>
+          <span class="order-id">#{{ order.id.split('-')[0] }}</span>
+          <span class="order-date">{{ order.date | date:'mediumDate' }}</span>
         </div>
         <div class="order-status" [ngClass]="getStatusClass(order.status)">
           {{ order.status }}
@@ -37,3 +39,4 @@
     </div>
   </div>
 </div>
+<app-footer></app-footer>

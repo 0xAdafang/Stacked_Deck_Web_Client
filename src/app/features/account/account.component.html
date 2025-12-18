@@ -1,0 +1,94 @@
+<app-header></app-header>
+
+<div class="account-container" [class.light-theme]="!isDark">
+
+  <div *ngIf="isLoadingData" style="text-align: center; padding-top: 50px;">
+    Loading profile...
+  </div>
+
+  <div class="account-card" *ngIf="!isLoadingData">
+    <div class="header-section">
+      <h1>My Account</h1>
+      <p class="subtitle">Manage your personal information and shipping details.</p>
+    </div>
+
+    <div *ngIf="successMessage" class="alert success">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="alert error">{{ errorMessage }}</div>
+
+    <form [formGroup]="accountForm" (ngSubmit)="onSubmit()">
+
+      <section class="form-section">
+        <h3>Identity</h3>
+        <div class="row">
+          <div class="form-group half">
+            <label>Username</label>
+            <input type="text" formControlName="username" class="read-only">
+          </div>
+          <div class="form-group half">
+            <label>Email</label>
+            <input type="email" formControlName="email" class="read-only">
+          </div>
+        </div>
+      </section>
+
+      <section class="form-section">
+        <h3>Contact Info</h3>
+        <div class="row">
+          <div class="form-group half">
+            <label>First Name</label>
+            <input type="text" formControlName="firstName" placeholder="Ash">
+          </div>
+          <div class="form-group half">
+            <label>Last Name</label>
+            <input type="text" formControlName="lastName" placeholder="Ketchum">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="tel" formControlName="phone" placeholder="+1 (555) 000-0000">
+        </div>
+      </section>
+
+      <section class="form-section">
+        <h3>Default Shipping Address</h3>
+
+        <div class="form-group">
+          <label>Address Line 1</label>
+          <input type="text" formControlName="addressLine1" placeholder="123 Pallet Town">
+        </div>
+
+        <div class="form-group">
+          <label>Apartment, suite, etc. (Optional)</label>
+          <input type="text" formControlName="addressLine2">
+        </div>
+
+        <div class="row">
+          <div class="form-group half">
+            <label>City</label>
+            <input type="text" formControlName="city">
+          </div>
+          <div class="form-group half">
+            <label>Postal Code</label>
+            <input type="text" formControlName="postalCode">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Country</label>
+          <select formControlName="country">
+            <option value="CA">Canada</option>
+            <option value="US">United States</option>
+          </select>
+        </div>
+      </section>
+
+      <button type="submit" class="btn-save" [disabled]="isSaving || accountForm.invalid">
+        <span *ngIf="!isSaving">Save Changes</span>
+        <span *ngIf="isSaving">Saving...</span>
+      </button>
+
+    </form>
+  </div>
+</div>
+
+<app-footer></app-footer>

@@ -26,8 +26,9 @@ export const routes: Routes = [
   },
   {
     path: 'orders',
-    canActivate: [AuthGuard],
-    loadComponent: () => import('./features/orders/order-history.component').then(m => m.OrderHistoryComponent)
+    loadComponent: () => import('./features/orders/order-history.component')
+      .then(m => m.OrderHistoryComponent),
+    canActivate: [AuthGuard]
   },
   {
     path: 'products',
@@ -41,6 +42,11 @@ export const routes: Routes = [
     path: 'auth',
     loadChildren: () =>
       import('./features/auth/auth.module').then(m => m.AuthModule)
+  },
+  {
+    path: 'account',
+    loadComponent: () => import('./features/account/account.component').then(m => m.AccountComponent),
+    canActivate: [AuthGuard]
   },
   {
     path: 'reset-password',
