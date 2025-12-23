@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { AuthGuard } from './core/guards/auth.guard';
 import { ProductListComponent } from './features/products/product-list.component';
 import { ProductDetailComponent } from './features/product-detail/product-detail.component';
+import {AdminGuard} from './core/guards/admin.guard';
 
 
 export const routes: Routes = [
@@ -12,6 +13,12 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     loadChildren: () =>
       import('./features/home/home.module').then(m => m.HomeModule)
+  },
+  {
+    path: 'admin',
+    loadComponent: () => import('./features/admin/admin-dashboard.component')
+      .then(m => m.AdminDashboardComponent),
+    canActivate: [AuthGuard, AdminGuard]
   },
   {
     path: 'cart',

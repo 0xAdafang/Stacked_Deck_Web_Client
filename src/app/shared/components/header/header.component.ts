@@ -120,5 +120,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     }
   }
+
+  get isAdmin(): boolean {
+
+    return this.currentUser?.roles?.includes('ADMIN') || false;
+  }
 }
 
