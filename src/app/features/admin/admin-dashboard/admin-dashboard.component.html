@@ -1,0 +1,70 @@
+<app-header></app-header>
+
+<div class="admin-container" [class.light-theme]="!isDark">
+
+  <div class="admin-header">
+    <h1>Team Rocket HQ 🚀</h1>
+
+    <nav class="admin-nav">
+      <a routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Dashboard</a>
+      <a routerLink="/admin/products" routerLinkActive="active">Products</a>
+    </nav>
+  </div>
+
+  <div class="stats-grid" *ngIf="stats">
+    <div class="stat-card revenue">
+      <h3>Total Revenue</h3>
+      <div class="value">{{ (stats.totalRevenue / 100) | currency:'CAD':'symbol':'1.0-0' }}</div>
+    </div>
+    <div class="stat-card">
+      <h3>Total Orders</h3>
+      <div class="value">{{ stats.totalOrders }}</div>
+    </div>
+    <div class="stat-card alert">
+      <h3>Pending</h3>
+      <div class="value">{{ stats.pendingOrders }}</div>
+    </div>
+    <div class="stat-card">
+      <h3>Products</h3>
+      <div class="value">{{ stats.totalProducts }}</div>
+    </div>
+  </div>
+
+  <div class="orders-section">
+    <h2>Incoming Orders</h2>
+
+    <div class="table-wrapper">
+      <table class="admin-table">
+        <thead>
+        <tr>
+          <th>ID</th>
+          <th>Date</th>
+          <th>Customer (ID)</th> <th>Total</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let order of orders">
+          <td class="mono">#{{ order.id.split('-')[0] }}</td>
+          <td>{{ order.date | date:'short' }}</td>
+          <td class="mono user-id" title="{{order.id}}">User...{{ order.id.substring(0,6) }}</td>
+          <td class="amount">{{ (order.totalAmount / 100) | currency:'CAD' }}</td>
+          <td>
+            <span class="badge" [ngClass]="getStatusClass(order.status)">{{ order.status }}</span>
+          </td>
+          <td>
+            <button *ngIf="order.status === 'PAID'"
+                    (click)="markAsShipped(order)"
+                    class="btn-ship">
+              Ship It 📦
+            </button>
+            <span *ngIf="order.status === 'SHIPPED'" class="text-muted">Shipped</span>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<app-footer></app-footer>
