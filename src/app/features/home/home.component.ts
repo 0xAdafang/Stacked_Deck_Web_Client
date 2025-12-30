@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {Component, CUSTOM_ELEMENTS_SCHEMA, OnDestroy, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { HeaderComponent } from '../../shared/components/header/header.component';
@@ -7,6 +7,9 @@ import { Subscription } from 'rxjs';
 import { FooterComponent } from '../../shared/components/footer/footer.component';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
+import { register } from 'swiper/element/bundle';
+
+register();
 
 interface ProductType {
   label: string;
@@ -20,7 +23,8 @@ interface ProductType {
   standalone: true,
   imports: [CommonModule, RouterModule, HeaderComponent, FooterComponent],
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.scss'],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class HomeComponent implements OnInit, OnDestroy {
   isDark = true;
@@ -69,8 +73,22 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   private loadFeaturedCards(): void {
-    this.http.get<any>(`${this.base}/api/public/featured-products?size=8`).subscribe({
-      next: (response) => this.featuredCards = response.content || [],
+
+    this.http.get<any>(`${this.base}/api/public/featured-products?size=24`).subscribe({
+      next: (response) => {
+        let content = response.content || [];
+
+        if (content.length > 0 && content.length < 12) {
+
+          content = [...content, ...content];
+        }
+
+        if (content.length > 0 && content.length < 10) {
+          content = [...content, ...content];
+        }
+
+        this.featuredCards = content;
+      },
       error: (err) => console.error('Error loading featured cards', err)
     });
   }

@@ -45,12 +45,9 @@
 
           <div class="user-dropdown-wrapper desktop-only">
 
-            <button *ngIf="!currentUser" class="action-btn account-btn" routerLink="/auth/login" aria-label="Login">
-              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                <circle cx="12" cy="7" r="4"></circle>
-              </svg>
-            </button>
+            <a *ngIf="!currentUser" routerLink="/auth/login" class="btn-login">
+              Sign In
+            </a>
 
             <div *ngIf="currentUser" class="relative">
               <button class="action-btn account-btn" (click)="toggleUserMenu()" [class.active]="userMenuOpen" aria-label="My Account">
@@ -79,6 +76,7 @@
                 <button (click)="logout()" class="dropdown-item logout">Logout</button>
               </div>
             </div>
+
           </div>
 
           <button class="action-btn mobile-menu-btn mobile-only" (click)="toggleMobileMenu()">

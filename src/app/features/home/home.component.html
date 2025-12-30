@@ -64,50 +64,70 @@
     </div>
   </section>
 
-  <section class="cards-section">
-    <div class="container">
+  <section class="vault-section">
+    <div class="container full-width-mobile">
       <div class="section-header">
-        <h2 class="section-title">Trending <span class="accent-text">Cards</span></h2>
-        <p class="section-subtitle">Most popular cards among collectors</p>
+        <h2 class="section-title">The <span class="accent-text">Vault</span> Selection</h2>
+        <p class="section-subtitle">Exclusive cards available for immediate extraction.</p>
       </div>
 
-      <div class="cards-grid">
-        <div *ngFor="let card of featuredCards" class="card-item">
-          <div class="card-image-wrapper" [routerLink]="['/products', card.id]">
-            <img [src]="card.image || '/assets/placeholder-card.png'" [alt]="card.name" class="card-image" />
-            <div class="card-overlay">
-              <button class="quick-view-btn">Quick View</button>
-            </div>
-            <div class="rarity-badge" [style.background-color]="getRarityColor(card.rarity)">
-              {{ card.rarity }}
-            </div>
-            <div *ngIf="!card.inStock" class="out-of-stock-badge">Out of Stock</div>
-          </div>
+      <div class="carousel-wrapper" *ngIf="featuredCards.length > 0">
 
-          <div class="card-info">
-            <h3 class="card-name">{{ card.name }}</h3>
-            <p class="card-set">{{ card.category?.name || 'TCG Set' }}</p>
-            <div class="card-footer">
-              <div class="card-price">${{ card.price?.amount?.toFixed(2) || '0.00' }}</div>
-              <button
-                class="add-to-cart-btn"
-                [disabled]="!card.inStock"
-                (click)="addToCart(card)"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="8" cy="21" r="1"></circle>
-                  <circle cx="19" cy="21" r="1"></circle>
-                  <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path>
-                </svg>
-              </button>
+        <div class="fade-mask left"></div>
+        <div class="fade-mask right"></div>
+
+        <swiper-container
+          class="vault-swiper"
+          effect="coverflow"
+          grab-cursor="true"
+          centered-slides="true"
+          slides-per-view="auto"
+          initial-slide="2"
+          loop="true"
+          looped-slides="10"
+
+          navigation="true"
+          pagination="false"
+
+          coverflow-effect-rotate="15"
+          coverflow-effect-stretch="50"
+          coverflow-effect-depth="200"
+          coverflow-effect-modifier="1"
+          coverflow-effect-slide-shadows="false"
+
+          autoplay-delay="3000"
+          autoplay-disable-on-interaction="true"
+          speed="800"
+        >
+          <swiper-slide *ngFor="let card of featuredCards">
+            <div class="vault-card" [routerLink]="['/products', card.slug]">
+
+              <div class="vault-image-wrapper">
+                <img [src]="card.image || '/assets/placeholder-card.png'" [alt]="card.name" class="vault-image" loading="lazy">
+                <div class="glow-effect"></div>
+
+                <div class="rarity-badge" [style.background-color]="getRarityColor(card.rarity)">
+                  {{ card.rarity }}
+                </div>
+              </div>
+
+              <div class="vault-info">
+                <h3 class="vault-name">{{ card.name }}</h3>
+                <div class="vault-details">
+                  <span class="vault-set">{{ card.categoryName || 'TCG Set' }}</span>
+                  <span class="vault-price">{{ (card.price / 100) | currency:'CAD':'symbol':'1.2-2' }}</span>
+                </div>
+                <button class="btn-inspect">Inspect</button>
+              </div>
+
             </div>
-          </div>
-        </div>
+          </swiper-slide>
+        </swiper-container>
       </div>
 
       <div class="view-all-wrapper">
         <button class="btn btn-outline" routerLink="/products">
-          View All Cards
+          Access Full Inventory
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="m9 18 6-6-6-6"/>
           </svg>
