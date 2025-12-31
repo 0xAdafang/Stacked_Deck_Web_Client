@@ -243,7 +243,60 @@ $bg-card-light: #ffffff;
 .vault-section {
   padding: 2rem 0 4rem;
   overflow: hidden;
-  background: radial-gradient(circle at center, rgba($primary, 0.05) 0%, transparent 70%);
+  position: relative;
+
+
+  background-color: $bg-dark;
+
+  color: #ffffff;
+
+  .section-title {
+    color: #ffffff;
+  }
+
+  .section-subtitle {
+    color: #a1a1aa;
+  }
+}
+
+
+.vault-animated-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  opacity: 0.05;
+  pointer-events: none;
+
+  background-image:
+    linear-gradient(135deg, $primary 25%, transparent 25%),
+    linear-gradient(225deg, $primary 25%, transparent 25%),
+    linear-gradient(45deg, $primary 25%, transparent 25%),
+    linear-gradient(315deg, $primary 25%, transparent 25%);
+  background-position: 20px 0, 20px 0, 0 0, 0 0;
+  background-size: 60px 60px;
+  background-repeat: repeat;
+
+
+  animation: vaultScroll 60s linear infinite;
+
+
+  mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+  -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+}
+
+
+.relative-content {
+  position: relative;
+  z-index: 2;
+}
+
+
+@keyframes vaultScroll {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(-60px, -60px); }
 }
 
 .carousel-wrapper {
@@ -253,7 +306,7 @@ $bg-card-light: #ffffff;
   position: relative;
 }
 
-// Masques de fondu latéraux
+
 .fade-mask {
   position: absolute;
   top: 0; bottom: 0;
@@ -272,7 +325,7 @@ $bg-card-light: #ffffff;
   }
 }
 
-// Configuration Swiper
+
 swiper-container {
   width: 100%;
   padding-top: 40px;
@@ -302,7 +355,6 @@ swiper-slide:nth-child(2) { animation-delay: 0.2s; }
 swiper-slide:nth-child(3) { animation-delay: 0.3s; }
 swiper-slide:nth-child(n+4) { animation-delay: 0.4s; }
 
-// --- Style de la Carte ---
 .vault-card {
   width: 100%;
   height: 100%;
@@ -473,44 +525,75 @@ swiper-slide.swiper-slide-active {
   .vault-swiper {
     .swiper-button-prev,
     .swiper-button-next {
-      width: 40px;
-      height: 40px;
+      width: 44px !important;
+      height: 44px !important;
 
+      color: white !important;
+      background: rgba(255, 255, 255, 0.15) !important;
+      border: 2px solid white !important;
 
-      color: #ffffff;
-      background: rgba(0, 0, 0, 0.6);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-
-      border-radius: 50%;
+      border-radius: 50% !important;
       backdrop-filter: blur(4px);
-      transition: all 0.3s ease;
-      opacity: 1;
+      transition: all 0.3s ease !important;
+      opacity: 1 !important;
 
       &::after {
-        font-size: 1.2rem;
-        font-weight: bold;
+        font-size: 1.2rem !important;
+        font-weight: bold !important;
+        color: white !important;
       }
 
-
       &:hover {
-        background: $primary;
-        border-color: $primary;
-        color: white;
-        box-shadow: 0 0 15px rgba($primary, 0.6);
-        transform: scale(1.1);
+        background: $primary !important;
+        border-color: $primary !important;
+        color: white !important;
+        box-shadow: 0 0 20px rgba($primary, 0.7) !important;
+        transform: scale(1.15) !important;
       }
     }
 
-    .swiper-button-prev { left: 15px; }
-    .swiper-button-next { right: 15px; }
+    .swiper-button-prev {
+      left: 15px !important;
+    }
+
+    .swiper-button-next {
+      right: 15px !important;
+    }
 
     @media (max-width: 768px) {
-      .swiper-button-prev, .swiper-button-next { display: none; }
+      .swiper-button-prev, .swiper-button-next {
+        display: none !important;
+      }
     }
   }
 }
 
-// Animation Keyframes
+
+:host ::ng-deep {
+  swiper-container.vault-swiper {
+    .swiper-button-prev,
+    .swiper-button-next {
+      width: 44px !important;
+      height: 44px !important;
+      color: white !important;
+      background: rgba(255, 255, 255, 0.15) !important;
+      border: 2px solid white !important;
+      border-radius: 50% !important;
+
+      &::after {
+        color: white !important;
+      }
+
+      &:hover {
+        background: $primary !important;
+        border-color: $primary !important;
+        box-shadow: 0 0 20px rgba($primary, 0.7) !important;
+      }
+    }
+  }
+}
+
+
 @keyframes fadeSlideUp {
   from { opacity: 0; transform: translateY(30px) scale(0.9); }
   to { opacity: 1; transform: translateY(0) scale(1); }
@@ -521,4 +604,8 @@ swiper-slide.swiper-slide-active {
     padding-left: 0; padding-right: 0;
     .section-header { padding: 0 1.5rem; }
   }
+}
+
+.accent-text {
+  color: $primary;
 }

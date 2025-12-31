@@ -65,6 +65,7 @@
   </section>
 
   <section class="vault-section">
+    <div class="vault-animated-bg"></div>
     <div class="container full-width-mobile">
       <div class="section-header">
         <h2 class="section-title">The <span class="accent-text">Vault</span> Selection</h2>
@@ -95,8 +96,10 @@
           coverflow-effect-modifier="1"
           coverflow-effect-slide-shadows="false"
 
+          autoplay="true"
           autoplay-delay="3000"
-          autoplay-disable-on-interaction="true"
+          autoplay-disable-on-interaction="false"
+          autoplay-pause-on-mouse-enter="true"
           speed="800"
         >
           <swiper-slide *ngFor="let card of featuredCards">

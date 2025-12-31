@@ -1,15 +1,15 @@
-// --- Variables  ---
+
 $primary: #ef4444;
 $primary-hover: #dc2626;
 
-// Dark Theme Colors
+
 $bg-dark: #09090b;
 $card-dark: #18181b;
 $border-dark: #27272a;
 $text-dark: #f4f4f5;
 $text-muted-dark: #a1a1aa;
 
-// Light Theme Colors
+
 $bg-light: #f4f4f5;
 $card-light: #ffffff;
 $border-light: #e4e4e7;
@@ -19,18 +19,34 @@ $text-muted-light: #52525b;
 
 $rocket-border-main: linear-gradient(135deg, $primary 0%, #000000 50%, $primary 100%);
 
-// Bordure de sélection (pour les radios) : Rouge vif
+
 $rocket-border-accent: linear-gradient(to right, $primary, darken($primary, 10%));
 
-// Ligne de séparation subtile : Fondu rouge
+
 $rocket-divider-bottom: linear-gradient(to right, transparent, $primary, transparent);
 
-// --- Global Layout ---
+
 :host {
   display: block;
   min-height: 100vh;
+
+  &::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+  }
+}
+
+:host.dark-theme::before {
   background-color: $bg-dark;
-  color: $text-dark;
+}
+
+:host.light-theme::before {
+  background-color: $bg-light;
 }
 
 .checkout-container {
@@ -40,14 +56,23 @@ $rocket-divider-bottom: linear-gradient(to right, transparent, $primary, transpa
   display: grid;
   gap: 3rem;
 
-  // Desktop : 2 colonnes
+
   @media (min-width: 1024px) {
     grid-template-columns: 1fr 380px;
     align-items: start;
   }
+
+
+  &.dark-theme {
+    color: $text-dark;
+  }
+
+
+  &.light-theme {
+    color: $text-light;
+  }
 }
 
-// --- Left Column: Main Form ---
 .checkout-main {
   .header {
     margin-bottom: 2rem;
@@ -55,10 +80,19 @@ $rocket-divider-bottom: linear-gradient(to right, transparent, $primary, transpa
     .back-link {
       display: inline-block;
       margin-bottom: 1rem;
-      color: $text-muted-dark;
       text-decoration: none;
       font-size: 0.9rem;
-      &:hover { color: $primary; }
+      transition: color 0.2s;
+
+      .dark-theme & {
+        color: $text-muted-dark;
+        &:hover { color: $primary; }
+      }
+
+      .light-theme & {
+        color: $text-muted-light;
+        &:hover { color: $primary; }
+      }
     }
 
     h1 {
@@ -86,7 +120,7 @@ $rocket-divider-bottom: linear-gradient(to right, transparent, $primary, transpa
   }
 }
 
-// --- Form Inputs ---
+
 .form-group {
   margin-bottom: 1rem;
 
@@ -95,23 +129,37 @@ $rocket-divider-bottom: linear-gradient(to right, transparent, $primary, transpa
     font-size: 0.9rem;
     font-weight: 500;
     margin-bottom: 0.5rem;
-    color: $text-muted-dark;
+
+    .dark-theme & {
+      color: $text-muted-dark;
+    }
+
+    .light-theme & {
+      color: $text-muted-light;
+    }
   }
 
   input, select {
     width: 100%;
     padding: 0.75rem;
-
-    background-color: $card-dark;
-    border: 1px solid $border-dark;
-    color: white;
     font-size: 1rem;
     transition: all 0.2s;
+
+    .dark-theme & {
+      background-color: $card-dark;
+      border: 1px solid $border-dark;
+      color: white;
+    }
+
+    .light-theme & {
+      background-color: $card-light;
+      border: 1px solid $border-light;
+      color: $text-light;
+    }
 
     &:focus {
       outline: none;
       border-color: $primary;
-
       box-shadow: 0 0 8px rgba($primary, 0.5);
     }
 
@@ -119,7 +167,7 @@ $rocket-divider-bottom: linear-gradient(to right, transparent, $primary, transpa
   }
 }
 
-// Helper pour inputs côte à côte
+
 .row {
   display: flex;
   gap: 1rem;
@@ -130,7 +178,32 @@ $rocket-divider-bottom: linear-gradient(to right, transparent, $primary, transpa
   }
 }
 
-// --- Radio Cards (Shipping Method) ---
+
+.shipping-alert {
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+
+  .alert-success {
+    background-color: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    color: #22c55e;
+  }
+
+  .alert-info {
+    background-color: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+
+    .dark-theme & {
+      color: #60a5fa;
+    }
+
+    .light-theme & {
+      color: #2563eb;
+    }
+  }
+}
+
 .radio-group {
   display: flex;
   flex-direction: column;
@@ -142,25 +215,38 @@ $rocket-divider-bottom: linear-gradient(to right, transparent, $primary, transpa
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
-  background-color: $card-dark;
   cursor: pointer;
   transition: all 0.2s;
-
-
   border: 2px solid transparent;
-  border-image: linear-gradient(to right, #3f3f46, #27272a) 1;
 
-  &:hover {
+  .dark-theme & {
+    background-color: $card-dark;
+    border-image: linear-gradient(to right, #3f3f46, #27272a) 1;
 
-    border-image: linear-gradient(to right, #71717a, #52525b) 1;
-    background-color: lighten($card-dark, 2%);
+    &:hover {
+      border-image: linear-gradient(to right, #71717a, #52525b) 1;
+      background-color: lighten($card-dark, 2%);
+    }
+
+    &.selected {
+      border-image: $rocket-border-accent 1;
+      background-color: rgba($primary, 0.05);
+    }
   }
 
-  &.selected {
+  .light-theme & {
+    background-color: $card-light;
+    border: 2px solid $border-light;
 
-    border-image: $rocket-border-accent 1;
-    background-color: rgba($primary, 0.05);
+    &:hover {
+      border-color: darken($border-light, 10%);
+      background-color: darken($card-light, 2%);
+    }
 
+    &.selected {
+      border: 2px solid $primary;
+      background-color: rgba($primary, 0.05);
+    }
   }
 
   .radio-input {
@@ -179,14 +265,13 @@ $rocket-divider-bottom: linear-gradient(to right, transparent, $primary, transpa
   .price { font-weight: 700; }
 }
 
-// --- Button ---
+
 .btn-submit {
   width: 100%;
   padding: 1rem;
   background: linear-gradient(to right, $primary, darken($primary, 5%));
   color: white;
   border: none;
-
   font-size: 1.1rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -204,7 +289,6 @@ $rocket-divider-bottom: linear-gradient(to right, transparent, $primary, transpa
   &:disabled { opacity: 0.7; cursor: not-allowed; }
 }
 
-// --- Right Column: Sidebar Summary ---
 .checkout-sidebar {
   position: relative;
   @media (min-width: 1024px) {
@@ -214,26 +298,36 @@ $rocket-divider-bottom: linear-gradient(to right, transparent, $primary, transpa
 }
 
 .summary-card {
-  background-color: $card-dark;
   padding: 1.5rem;
-
-
-
-  // Configuration de la bordure image
-  border: 4px solid transparent;
-  border-image: $rocket-border-main;
-
-  border-image-slice: 1;
-
   box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+
+  .dark-theme & {
+    background-color: $card-dark;
+    border: 4px solid transparent;
+    border-image: $rocket-border-main;
+    border-image-slice: 1;
+  }
+
+  .light-theme & {
+    background-color: $card-light;
+    border: 4px solid $primary;
+    box-shadow: 0 10px 30px -10px rgba(239, 68, 68, 0.2);
+  }
 
   h2 {
     font-size: 1.25rem;
     font-weight: 700;
     margin-bottom: 1.5rem;
     text-transform: uppercase;
-    color: white;
     letter-spacing: 0.5px;
+
+    .dark-theme & {
+      color: white;
+    }
+
+    .light-theme & {
+      color: $text-light;
+    }
   }
 
   .summary-line {
@@ -241,13 +335,20 @@ $rocket-divider-bottom: linear-gradient(to right, transparent, $primary, transpa
     justify-content: space-between;
     margin-bottom: 1rem;
     font-size: 0.95rem;
-    color: $text-muted-dark;
+
+    .dark-theme & {
+      color: $text-muted-dark;
+    }
+
+    .light-theme & {
+      color: $text-muted-light;
+    }
 
     &.total {
       margin-top: 1rem;
       font-size: 1.25rem;
       font-weight: 800;
-      color: $primary; // Total en rouge
+      color: $primary;
       align-items: center;
       text-transform: uppercase;
     }
@@ -256,12 +357,9 @@ $rocket-divider-bottom: linear-gradient(to right, transparent, $primary, transpa
   .text-green { color: #22c55e; }
 
   .divider {
-
     height: 2px;
-
     background: none;
     border-bottom: 2px solid transparent;
-
     border-image: linear-gradient(to right, transparent, $primary, transparent) 1 0 0 0;
     margin: 1.5rem 0;
     opacity: 0.7;

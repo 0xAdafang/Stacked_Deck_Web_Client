@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostBinding } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CheckoutService, CheckoutSummary as CheckoutSummaryType } from '../../core/services/checkout.service';
@@ -18,6 +18,9 @@ import {ThemeService} from '../../core/services/theme.service';
   styleUrls: ['./checkout.component.scss']
 })
 export class CheckoutComponent implements OnInit {
+  @HostBinding('class.dark-theme') get darkTheme() { return this.isDark; }
+  @HostBinding('class.light-theme') get lightTheme() { return !this.isDark; }
+
   isDark = true;
   private themeSubscription?: Subscription;
   checkoutForm: FormGroup;
@@ -46,7 +49,7 @@ export class CheckoutComponent implements OnInit {
       phone: ['', Validators.required],
       shippingMethod: ['STANDARD', Validators.required]
     });
-}
+  }
 
   ngOnInit() {
 
