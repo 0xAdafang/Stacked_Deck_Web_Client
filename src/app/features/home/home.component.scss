@@ -1,4 +1,4 @@
-// --- Variables (Palette "Team Rocket" & "Soft Zinc") ---
+
 $primary: #ef4444;
 $primary-dark: #dc2626;
 $primary-light: #fca5a5;
@@ -10,7 +10,7 @@ $bg-card-dark: #18181b;
 $bg-light: #f4f4f5;
 $bg-card-light: #ffffff;
 
-// --- Mixins ---
+
 @mixin shadow-sm { box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06); }
 @mixin shadow-md { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
 @mixin shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
@@ -20,7 +20,6 @@ $bg-card-light: #ffffff;
   &:hover { transform: translateY(-4px); @include shadow-lg; }
 }
 
-// --- Global Layout ---
 .container {
   max-width: 1280px;
   margin: 0 auto;
@@ -45,7 +44,6 @@ $bg-card-light: #ffffff;
   }
 }
 
-// --- Hero Section ---
 .hero-section {
   padding: 5rem 0 6rem;
   position: relative;
@@ -104,7 +102,6 @@ $bg-card-light: #ffffff;
   @media (min-width: 1024px) { justify-content: flex-start; }
 }
 
-// --- Hero Visual ---
 .hero-visual {
   display: flex;
   justify-content: center;
@@ -143,7 +140,7 @@ $bg-card-light: #ffffff;
   &.card-3 { top: 20px; left: 50%; transform: translateX(-50%) rotate(6deg); z-index: 1; filter: brightness(0.7); }
 }
 
-// --- Sections ---
+
 .categories-section, .cards-section { padding: 4rem 0; }
 
 .section-header {
@@ -159,7 +156,6 @@ $bg-card-light: #ffffff;
   &::after { content: ''; display: block; width: 60px; height: 4px; background-color: $primary; margin: 1rem auto 0; border-radius: 2px; }
 }
 
-// --- Categories Grid ---
 .product-type-grid {
   display: flex;
   gap: 1.5rem;
@@ -208,7 +204,6 @@ $bg-card-light: #ffffff;
   svg { width: 20px; height: 20px; }
 }
 
-// --- Buttons ---
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.75rem 1.5rem;
   border-radius: 0.5rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; border: 1px solid transparent; text-decoration: none;
@@ -232,7 +227,7 @@ $bg-card-light: #ffffff;
 }
 .view-all-wrapper { display: flex; justify-content: center; margin-top: 4rem; }
 
-// --- CTA Section ---
+
 .cta-section {
   padding: 6rem 0; position: relative; text-align: center;
   background: linear-gradient(180deg, transparent 0%, rgba($primary, 0.08) 100%);
@@ -521,49 +516,59 @@ swiper-slide.swiper-slide-active {
   box-shadow: 0 2px 5px rgba(0,0,0,0.5);
 }
 
-::ng-deep {
-  .vault-swiper {
-    .swiper-button-prev,
-    .swiper-button-next {
-      width: 44px !important;
-      height: 44px !important;
+swiper-container.vault-swiper {
 
-      color: white !important;
-      background: rgba(255, 255, 255, 0.15) !important;
-      border: 2px solid white !important;
+  --swiper-navigation-color: #ffffff;
+  --swiper-navigation-size: 20px;
 
-      border-radius: 50% !important;
-      backdrop-filter: blur(4px);
-      transition: all 0.3s ease !important;
-      opacity: 1 !important;
 
-      &::after {
-        font-size: 1.2rem !important;
-        font-weight: bold !important;
-        color: white !important;
-      }
+  &::part(button-prev),
+  &::part(button-next) {
 
-      &:hover {
-        background: $primary !important;
-        border-color: $primary !important;
-        color: white !important;
-        box-shadow: 0 0 20px rgba($primary, 0.7) !important;
-        transform: scale(1.15) !important;
-      }
-    }
+    width: 44px;
+    height: 44px;
 
-    .swiper-button-prev {
-      left: 15px !important;
-    }
 
-    .swiper-button-next {
-      right: 15px !important;
-    }
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    backdrop-filter: blur(4px);
 
-    @media (max-width: 768px) {
-      .swiper-button-prev, .swiper-button-next {
-        display: none !important;
-      }
+
+    position: absolute;
+    top: 50%;
+
+    margin-top: -22px;
+
+    opacity: 1;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+
+  &::part(button-prev) { left: 20px; }
+  &::part(button-next) { right: 20px; }
+
+
+  &::part(button-prev):hover,
+  &::part(button-next):hover {
+    background-color: $primary;
+    border-color: $primary;
+    color: white;
+    box-shadow: 0 0 15px rgba($primary, 0.6);
+    transform: scale(1.1);
+  }
+
+
+  @media (max-width: 768px) {
+    &::part(button-prev),
+    &::part(button-next) {
+      display: none;
     }
   }
 }
@@ -571,23 +576,46 @@ swiper-slide.swiper-slide-active {
 
 :host ::ng-deep {
   swiper-container.vault-swiper {
-    .swiper-button-prev,
-    .swiper-button-next {
-      width: 44px !important;
-      height: 44px !important;
-      color: white !important;
-      background: rgba(255, 255, 255, 0.15) !important;
-      border: 2px solid white !important;
-      border-radius: 50% !important;
 
-      &::after {
-        color: white !important;
-      }
+    --swiper-navigation-color: rgba(255, 255, 255, 0.6);
+    --swiper-navigation-size: 35px;
 
-      &:hover {
-        background: $primary !important;
-        border-color: $primary !important;
-        box-shadow: 0 0 20px rgba($primary, 0.7) !important;
+
+    &::part(button-prev),
+    &::part(button-next) {
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      backdrop-filter: none;
+      width: auto;
+      height: auto;
+
+      position: absolute;
+      top: 50%;
+
+      transform: translateY(-50%);
+      margin-top: 0;
+
+      cursor: pointer;
+      transition: all 0.3s ease;
+      z-index: 10;
+    }
+
+    &::part(button-prev) { left: 10px; }
+    &::part(button-next) { right: 10px; }
+
+
+    &::part(button-prev):hover,
+    &::part(button-next):hover {
+      --swiper-navigation-color: #ef4444;
+      transform: translateY(-50%) scale(1.2);
+      filter: drop-shadow(0 0 5px rgba(239, 68, 68, 0.5));
+    }
+
+
+    @media (max-width: 768px) {
+      &::part(button-prev), &::part(button-next) {
+        display: none;
       }
     }
   }
@@ -595,17 +623,12 @@ swiper-slide.swiper-slide-active {
 
 
 @keyframes fadeSlideUp {
-  from { opacity: 0; transform: translateY(30px) scale(0.9); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-.full-width-mobile {
-  @media (max-width: 640px) {
-    padding-left: 0; padding-right: 0;
-    .section-header { padding: 0 1.5rem; }
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.9);
   }
-}
-
-.accent-text {
-  color: $primary;
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }

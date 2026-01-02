@@ -12,7 +12,7 @@ export const routes: Routes = [
 
     canActivate: [AuthGuard],
     loadChildren: () =>
-      import('./features/home/home.module').then(m => m.HomeModule)
+      import('./features/home/home-module/home.module').then(m => m.HomeModule)
   },
   {
     path: 'admin',
