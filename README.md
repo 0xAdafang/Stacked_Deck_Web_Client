@@ -1,138 +1,138 @@
-# 🃏 Stacked Deck - Client Web
+# 🃏 Stacked Deck - Web Client
 
 ![Angular](https://img.shields.io/badge/Angular-16%2B-red)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)
 ![RxJS](https://img.shields.io/badge/RxJS-Reactive-purple)
 ![Stripe](https://img.shields.io/badge/Payment-Stripe-blueviolet)
 
-**Stacked Deck Client** est l'interface frontend moderne et réactive de la marketplace *Stacked Deck*. Développée avec **Angular**, cette application offre une expérience utilisateur fluide ("SPA") pour l'achat et la collection de cartes Pokémon TCG, avec une esthétique "Dark Mode" immersive.
+**Stacked Deck Client** is the modern, reactive frontend interface for the *Stacked Deck* marketplace. Built with **Angular**, this Single Page Application (SPA) delivers a seamless user experience for buying and collecting Pokémon TCG cards, featuring an immersive "Dark Mode" aesthetic.
 
-Elle communique avec l'API Java Spring Boot pour gérer le catalogue, les utilisateurs et les commandes.
-
----
-
-## 📑 Table des Matières
-
-- [Aperçu Visuel (Parcours Utilisateur)](#-aperçu-visuel)
-- [Fonctionnalités Clés](#-fonctionnalités-clés)
-- [Technologies & Stack](#-technologies--stack)
-- [Installation et Démarrage](#-installation-et-démarrage)
-- [Structure du Projet](#-structure-du-projet)
+It interacts with the Java Spring Boot API to manage the catalog, user authentication, and order processing.
 
 ---
 
-## 📸 Aperçu Visuel
+## 📑 Table of Contents
 
-Bienvenue dans *The Underground Marketplace*. Voici un tour d'horizon de l'application.
+- [Visual Overview (User Journey)](#-visual-overview)
+- [Key Features](#-key-features)
+- [Tech Stack](#-tech-stack)
+- [Installation & Setup](#-installation--setup)
+- [Configuration](#-configuration)
 
-### 🏠 1. Accueil & Immersion
-La page d'accueil plonge l'utilisateur dans l'univers de la marque avec une mise en avant des produits phares ("Vault Selection") et une navigation intuitive.
+---
+
+## 📸 Visual Overview
+
+Welcome to *The Underground Marketplace*. Here is a tour of the application.
+
+### 🏠 1. Home & Immersion
+The landing page immerses the user in the brand's universe, highlighting flagship products ("Vault Selection") with intuitive navigation.
 
 ![Hero Section](src/assets/readme-img/1.png)
-*L'écran d'accueil avec le Hero Banner et l'identité "Underground Marketplace".*
+*Home screen featuring the Hero Banner and the "Underground Marketplace" identity.*
 
 ![Vault Selection](src/assets/readme-img/4.png)
-*La "Vault Selection" : un carrousel interactif des cartes les plus exclusives.*
+*The "Vault Selection": an interactive carousel of the most exclusive cards.*
 
 ---
 
-### 📂 2. Navigation par Catégories
-L'utilisateur peut naviguer rapidement entre les différents types de produits (Cartes à l'unité, Boosters, ETB, Bundles).
+### 📂 2. Category Navigation
+Users can quickly navigate between different product types (Single Cards, Booster Packs, ETBs, Bundles).
 
 ![Categories](src/assets/readme-img/3.png)
 
 ---
 
-### 🛍️ 3. Catalogue & Recherche Avancée
-Le catalogue propose des outils de filtrage puissants (Prix, Type de produit, Tri) pour trouver la perle rare.
+### 🛍️ 3. Catalog & Advanced Search
+The catalog features powerful filtering tools (Price range, Product type, Sorting) to help collectors find specific items.
 
 ![Catalog](src/assets/readme-img/6.png)
 
 ---
 
-### 🔍 4. Détails Produit
-Chaque carte possède une fiche détaillée permettant de choisir l'état de la carte (Near Mint, Played, etc.) avant l'ajout au panier.
+### 🔍 4. Product Details
+Each card has a detailed view allowing users to select the specific condition (Near Mint, Played, etc.) before adding it to the cart.
 
 ![Product Details](src/assets/readme-img/7.png)
 
 ---
 
-### 🛒 5. Panier & Commande
-Gestion complète du panier avec ajustement des quantités, application de codes promo et récapitulatif avant paiement.
+### 🛒 5. Cart & Orders
+Complete cart management system with quantity adjustments, promo code application, and order summary before checkout.
 
 ![Cart](src/assets/readme-img/8.png)
 
 ---
 
-### 🔐 6. Authentification Sécurisée
-L'accès aux fonctionnalités de compte et au paiement nécessite une authentification sécurisée.
+### 🔐 6. Secure Authentication
+Access to account features and payment requires secure authentication.
 
 ![Login](src/assets/readme-img/9.png)
-*Page de connexion "Welcome to the Vault".*
+*Login page: "Welcome to the Vault".*
 
 ---
 
-### 💳 7. Paiement & Checkout
-L'application intègre un tunnel de paiement complet et sécurisé via **Stripe**.
+### 💳 7. Payment & Checkout
+The application integrates a full, secure payment tunnel via **Stripe**.
 
-| Checkout | Paiement Stripe |
+| Checkout | Stripe Payment |
 | :---: | :---: |
 | ![Checkout](src/assets/readme-img/10.png) | ![Stripe](src/assets/readme-img/11.png) |
-| *Validation de l'adresse et expédition* | *Saisie sécurisée des coordonnées bancaires* |
+| *Address validation and shipping* | *Secure credit card entry form* |
 
 ---
 
-## 🚀 Fonctionnalités Clés
+## 🚀 Key Features
 
-* **Design Responsive & Dark Mode :** Interface soignée adaptée aux collectionneurs.
-* **Filtrage Dynamique :** Tri et recherche instantanée dans le catalogue.
-* **Gestion d'État (State Management) :** Utilisation de RxJS pour une synchronisation temps réel du panier et de l'authentification.
-* **Intégration Stripe :** Paiement sécurisé avec gestion des intents côté client.
-* **Espace Membre :** Historique de commandes et gestion de profil.
-
----
-
-## 🛠 Technologies & Stack
-
-* **Framework :** Angular (Dernière version stable)
-* **Langage :** TypeScript
-* **Style :** SCSS (Sass) / HTML5
-* **Http Client :** RxJS (Observables)
-* **Paiement :** Stripe.js / Ngx-Stripe
+* **Responsive Design & Dark Mode:** A polished UI tailored for collectors.
+* **Dynamic Filtering:** Instant sorting and search capabilities within the catalog.
+* **State Management:** Powered by **RxJS** for real-time synchronization of cart and authentication states.
+* **Stripe Integration:** Secure payment processing with client-side intent handling.
+* **User Dashboard:** Order history and profile management.
 
 ---
 
-## 💻 Installation et Démarrage
+## 🛠 Tech Stack
 
-Ce projet nécessite [Node.js](https://nodejs.org/) et [Angular CLI](https://angular.io/cli).
+* **Framework:** Angular (Latest Stable)
+* **Language:** TypeScript
+* **Styling:** SCSS (Sass) / HTML5
+* **Http Client:** RxJS (Observables)
+* **Payment:** Stripe.js / Ngx-Stripe
 
-1.  **Cloner le dépôt :**
+---
+
+## 💻 Installation & Setup
+
+This project requires [Node.js](https://nodejs.org/) and [Angular CLI](https://angular.io/cli).
+
+1.  **Clone the repository:**
     ```bash
     git clone [https://github.com/0xAdafang/Stacked_Deck_Client.git](https://github.com/0xAdafang/Stacked_Deck_Client.git)
     cd Stacked_Deck_Client
     ```
 
-2.  **Installer les dépendances :**
+2.  **Install dependencies:**
     ```bash
     npm install
     ```
 
-3.  **Lancer le serveur de développement :**
+3.  **Start the development server:**
     ```bash
     ng serve
     ```
-    L'application sera accessible sur `http://localhost:4200/`.
+    The application will be available at `http://localhost:4200/`.
 
 ---
 
 ## ⚙️ Configuration
 
-Les variables d'environnement (URL de l'API, Clé publique Stripe) sont gérées dans le dossier `src/environments/`.
+Environment variables (API URL, Stripe Public Key) are managed in the `src/environments/` folder.
 
-* `environment.ts` (Développement)
+* `environment.ts` (Development)
 * `environment.prod.ts` (Production)
 
-Exemple :
+Example:
 ```typescript
 export const environment = {
   production: false,
@@ -141,4 +141,4 @@ export const environment = {
 };
 
 <hr>
-<p><em>Développé par <a href="https://github.com/0xAdafang">0xAdafang</a></em></p>
+<p><em>Made by <a href="https://github.com/0xAdafang">0xAdafang</a></em></p>
