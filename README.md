@@ -1,59 +1,144 @@
-# Stacked Deck
+# 🃏 Stacked Deck - Client Web
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.7.
+![Angular](https://img.shields.io/badge/Angular-16%2B-red)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)
+![RxJS](https://img.shields.io/badge/RxJS-Reactive-purple)
+![Stripe](https://img.shields.io/badge/Payment-Stripe-blueviolet)
 
-## Development server
+**Stacked Deck Client** est l'interface frontend moderne et réactive de la marketplace *Stacked Deck*. Développée avec **Angular**, cette application offre une expérience utilisateur fluide ("SPA") pour l'achat et la collection de cartes Pokémon TCG, avec une esthétique "Dark Mode" immersive.
 
-To start a local development server, run:
+Elle communique avec l'API Java Spring Boot pour gérer le catalogue, les utilisateurs et les commandes.
 
-```bash
-ng serve
-```
+---
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## 📑 Table des Matières
 
-## Code scaffolding
+- [Aperçu Visuel (Parcours Utilisateur)](#-aperçu-visuel)
+- [Fonctionnalités Clés](#-fonctionnalités-clés)
+- [Technologies & Stack](#-technologies--stack)
+- [Installation et Démarrage](#-installation-et-démarrage)
+- [Structure du Projet](#-structure-du-projet)
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+---
 
-```bash
-ng generate component component-name
-```
+## 📸 Aperçu Visuel
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Bienvenue dans *The Underground Marketplace*. Voici un tour d'horizon de l'application.
 
-```bash
-ng generate --help
-```
+### 🏠 1. Accueil & Immersion
+La page d'accueil plonge l'utilisateur dans l'univers de la marque avec une mise en avant des produits phares ("Vault Selection") et une navigation intuitive.
 
-## Building
+![Hero Section](src/assets/readme-img/1.png)
+*L'écran d'accueil avec le Hero Banner et l'identité "Underground Marketplace".*
 
-To build the project run:
+![Vault Selection](src/assets/readme-img/4.png)
+*La "Vault Selection" : un carrousel interactif des cartes les plus exclusives.*
 
-```bash
-ng build
-```
+---
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+### 📂 2. Navigation par Catégories
+L'utilisateur peut naviguer rapidement entre les différents types de produits (Cartes à l'unité, Boosters, ETB, Bundles).
 
-## Running unit tests
+![Categories](src/assets/readme-img/3.png)
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+---
 
-```bash
-ng test
-```
+### 🛍️ 3. Catalogue & Recherche Avancée
+Le catalogue propose des outils de filtrage puissants (Prix, Type de produit, Tri) pour trouver la perle rare.
 
-## Running end-to-end tests
+![Catalog](src/assets/readme-img/6.png)
 
-For end-to-end (e2e) testing, run:
+---
 
-```bash
-ng e2e
-```
+### 🔍 4. Détails Produit
+Chaque carte possède une fiche détaillée permettant de choisir l'état de la carte (Near Mint, Played, etc.) avant l'ajout au panier.
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+![Product Details](src/assets/readme-img/7.png)
 
-## Additional Resources
+---
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+### 🛒 5. Panier & Commande
+Gestion complète du panier avec ajustement des quantités, application de codes promo et récapitulatif avant paiement.
+
+![Cart](src/assets/readme-img/8.png)
+
+---
+
+### 🔐 6. Authentification Sécurisée
+L'accès aux fonctionnalités de compte et au paiement nécessite une authentification sécurisée.
+
+![Login](src/assets/readme-img/9.png)
+*Page de connexion "Welcome to the Vault".*
+
+---
+
+### 💳 7. Paiement & Checkout
+L'application intègre un tunnel de paiement complet et sécurisé via **Stripe**.
+
+| Checkout | Paiement Stripe |
+| :---: | :---: |
+| ![Checkout](src/assets/readme-img/10.png) | ![Stripe](src/assets/readme-img/11.png) |
+| *Validation de l'adresse et expédition* | *Saisie sécurisée des coordonnées bancaires* |
+
+---
+
+## 🚀 Fonctionnalités Clés
+
+* **Design Responsive & Dark Mode :** Interface soignée adaptée aux collectionneurs.
+* **Filtrage Dynamique :** Tri et recherche instantanée dans le catalogue.
+* **Gestion d'État (State Management) :** Utilisation de RxJS pour une synchronisation temps réel du panier et de l'authentification.
+* **Intégration Stripe :** Paiement sécurisé avec gestion des intents côté client.
+* **Espace Membre :** Historique de commandes et gestion de profil.
+
+---
+
+## 🛠 Technologies & Stack
+
+* **Framework :** Angular (Dernière version stable)
+* **Langage :** TypeScript
+* **Style :** SCSS (Sass) / HTML5
+* **Http Client :** RxJS (Observables)
+* **Paiement :** Stripe.js / Ngx-Stripe
+
+---
+
+## 💻 Installation et Démarrage
+
+Ce projet nécessite [Node.js](https://nodejs.org/) et [Angular CLI](https://angular.io/cli).
+
+1.  **Cloner le dépôt :**
+    ```bash
+    git clone [https://github.com/0xAdafang/Stacked_Deck_Client.git](https://github.com/0xAdafang/Stacked_Deck_Client.git)
+    cd Stacked_Deck_Client
+    ```
+
+2.  **Installer les dépendances :**
+    ```bash
+    npm install
+    ```
+
+3.  **Lancer le serveur de développement :**
+    ```bash
+    ng serve
+    ```
+    L'application sera accessible sur `http://localhost:4200/`.
+
+---
+
+## ⚙️ Configuration
+
+Les variables d'environnement (URL de l'API, Clé publique Stripe) sont gérées dans le dossier `src/environments/`.
+
+* `environment.ts` (Développement)
+* `environment.prod.ts` (Production)
+
+Exemple :
+```typescript
+export const environment = {
+  production: false,
+  apiUrl: 'http://localhost:8080/api',
+  stripePublicKey: 'pk_test_...'
+};
+
+<hr>
+<p><em>Développé par <a href="https://github.com/0xAdafang">0xAdafang</a></em></p>
