@@ -1,0 +1,24 @@
+<app-header></app-header>
+<div class="success-wrapper">
+  <div class="success-card">
+    <div class="icon-circle">
+      <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="check-icon">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+    </div>
+
+    <h1>Acquisition Complete</h1>
+    <p class="subtitle">The assets have been secured and are being prepared for extraction.</p>
+
+    <div class="order-info" *ngIf="sessionId">
+      <span>Transaction ID:</span>
+      <code>{{ sessionId | slice:0:18 }}...</code>
+    </div>
+
+    <div class="actions">
+      <button class="btn-primary" routerLink="/orders">View Order Status</button>
+      <button class="btn-secondary" routerLink="/">Return to Vault</button>
+    </div>
+  </div>
+</div>
+<app-footer></app-footer>

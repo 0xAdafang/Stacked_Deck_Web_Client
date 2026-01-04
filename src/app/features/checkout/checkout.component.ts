@@ -104,7 +104,29 @@ export class CheckoutComponent implements OnInit {
       return;
     }
 
+    this.loading = true;
 
+    const totalAmount = this.summary?.total || 0;
+    const email = this.checkoutForm.get('email')!.value;
+
+    if (totalAmount <= 0 ) {
+      alert("Invalid total amount");
+      this.loading = false;
+      return;
+    }
+
+    this.checkoutService.createStripeSession(totalAmount, 'cad', email).subscribe({
+      next: (response) => {
+        if (response.paymentUrl) {
+          window.location.href = response.paymentUrl;
+        }
+      },
+      error: (err) => {
+        console.error('Payment error', err);
+        this.loading = false;
+        alert('Payment initiation failed. Please try again.');
+      }
+    });
     console.log('Proceeding to payment with:', this.checkoutForm.value);
   }
 }

@@ -26,16 +26,15 @@ $text-muted-light: #52525b;
   padding: 2rem 1.5rem;
   max-width: 100%;
 
-  // Centrage du contenu intérieur
+
   display: flex;
   flex-direction: column;
   align-items: center;
 
-  // --- DARK THEME (Défaut) ---
   background-color: $bg-dark;
   color: #fff;
 
-  // --- LIGHT THEME (Override) ---
+
   &.light-theme {
     background-color: $bg-light;
     color: $text-light;
@@ -59,7 +58,7 @@ $text-muted-light: #52525b;
     .empty-state { color: $text-muted-light; }
   }
 
-  // Styles communs du titre
+
   h1 {
     font-size: 2rem;
     font-weight: 800;

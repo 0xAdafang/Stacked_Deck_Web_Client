@@ -2,13 +2,13 @@ $primary: #ef4444;
 $primary-dark: #dc2626;
 $primary-light: #fca5a5;
 
-// Backgrounds
+
 $bg-dark: #09090b;
 $bg-light: #ffffff;
 $border-dark: #27272a;
 $border-light: #e4e4e7;
 
-// Mixins (Ombres standard, pas de néon)
+
 @mixin shadow-sm {
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
@@ -17,21 +17,21 @@ $border-light: #e4e4e7;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
-// Container
+
 .container {
   max-width: 1280px;
   margin: 0 auto;
   padding: 0 1.5rem;
 }
 
-// Theme wrapper
+
 .header-wrapper {
   transition: background-color 0.3s ease, color 0.3s ease;
   position: sticky;
   top: 0;
   z-index: 100;
 
-  // --- DARK THEME (Team Rocket) ---
+
   &.dark-theme {
     background-color: rgba($bg-dark, 0.95);
     color: #f4f4f5;
@@ -101,7 +101,7 @@ $border-light: #e4e4e7;
     }
   }
 
-  // --- LIGHT THEME (Soft Zinc) ---
+
   &.light-theme {
     background-color: rgba($bg-light, 0.95);
     color: #18181b;
@@ -109,7 +109,7 @@ $border-light: #e4e4e7;
     backdrop-filter: blur(12px);
 
     .top-bar {
-      background-color: #f4f4f5; // Gris très clair
+      background-color: #f4f4f5;
       border-bottom: 1px solid $border-light;
     }
 
@@ -173,9 +173,7 @@ $border-light: #e4e4e7;
   }
 }
 
-// --- Common Layout Styles ---
 
-// Top Bar
 .top-bar {
   font-size: 0.75rem;
   font-weight: 500;
@@ -199,7 +197,7 @@ $border-light: #e4e4e7;
   }
 }
 
-// Main Header
+
 .main-header {
 
 }
@@ -212,7 +210,7 @@ $border-light: #e4e4e7;
   padding: 1rem 0;
 }
 
-// Logo Styling
+
 .logo {
   display: flex;
   align-items: center;
@@ -223,7 +221,7 @@ $border-light: #e4e4e7;
 
   color: inherit;
 
-  // Suppression des effets de texte néon
+
   .logo-primary {
     font-size: 1.5rem;
     font-weight: 800;
@@ -238,7 +236,6 @@ $border-light: #e4e4e7;
     letter-spacing: -0.02em;
   }
 
-  // Ligne décorative sous le logo (plus fine et propre)
   .logo-underline {
     position: absolute;
     bottom: -4px;
@@ -255,7 +252,7 @@ $border-light: #e4e4e7;
   }
 }
 
-// Search
+
 .search-wrapper {
   position: relative;
 
@@ -294,7 +291,6 @@ $border-light: #e4e4e7;
   }
 }
 
-// Actions (Cart, Account)
 .header-actions {
   display: flex;
   align-items: center;
@@ -342,7 +338,6 @@ $border-light: #e4e4e7;
   100% { transform: scale(1); }
 }
 
-// Desktop Navigation
 .desktop-nav {
   display: none;
   align-items: center;
@@ -353,7 +348,7 @@ $border-light: #e4e4e7;
 
   @media (min-width: 768px) {
     display: flex;
-    justify-content: center; // Centré
+    justify-content: center;
   }
 }
 
@@ -383,7 +378,7 @@ $border-light: #e4e4e7;
   }
 }
 
-// Mobile Navigation
+
 .mobile-nav {
   display: flex;
   flex-direction: column;
@@ -410,7 +405,7 @@ $border-light: #e4e4e7;
   }
 }
 
-// Utilities
+
 .desktop-only {
   display: none;
   @media (min-width: 640px) { display: flex; }
@@ -421,7 +416,7 @@ $border-light: #e4e4e7;
   @media (min-width: 768px) { display: none; }
 }
 
-// --- User Dropdown (Desktop) ---
+
 .user-dropdown-wrapper {
   position: relative;
 }
@@ -438,9 +433,9 @@ $border-light: #e4e4e7;
   animation: slideDown 0.2s ease-out;
   overflow: hidden;
 
-  // Theme Colors
+
   .dark-theme & {
-    background-color: #18181b; // Card Dark
+    background-color: #18181b;
     border: 1px solid $border-dark;
     color: #f4f4f5;
   }
@@ -450,7 +445,7 @@ $border-light: #e4e4e7;
     color: #18181b;
   }
 
-  // Header (Username/Email)
+
   .dropdown-header {
     padding: 0.75rem 1rem;
     display: flex;
@@ -467,7 +462,7 @@ $border-light: #e4e4e7;
     .light-theme & { background-color: $border-light; }
   }
 
-  // Links & Buttons
+
   .dropdown-item {
     display: block;
     width: 100%;
@@ -503,7 +498,7 @@ $border-light: #e4e4e7;
 }
 
 
-// --- Mobile User Section ---
+
 .mobile-user-info {
   padding: 1rem 1.5rem;
   font-size: 0.9rem;

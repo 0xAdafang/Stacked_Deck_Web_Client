@@ -9,15 +9,20 @@ export interface CheckoutSummary {
   taxAmount: number;
   total: number;
   shippingMethodLabel:  string;
-  discount?: number; // Ajouté : propriété optionnelle utilisée par le template
+  discount?: number;
 }
+
+export interface PaymentInitResponse {
+  paymentUrl: string;
+}
+
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class CheckoutService {
-  private apiUrl = `${environment.apiUrl}/api/checkout`;
+  private baseUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
@@ -26,8 +31,15 @@ export class CheckoutService {
         .set('shippingType', shippingType)
         .set('country', country);
 
-      return this.http.get<CheckoutSummary>(`${this.apiUrl}/summary`, { params });
+      return this.http.get<CheckoutSummary>(`${this.baseUrl}/api/checkout/summary`, { params });
 
     }
 
+  createStripeSession(amount: number, currency: string, email: string): Observable<PaymentInitResponse> {
+    return this.http.post<PaymentInitResponse>(`${this.baseUrl}/api/payment/checkout`, {
+      amount,
+      currency,
+      email
+    });
+  }
 }

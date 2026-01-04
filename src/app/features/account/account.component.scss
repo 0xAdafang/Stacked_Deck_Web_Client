@@ -1,22 +1,22 @@
-// --- Variables (Mêmes que Checkout) ---
+
 $primary: #ef4444;
 $bg-dark: #09090b;
 $card-dark: #18181b;
 $border-dark: #27272a;
 $text-muted: #a1a1aa;
 
-// Light Theme
+
 $bg-light: #f4f4f5;
 $card-light: #ffffff;
 $border-light: #e4e4e7;
 $text-light: #18181b;
 $text-muted-light: #52525b;
 
-// --- Global Layout (Style Checkout) ---
+
 :host {
   display: block;
   min-height: 100vh;
-  // On met le background par défaut sur le host pour éviter les trous blancs
+
   background-color: $bg-dark;
   color: white;
 }
@@ -27,14 +27,12 @@ $text-muted-light: #52525b;
   display: flex;
   justify-content: center;
 
-  // Transition douce si on change de thème
+
   transition: background-color 0.3s ease, color 0.3s ease;
 
-  // --- DARK MODE (Défaut) ---
   background-color: $bg-dark;
   color: white;
 
-  // --- LIGHT MODE ---
   &.light-theme {
     background-color: $bg-light;
     color: $text-light;
@@ -61,9 +59,6 @@ $text-muted-light: #52525b;
   }
 }
 
-// ... Le reste (account-card, form-group...) reste identique à ce que tu avais
-// Je te le remets pour être sûr que tout colle :
-
 .account-card {
   width: 100%;
   max-width: 650px;
@@ -71,7 +66,7 @@ $text-muted-light: #52525b;
   border: 1px solid $border-dark;
   border-radius: 0.75rem;
   padding: 2.5rem;
-  height: fit-content; // Important pour ne pas étirer la carte
+  height: fit-content;
 
   h1 {
     margin: 0 0 0.5rem 0;

@@ -26,6 +26,10 @@ export const routes: Routes = [
     canActivate: [AuthGuard, AdminGuard]
   },
   {
+    path: 'payment/success',
+    loadComponent: () => import('./features/payment/payment-success.component').then(m => m.PaymentSuccessComponent)
+  },
+  {
     path: 'cart',
     canActivate: [AuthGuard],
     loadComponent: () => import('./features/cart/cart.component').then(m => m.CartComponent)

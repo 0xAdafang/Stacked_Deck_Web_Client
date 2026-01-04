@@ -23,7 +23,7 @@ $text-muted-light: #52525b;
   background-color: $bg-dark;
   color: #f4f4f5;
 
-  // LIGHT THEME
+
   &.light-theme {
     background-color: $bg-light;
     color: $text-light;
@@ -34,7 +34,7 @@ $text-muted-light: #52525b;
       box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
     }
 
-    // Inputs en mode clair
+
     input, textarea, select {
       background-color: white;
       border-color: $border-light;
@@ -42,14 +42,14 @@ $text-muted-light: #52525b;
       &::placeholder { color: $text-muted-light; }
     }
 
-    // Navigation
+
     .admin-nav a {
       color: $text-muted-light;
       &:hover { color: $primary; background: rgba($primary, 0.1); }
       &.active { background: $primary; color: white; }
     }
 
-    // Table
+
     .admin-table {
       th { background-color: #f9fafb; border-bottom-color: $border-light; color: $text-muted-light; }
       td { border-bottom-color: $border-light; }
@@ -98,7 +98,7 @@ $text-muted-light: #52525b;
   padding: 2rem;
 }
 
-// --- Header ---
+
 .header-actions {
   display: flex;
   justify-content: space-between;
@@ -132,7 +132,7 @@ $text-muted-light: #52525b;
   }
 }
 
-// --- Editor Panel (Formulaire) ---
+
 .editor-panel {
   background: $card-dark;
   border: 1px solid $border-dark;
@@ -172,7 +172,7 @@ $text-muted-light: #52525b;
     input, textarea, select {
       width: 100%;
       padding: 0.75rem;
-      background: #27272a; // un peu plus clair que le fond
+      background: #27272a;
       border: 1px solid transparent;
       color: white;
       border-radius: 0.5rem;
@@ -246,7 +246,7 @@ $text-muted-light: #52525b;
   }
 }
 
-// --- Table Wrapper ---
+
 .table-wrapper {
   background: $card-dark;
   border: 1px solid $border-dark;
@@ -279,7 +279,7 @@ $text-muted-light: #52525b;
 
   tr:hover td { background-color: rgba(255, 255, 255, 0.02); }
 
-  // Colonnes spécifiques
+
   .thumb {
     width: 48px;
     height: auto;
@@ -303,10 +303,9 @@ $text-muted-light: #52525b;
 
   .amount {
     font-weight: 700;
-    color: $success; // Vert pour l'argent
+    color: $success;
   }
 
-  // Badges (Stock / Active)
   .badge {
     padding: 0.25rem 0.6rem;
     border-radius: 4px;
@@ -321,7 +320,6 @@ $text-muted-light: #52525b;
       border: 1px solid rgba($warning, 0.3);
     }
 
-    // Status Active/Hidden
     &.status {
       &.active {
         background: rgba($success, 0.15);
@@ -336,7 +334,7 @@ $text-muted-light: #52525b;
     }
   }
 
-  // Actions
+
   .actions {
     display: flex;
     gap: 0.75rem;
@@ -351,7 +349,7 @@ $text-muted-light: #52525b;
       transition: all 0.2s;
 
       &.edit:hover {
-        border-color: #60a5fa; // Bleu
+        border-color: #60a5fa;
         background: rgba(#60a5fa, 0.1);
       }
 

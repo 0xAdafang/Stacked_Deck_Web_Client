@@ -4,7 +4,7 @@ $primary: #ef4444;
 $text: #f4f4f5;
 $border: #27272a;
 
-// Variables Light Theme (ajoutées)
+
 $bg-light: #f4f4f5;
 $card-light: #ffffff;
 $text-light: #18181b;
@@ -18,11 +18,11 @@ $text-muted-light: #52525b;
   padding: 2rem;
   transition: background-color 0.3s ease;
 
-  // --- DARK MODE (Défaut) ---
+
   background-color: $bg-dark;
   color: $text;
 
-  // --- LIGHT MODE ---
+
   &.light-theme {
     background-color: $bg-light;
     color: $text-light;
@@ -47,7 +47,7 @@ $text-muted-light: #52525b;
   }
 }
 
-// --- Header & Nav ---
+
 .admin-header {
   display: flex;
   justify-content: space-between;

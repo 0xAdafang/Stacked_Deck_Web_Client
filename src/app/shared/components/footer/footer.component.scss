@@ -1,8 +1,8 @@
-// --- Variables ---
+
 $primary: #ef4444;
 $primary-dark: #dc2626;
 
-// Backgrounds
+
 $bg-dark: #09090b;
 $bg-footer-dark: #000000;
 $border-dark: #27272a;
@@ -11,20 +11,20 @@ $bg-light: #f4f4f5;
 $bg-footer-light: #ffffff;
 $border-light: #e4e4e7;
 
-// Container
+
 .container {
   max-width: 1280px;
   margin: 0 auto;
   padding: 0 1.5rem;
 }
 
-// Footer Global Wrapper
+
 .footer {
   margin-top: auto;
   transition: background-color 0.3s ease;
   border-top: 1px solid;
 
-  // --- DARK THEME ---
+
   &.dark-theme {
     background-color: $bg-footer-dark;
     color: #a1a1aa;
@@ -64,7 +64,7 @@ $border-light: #e4e4e7;
     }
   }
 
-  // --- LIGHT THEME ---
+
   &.light-theme {
     background-color: $bg-footer-light;
     color: #52525b;
@@ -105,7 +105,7 @@ $border-light: #e4e4e7;
   }
 }
 
-// Main Footer Layout
+
 .footer-main {
   padding: 5rem 0 3rem;
 }
@@ -127,7 +127,7 @@ $border-light: #e4e4e7;
   flex-direction: column;
 }
 
-// Brand Section
+
 .brand-section {
   @media (min-width: 640px) { grid-column: span 2; }
   @media (min-width: 1024px) { grid-column: span 1; }
@@ -162,7 +162,7 @@ $border-light: #e4e4e7;
   max-width: 320px;
 }
 
-// Social Links
+
 .social-links {
   display: flex;
   gap: 0.75rem;
@@ -184,7 +184,7 @@ $border-light: #e4e4e7;
   }
 }
 
-// Footer Links (Categories & Help)
+
 .footer-title {
   font-size: 0.9rem;
   font-weight: 700;
@@ -213,7 +213,7 @@ $border-light: #e4e4e7;
   }
 }
 
-// Newsletter Section
+
 .newsletter-text {
   font-size: 0.95rem;
   line-height: 1.5;
@@ -253,7 +253,6 @@ $border-light: #e4e4e7;
   svg { display: block; }
 }
 
-// Footer Bottom
 .footer-bottom {
   padding: 2rem 0;
 }

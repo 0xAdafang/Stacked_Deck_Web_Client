@@ -1,8 +1,8 @@
-// --- Variables
+
 $primary: #ef4444;
 $primary-dark: #dc2626;
 
-// Backgrounds
+
 $bg-dark: #09090b;
 $card-dark: #18181b;
 $border-dark: #27272a;
@@ -13,16 +13,16 @@ $card-light: #ffffff;
 $border-light: #e4e4e7;
 $sidebar-light: #ffffff;
 
-// --- Mixins ---
+
 @mixin shadow-sm { box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); }
 @mixin shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
 
-// --- Global Layout ---
+
 .catalog-wrapper {
   min-height: 100vh;
   transition: background-color 0.3s ease;
 
-  // Thème SOMBRE
+
   &.dark-theme {
     background-color: $bg-dark;
     color: #f4f4f5;
@@ -57,7 +57,7 @@ $sidebar-light: #ffffff;
     }
   }
 
-  // Thème CLAIR
+
   &.light-theme {
     background-color: $bg-light;
     color: #18181b;
@@ -99,7 +99,7 @@ $sidebar-light: #ffffff;
   padding: 0 1.5rem;
 }
 
-// --- Header Section ---
+
 .catalog-header {
   padding: 2rem 0;
   display: flex;
@@ -134,7 +134,7 @@ $sidebar-light: #ffffff;
   @media (min-width: 1024px) { display: none; }
 }
 
-// --- Layout Grid (Sidebar + Main) ---
+
 .catalog-layout {
   display: flex;
   gap: 2rem;
@@ -143,12 +143,12 @@ $sidebar-light: #ffffff;
   position: relative;
 }
 
-// --- Sidebar Filters ---
+
 .filters-sidebar {
   width: 260px;
   flex-shrink: 0;
 
-  // Sticky behavior on Desktop
+
   @media (min-width: 1024px) {
     position: sticky;
     top: 100px;
@@ -156,12 +156,12 @@ $sidebar-light: #ffffff;
     overflow-y: auto;
     padding-right: 1rem;
 
-    // Custom Scrollbar fine
+
     &::-webkit-scrollbar { width: 4px; }
     &::-webkit-scrollbar-thumb { background-color: $border-dark; border-radius: 4px; }
   }
 
-  // Mobile behavior (Drawer / Off-canvas)
+
   @media (max-width: 1023px) {
     position: fixed;
     top: 0;
@@ -191,7 +191,7 @@ $sidebar-light: #ffffff;
   @media (min-width: 1024px) { display: none; }
 }
 
-// Filter Groups
+
 .filter-group {
   margin-bottom: 2rem;
   padding-bottom: 1.5rem;
@@ -208,7 +208,7 @@ $sidebar-light: #ffffff;
   margin-bottom: 1rem;
 }
 
-// Radio Inputs Custom
+
 .radio-group {
   display: flex;
   flex-direction: column;
@@ -249,7 +249,7 @@ $sidebar-light: #ffffff;
   &:hover .radio-custom { border-color: $primary; }
 }
 
-// Price Inputs
+
 .price-inputs {
   display: flex;
   align-items: center;
@@ -269,7 +269,7 @@ $sidebar-light: #ffffff;
   &:focus { border-color: $primary; }
 }
 
-// --- Main Content (Products Grid) ---
+
 .products-main {
   flex: 1;
 }
@@ -305,18 +305,18 @@ $sidebar-light: #ffffff;
   }
 }
 
-// --- Product Cards (Grid Layout) ---
+
 .cards-grid {
   display: grid;
-  grid-template-columns: 1fr; // Mobile 1 colonne
+  grid-template-columns: 1fr;
   gap: 1.5rem;
 
   @media (min-width: 640px) { grid-template-columns: repeat(2, 1fr); }
   @media (min-width: 1024px) { grid-template-columns: repeat(3, 1fr); }
-  @media (min-width: 1280px) { grid-template-columns: repeat(4, 1fr); } // Grand écran 4 cols
+  @media (min-width: 1280px) { grid-template-columns: repeat(4, 1fr); }
 }
 
-// --- Product Card Style (Réutilisation Home) ---
+
 .card-item {
   border-radius: 0.75rem;
   overflow: hidden;
@@ -333,7 +333,7 @@ $sidebar-light: #ffffff;
 
 .card-image-wrapper {
   position: relative;
-  padding-top: 139%; // Ratio Pokemon Card
+  padding-top: 139%;
   background-color: #000;
   overflow: hidden;
   cursor: pointer;
@@ -411,7 +411,7 @@ $sidebar-light: #ffffff;
   }
 }
 
-// --- Pagination ---
+
 .pagination-wrapper {
   display: flex;
   align-items: center;
@@ -477,7 +477,7 @@ $sidebar-light: #ffffff;
     &:hover { color: #18181b; background-color: rgba(0, 0, 0, 0.05); }
   }
 
-  // Page Active (Rouge Team Rocket)
+
   &.active {
     background-color: $primary !important;
     color: white !important;
@@ -487,7 +487,7 @@ $sidebar-light: #ffffff;
 
 @keyframes spin { to { transform: rotate(360deg); } }
 
-// Toast Styles
+
 .toast-notification {
   position: fixed;
   bottom: 2rem;
@@ -524,7 +524,7 @@ $sidebar-light: #ffffff;
   }
 }
 
-// Style désactivé pour le bouton
+
 .add-to-cart-btn.disabled {
   opacity: 0.5;
   cursor: not-allowed;
