@@ -1,3 +1,14 @@
+export interface CardDetails {
+  hp?: string;
+  types?: string;
+  stage?: string;
+  retreatCost?: string;
+  weakness?: string;
+  resistance?: string;
+  attackDetails?: string;
+  flavorText?: string;
+}
+
 export interface Product {
   id: string;
   sku: string;
@@ -5,9 +16,11 @@ export interface Product {
   slug: string;
   description?: string;
 
+  cardDetails?: CardDetails;
+
   price: number;
-  stockQuantity: number;
-  inStock?: boolean;
+
+  inStock: boolean;
 
   image: string;
   images?: string[];
@@ -15,7 +28,10 @@ export interface Product {
 
   categoryId?: string;
   categoryName?: string;
-  type: 'SINGLE_CARD' | 'BOOSTER_PACK' | 'ETB' | 'BOOSTER_BOX' | 'BUNDLE';
+  categoryCode?: string;
+
+  type: 'SINGLE' | 'BOOSTER_PACK' | 'ETB' | 'BOOSTER_BOX' | 'BUNDLE';
+
   rarity?: string;
   condition?: string;
 
