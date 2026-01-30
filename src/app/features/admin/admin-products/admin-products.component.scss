@@ -254,6 +254,40 @@ $text-muted-light: #52525b;
   overflow-x: auto;
 }
 
+.nested-form-section {
+  background-color: rgba(255, 255, 255, 0.02);
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  padding: 1.25rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+
+  .section-title {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    color: #a1a1aa;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+
+  .form-group {
+    margin-bottom: 1rem;
+    input, textarea, select {
+
+      @extend input;
+    }
+  }
+
+
+  .row {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+    .half { flex: 1; }
+  }
+}
+
 .admin-table {
   width: 100%;
   border-collapse: collapse;

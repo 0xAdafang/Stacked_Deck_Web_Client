@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ThemeService } from '../../core/services/theme.service';
 import { ProductService, Product } from '../../core/services/product.service';
+import { InventoryService, InventoryStatus} from '../../core/services/inventory.service';
 import { HeaderComponent } from '../../shared/components/header/header.component';
 import { FooterComponent } from '../../shared/components/footer/footer.component';
 import { Subscription } from 'rxjs';
@@ -22,13 +23,13 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
   private themeSub?: Subscription;
 
   product?: Product;
+  stockStatus?: InventoryStatus;
   loading = true;
   error = false;
 
   selectedImage: string = '';
-
   quantity: number = 1;
-  maxQuantity: number = 10;
+  maxQuantity: number = 1;
   showSuccessMessage = false;
 
   constructor(
@@ -36,6 +37,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     private router: Router,
     private themeService: ThemeService,
     private productService: ProductService,
+    private inventoryService : InventoryService,
     private cartService: CartService,
     private authService: AuthService
   ) {}
@@ -59,18 +61,32 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
         this.selectedImage = prod.image;
 
         if (!prod.inStock) {
-          this.quantity = 0;
+          this.checkInventory(prod.sku);
         } else {
-          this.quantity = 1;
+          this.quantity = 0;
+          this.loading = false;
         }
-
-        this.loading = false;
       },
       error: () => {
         this.error = true;
         this.loading = false;
       }
     });
+  }
+
+  checkInventory(sku: string): void {
+    this.inventoryService.getStatus(sku).subscribe({
+      next: (status) => {
+        this.stockStatus = status;
+        this.maxQuantity = status.quantityAvailable;
+        this.quantity = 1;
+        this.loading = false;
+      },
+      error: () => {
+        this.maxQuantity = 1;
+        this.loading = false;
+      }
+    })
   }
 
   changeImage(img: string): void {
@@ -80,16 +96,10 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
   updateQuantity(delta: number): void {
     if (!this.product?.inStock) return;
 
-    const maxStock = this.product.stockQuantity || 0;
-
-    const realMax = Math.min(this.maxQuantity, maxStock);
-
     const newQty = this.quantity + delta;
 
-    if (newQty >= 1 && newQty <= realMax) {
+    if (newQty >= 1 && newQty <= this.maxQuantity) {
       this.quantity = newQty;
-    } else if (newQty > realMax) {
-      this.quantity = realMax;
     }
   }
 
@@ -110,31 +120,20 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
       this.router.navigate(['/auth/login'], { queryParams: { returnUrl: this.router.url } });
       return;
     }
-
     if (!this.product || !this.product.inStock || this.quantity <= 0) return;
-
 
     this.cartService.addToCart(this.product.sku, this.quantity).subscribe({
       next: () => {
-
-        console.log('✅ Product added');
-
-
         this.showSuccessMessage = true;
-
-
         setTimeout(() => this.showSuccessMessage = false, 3000);
       },
       error: (err) => {
-        console.error('❌ Error adding cart', err);
-
-
         if (err.status === 401 || err.status === 403) {
           this.router.navigate(['/auth/login'], {
             queryParams: { returnUrl: this.router.url }
           });
         } else {
-          alert('An error has occurred. Check your stock or your connection.');
+          alert('Could not add item to cart.');
         }
       }
     });

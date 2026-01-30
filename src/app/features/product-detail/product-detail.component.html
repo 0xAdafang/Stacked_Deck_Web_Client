@@ -1,117 +1,105 @@
 <app-header></app-header>
 
-<div class="product-wrapper" [class.dark-theme]="isDark" [class.light-theme]="!isDark">
-
-  <div *ngIf="loading" class="state-container"><div class="spinner"></div></div>
-  <div *ngIf="error" class="state-container">
-    <h2>Product not found</h2>
-    <button class="btn-back" routerLink="/products">Back to Catalog</button>
+<div class="main-content">
+  <div class="loading-container" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Loading product...</p>
   </div>
 
-  <div class="container" *ngIf="!loading && !error && product">
+  <div class="error-container" *ngIf="error && !loading">
+    <p>Product not found or an error occurred.</p>
+    <button routerLink="/products">Back to Products</button>
+  </div>
 
+  <div class="product-wrapper" *ngIf="!loading && !error && product" [class.dark-theme]="isDark" [class.light-theme]="!isDark">
     <div class="breadcrumb">
-      <a routerLink="/products">Catalog</a>
-      <span class="sep">/</span>
-      <span class="current">{{ product.name }}</span>
+      <a routerLink="/">Home</a> &gt;
+      <a routerLink="/products">Products</a> &gt;
+      <span>{{ product.name }}</span>
     </div>
 
     <div class="product-layout">
-
       <div class="product-gallery">
-        <div class="main-image-wrapper">
-          <img [src]="selectedImage" [alt]="product.name" class="main-image">
-
-          <span *ngIf="product.rarity" class="rarity-badge" [style.background-color]="getRarityColor(product.rarity)">
-            {{ product.rarity }}
-          </span>
+        <div class="main-image">
+          <img [src]="selectedImage" [alt]="product.name">
         </div>
-
-        <div class="thumbnails" *ngIf="product.images && product.images.length > 0">
-          <div class="thumb" [class.active]="selectedImage === product.image" (click)="changeImage(product.image)">
-            <img [src]="product.image" [alt]="product.name">
-          </div>
-          <div *ngFor="let img of product.images" class="thumb" [class.active]="selectedImage === img" (click)="changeImage(img)">
-            <img [src]="img" [alt]="product.name">
-          </div>
+        <div class="thumbnail-list" *ngIf="product.images && product.images.length > 0">
+          <img *ngFor="let img of product.images" [src]="img" [class.active]="img === selectedImage" (click)="changeImage(img)" alt="thumbnail">
         </div>
       </div>
 
       <div class="product-info">
+        <h5>
+          <span *ngIf="product.categoryCode" style="opacity: 0.7; margin-right: 5px;">{{ product.categoryCode }}:</span>
+          {{ product.categoryName }}
+        </h5>
 
-        <h2 class="set-name">{{ product.set || 'Pokémon TCG' }}</h2>
-        <h1 class="product-title">{{ product.name }}</h1>
+        <h1>{{ product.name }}</h1>
 
         <div class="product-meta">
-          <span class="sku">SKU: {{ product.sku }}</span>
-          <span class="stock-status" [class.out]="!product.inStock">
-            {{ product.inStock ? 'In Stock' : 'Out of Stock' }}
+          <span class="meta-badge rarity" [style.background-color]="getRarityColor(product.rarity || '')" *ngIf="product.rarity">
+            {{ product.rarity.replace('_', ' ') }}
+          </span>
+          <span class="meta-badge condition" *ngIf="product.condition">
+            {{ getConditionLabel(product.condition) }}
           </span>
         </div>
 
-        <div class="price-block">
-          <span class="currency">$</span>
-          <span class="amount">{{ product.price.toFixed(2) }}</span>
+        <div class="product-price">
+          {{ product.price | currency:'USD' }}
         </div>
 
+        <div class="card-specs-container" *ngIf="product.cardDetails && product.type === 'SINGLE'">
+          <div class="specs-grid">
+            <div class="spec-item" *ngIf="product.cardDetails.hp">
+              <span class="label">HP</span>
+              <span class="value">{{ product.cardDetails.hp }}</span>
+            </div>
+            <div class="spec-item" *ngIf="product.cardDetails.types">
+              <span class="label">Type</span>
+              <span class="value">{{ product.cardDetails.types }}</span>
+            </div>
+            <div class="spec-item" *ngIf="product.cardDetails.stage">
+              <span class="label">Stage</span>
+              <span class="value">{{ product.cardDetails.stage }}</span>
+            </div>
+            <div class="spec-item" *ngIf="product.cardDetails.weakness">
+              <span class="label">Weakness</span>
+              <span class="value">{{ product.cardDetails.weakness }}</span>
+            </div>
+            <div class="spec-item" *ngIf="product.cardDetails.retreatCost">
+              <span class="label">Retreat</span>
+              <span class="value">{{ product.cardDetails.retreatCost }}</span>
+            </div>
+          </div>
+          <div class="flavor-text" *ngIf="product.cardDetails.flavorText">
+            "{{ product.cardDetails.flavorText }}"
+          </div>
+        </div>
         <div class="description">
           <p>{{ product.description }}</p>
         </div>
 
-        <div class="condition-wrapper" *ngIf="product.type === 'SINGLE' && product.condition">
-          <label class="label">Card Condition</label>
-          <div class="condition-display">
-            {{ getConditionLabel(product.condition) }}
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
-          </div>
-          <p class="condition-hint" *ngIf="product.condition === 'NEAR_MINT'">
-            Card is in perfect condition. Pack fresh.
-          </p>
-        </div>
-
-        <div class="actions-wrapper">
-
+        <div class="product-actions">
           <div class="quantity-selector" [class.disabled]="!product.inStock">
             <button (click)="updateQuantity(-1)" [disabled]="quantity <= 1">-</button>
-            <input type="number" [(ngModel)]="quantity" readonly>
+            <input type="text" [value]="quantity" readonly>
             <button (click)="updateQuantity(1)" [disabled]="quantity >= maxQuantity">+</button>
           </div>
 
-          <button
-            class="btn-add-cart"
-            [disabled]="!product.inStock"
-            (click)="addToCart()"
-          >
-            <span *ngIf="product.inStock">Add to Cart</span>
-            <span *ngIf="!product.inStock">Sold Out</span>
-            <svg *ngIf="product.inStock" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path></svg>
+          <button class="btn-add-cart" (click)="addToCart()" [disabled]="!product.inStock">
+            {{ product.inStock ? 'Add to Cart' : 'Out of Stock' }}
           </button>
         </div>
 
-        <div class="actions">
-          <button (click)="addToCart()" [disabled]="!product.inStock" class="btn-add">
-            Add to Cart
-          </button>
+        <p *ngIf="product.inStock && stockStatus?.lowStock" style="color: #eab308; font-size: 0.9rem; margin-top: 10px;">
+          Only {{ stockStatus?.quantityAvailable }} left!
+        </p>
+
+
+        <div class="success-message" *ngIf="showSuccessMessage">
+          Item added to cart!
         </div>
 
-        <div *ngIf="showSuccessMessage" class="success-toast">
-          ✅ Added {{ quantity }} x {{ product.name }} to cart!
-        </div>
-
-        <div class="secure-info">
-          <div class="item">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-            <span>Secure Payment</span>
-          </div>
-          <div class="item">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" x2="12" y1="22.08" y2="12"/></svg>
-            <span>Official Sealed Product</span>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-</div>
-
+      </div> </div> </div> </div>
 <app-footer></app-footer>

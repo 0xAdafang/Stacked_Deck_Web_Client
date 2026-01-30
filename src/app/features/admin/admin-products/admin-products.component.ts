@@ -31,16 +31,36 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
   selectedProductId?: string;
 
   productTypes = [
-    { label: 'Single Card', value: 'SINGLE_CARD' },
+    { label: 'Single Card', value: 'SINGLE' },
     { label: 'Booster Pack', value: 'BOOSTER_PACK' },
     { label: 'Elite Trainer Box', value: 'ETB' },
     { label: 'Booster Box', value: 'BOOSTER_BOX' },
     { label: 'Bundle', value: 'BUNDLE' }
-  ]
+  ];
 
-  rarities = ['COMMON', 'UNCOMMON', 'RARE', 'RARE_HOLO', 'DOUBLE_RARE', 'ULTRA_RARE', 'ILLUSTRATION_RARE', 'SPECIAL_ILLUSTRATION_RARE', 'SECRET_RARE', 'HYPER_RARE'];
+  rarities = [
+    { value: 'COMMON', label: 'Common' },
+    { value: 'UNCOMMON', label: 'Uncommon' },
+    { value: 'RARE', label: 'Rare' },
+    { value: 'RARE_HOLO', label: 'Rare Holo' },
+    { value: 'DOUBLE_RARE', label: 'Double Rare' },
+    { value: 'TRIPLE_RARE', label: 'Triple Rare' },
+    { value: 'ULTRA_RARE', label: 'Ultra Rare' },
+    { value: 'ILLUSTRATION_RARE', label: 'Illustration Rare' },
+    { value: 'SPECIAL_ILLUSTRATION_RARE', label: 'Special Illustration Rare' },
+    { value: 'HYPER_RARE', label: 'Hyper Rare (Gold)' },
+    { value: 'SECRET_RARE', label: 'Secret Rare' },
+    { value: 'PROMO', label: 'Promo' }
+  ];
 
-  conditions = ['NEAR_MINT', 'LIGHTLY_PLAYED', 'MODERATELY_PLAYED', 'HEAVILY_PLAYED', 'DAMAGED'];
+
+  conditions = [
+    { value: 'NEAR_MINT', label: 'Near Mint' },
+    { value: 'LIGHTLY_PLAYED', label: 'Lightly Played' },
+    { value: 'MODERATELY_PLAYED', label: 'Moderately Played' },
+    { value: 'HEAVILY_PLAYED', label: 'Heavily Played' },
+    { value: 'DAMAGED', label: 'Damaged' }
+  ];
 
   constructor(
     private productService: ProductService,
@@ -53,19 +73,29 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
       name: ['', Validators.required],
       description: ['', Validators.required],
       price: [0, [Validators.required, Validators.min(0)]],
-      stockQuantity: [0, [Validators.required, Validators.min(0)]],
       categoryId: ['', Validators.required],
       image: ['', Validators.required],
       type: ['SINGLE_CARD', Validators.required],
       rarity: [null],
       condition: [null],
       active: [true],
-      featured: [false]
+      featured: [false],
+
+      cardDetails: this.fb.group({
+        hp: [''],
+        types: [''],
+        stage: [''],
+        retreatCost: [''],
+        weakness: [''],
+        resistance: [''],
+        flavorText: [''],
+        attackDetails: ['']
+      })
     });
   }
 
   ngOnInit() {
-    this.themeSub = this.themeService.isDark$.subscribe(d => this.isDark = d); // + Subscribe
+    this.themeSub = this.themeService.isDark$.subscribe(d => this.isDark = d);
     this.loadData();
   }
 
@@ -93,7 +123,7 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
       stockQuantity: 0,
       active: true,
       featured: false,
-      type: 'SINGLE_CARD'
+      type: 'SINGLE'
     });
     this.showForm = true;
   }
@@ -108,7 +138,6 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
       name: product.name,
       description: product.description,
       price: product.price,
-      stockQuantity: product.stockQuantity,
       categoryId: (product as any).categoryId || '',
       image: product.image,
       type: product.type,
@@ -117,9 +146,13 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
       active: (product as any).active ?? true,
       featured: (product as any).featured ?? false
     });
+
+    if (product.cardDetails) {
+      this.productForm.get('cardDetails')?.patchValue(product.cardDetails);
+    }
   }
 
-  onDelete(product: Product) {
+  onDelete(product: string) {
     if (confirm(`Delete ${product.name}?`)) {
       this.adminService.deleteProduct(product.id).subscribe(() => {
         this.loadData();
@@ -132,9 +165,12 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
 
     const formVal = this.productForm.value;
 
+    const cardDetails = formVal.type === 'SINGLE' ? formVal.cardDetails : null;
+
     const payload: ProductRequest = {
       ...formVal,
-      price: Math.round(formVal.price * 100)
+      price: Math.round(formVal.price * 100),
+      cardDetails: cardDetails
     };
 
     if (this.isEditing && this.selectedProductId) {

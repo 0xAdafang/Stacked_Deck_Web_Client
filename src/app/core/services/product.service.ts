@@ -3,6 +3,17 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
+export interface CardDetails {
+  hp?: string;
+  types?: string;
+  stage?: string;
+  retreatCost?: string;
+  weakness?: string;
+  resistance?: string;
+  attackDetails?: string;
+  flavorText?: string;
+}
+
 export interface Product {
   id: string;
   name: string;
@@ -11,15 +22,19 @@ export interface Product {
   image: string;
   images?: string[];
   description?: string;
+  cardDetails?: CardDetails;
+  categoryCode?: string;
   price: number;
   currency: string;
   rarity?: string;
   condition?: string;
   type: 'SINGLE' | 'BOOSTER_PACK' | 'ETB' | 'BOOSTER_BOX' | 'BUNDLE';
+
   categoryName?: string;
   set?: string;
-  stockQuantity: number;
-  inStock?: boolean;
+
+
+  inStock: boolean;
 }
 
 export interface PageResponse<T> {
@@ -71,15 +86,14 @@ export class ProductService {
 
     return this.http.get<PageResponse<any>>(this.apiUrl, { params }).pipe(
       map(response => {
-
-
         return {
 
           content: (response.content || []).map((dto: any) => ({
             ...dto,
             price: dto.price ? dto.price / 100 : 0,
             set: dto.categoryName,
-            stockQuantity: dto.stockQuantity,
+            categoryCode: dto.categoryCode,
+            cardDetails: dto.cardDetails,
             condition: dto.condition,
             inStock: dto.stockQuantity > 0 && dto.active
           })),
@@ -95,8 +109,9 @@ export class ProductService {
         ...dto,
         price: dto.price ? dto.price / 100 : 0,
         set: dto.categoryName,
-        stockQuantity: dto.stockQuantity,
-        inStock: dto.stockQuantity > 0 && dto.active
+        categoryCode: dto.categoryCode,
+        cardDetails: dto.cardDetails,
+        inStock: dto.inStock
       }))
     );
   }

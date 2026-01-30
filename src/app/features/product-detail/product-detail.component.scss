@@ -363,6 +363,47 @@ $card-light: #ffffff;
   }
 }
 
+.card-specs-container {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+
+  .specs-grid {
+    display: grid;
+
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+
+    .spec-item {
+      display: flex;
+      flex-direction: column;
+
+      .label {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        opacity: 0.6;
+        margin-bottom: 0.25rem;
+      }
+      .value {
+        font-weight: 600;
+        font-size: 1rem;
+      }
+    }
+  }
+
+  .flavor-text {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 0.75rem;
+    font-style: italic;
+    opacity: 0.8;
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+}
+
 @keyframes spin { to { transform: rotate(360deg); } }
 
 .success-toast {

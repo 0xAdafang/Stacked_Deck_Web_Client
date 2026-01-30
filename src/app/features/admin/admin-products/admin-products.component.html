@@ -1,133 +1,171 @@
-<app-header></app-header>
-<div class="admin-container" [class.light-theme]="!isDark">
-<div class="admin-container">
-  <div class="header-actions">
-    <h1>Product Management</h1>
-    <button *ngIf="!showForm" class="btn-add" (click)="openCreate()">+ New Product</button>
+<div class="admin-page" [class.dark-theme]="isDark">
+  <div class="header-section">
+    <h1>Products Inventory</h1>
+    <button class="btn-create" (click)="openCreate()">+ New Product</button>
   </div>
 
-  <div class="editor-panel" *ngIf="showForm">
-    <h2>{{ isEditing ? 'Edit Product' : 'Create New Product' }}</h2>
-
-    <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
-
-      <div class="row">
-        <div class="form-group half">
-          <label>SKU</label>
-          <input type="text" formControlName="sku">
-        </div>
-        <div class="form-group half">
-          <label>Name</label>
-          <input type="text" formControlName="name">
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>Description</label>
-        <textarea formControlName="description" rows="3"></textarea>
-      </div>
-
-      <div class="row">
-        <div class="form-group half">
-          <label>Price ($)</label>
-          <input type="number" formControlName="price" step="0.01">
-        </div>
-        <div class="form-group half">
-          <label>Stock</label>
-          <input type="number" formControlName="stockQuantity">
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="form-group half">
-          <label>Category</label>
-          <select formControlName="categoryId">
-            <option value="" disabled>Select Category</option>
-            <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
-          </select>
-        </div>
-        <div class="form-group half">
-          <label>Type</label>
-          <select formControlName="type">
-            <option *ngFor="let t of productTypes" [value]="t.value">{{ t.label }}</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="form-group half">
-          <label>Rarity</label>
-          <select formControlName="rarity">
-            <option [ngValue]="null">-- None --</option>
-            <option *ngFor="let r of rarities" [value]="r">{{ r }}</option>
-          </select>
-        </div>
-        <div class="form-group half">
-          <label>Condition</label>
-          <select formControlName="condition">
-            <option [ngValue]="null">-- None --</option>
-            <option *ngFor="let c of conditions" [value]="c">{{ c }}</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>Image URL</label>
-        <input type="text" formControlName="image" placeholder="/assets/cards/...">
-      </div>
-
-      <div class="row checkbox-row">
-        <div class="form-group checkbox">
-          <label><input type="checkbox" formControlName="active"> Active (Visible)</label>
-        </div>
-        <div class="form-group checkbox">
-          <label><input type="checkbox" formControlName="featured"> Featured</label>
-        </div>
-      </div>
-
-      <div class="form-actions">
-        <button type="button" class="btn-cancel" (click)="closeForm()">Cancel</button>
-        <button type="submit" class="btn-save" [disabled]="productForm.invalid">Save Product</button>
-      </div>
-    </form>
-  </div>
-
-  <div class="table-wrapper" *ngIf="!showForm">
+  <div class="table-container">
     <table class="admin-table">
       <thead>
       <tr>
         <th>Image</th>
-        <th>Info</th>
+        <th>SKU</th>
+        <th>Name</th>
+        <th>Category</th>
+        <th>Type</th>
         <th>Price</th>
-        <th>Stock</th>
-        <th>Status</th>
+        <th>Status</th> <th>Active</th>
         <th>Actions</th>
       </tr>
       </thead>
       <tbody>
       <tr *ngFor="let p of products">
-        <td><img [src]="p.image" class="thumb" alt=""></td>
         <td>
-          <div class="p-name">{{ p.name }}</div>
-          <div class="p-sku">{{ p.sku }}</div>
+          <img [src]="p.image" alt="product" class="table-thumb">
         </td>
-        <td class="amount">{{ p.price | currency:'CAD' }}</td>
+        <td>{{ p.sku }}</td>
         <td>
-          <span class="badge" [class.low]="p.stockQuantity < 5">{{ p.stockQuantity }}</span>
+          <div class="name-cell">
+            <span>{{ p.name }}</span>
+            <span class="featured-badge" *ngIf="p.featured">Featured</span>
+          </div>
         </td>
+        <td>{{ p.categoryName || 'N/A' }}</td>
+        <td><span class="type-badge">{{ p.type.replace('_', ' ') }}</span></td>
+        <td>{{ p.price | currency }}</td>
+
         <td>
-          <span class="badge status" [class.active]="p?.active !== false">
-            {{ p?.active !== false ? 'Active' : 'Hidden' }}
-          </span>
+            <span class="badge" [ngStyle]="{'background': p.inStock ? '#10b981' : '#ef4444', 'color': 'white'}">
+             {{ p.inStock ? 'In Stock' : 'Out' }}
+           </span>
         </td>
-        <td class="actions">
-          <button class="btn-icon edit" (click)="openEdit(p)">✏️</button>
-          <button class="btn-icon delete" (click)="onDelete(p)">🗑️</button>
+
+        <td>
+          <span class="status-dot" [class.active]="p.active"></span>
         </td>
+        <td class="actions-cell">
+          <button class="btn-icon edit" (click)="openEdit(p)">Edit</button>
+          <button class="btn-icon delete" (click)="onDelete(p.id)">Del</button>
+        </td>
+      </tr>
+      <tr *ngIf="products.length === 0">
+        <td colspan="9" class="empty-state">No products found.</td>
       </tr>
       </tbody>
     </table>
   </div>
-</div>
 
-<app-footer></app-footer>
+  <div class="modal-overlay" *ngIf="showForm" (click)="closeForm()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <h2>{{ isEditing ? 'Edit Product' : 'Create Product' }}</h2>
+
+      <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+        <div class="row">
+          <div class="form-group half">
+            <label>SKU *</label>
+            <input type="text" formControlName="sku" [readonly]="isEditing">
+          </div>
+          <div class="form-group half">
+            <label>Name *</label>
+            <input type="text" formControlName="name">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Description</label>
+          <textarea formControlName="description" rows="3"></textarea>
+        </div>
+
+        <div class="row">
+          <div class="form-group half">
+            <label>Price ($) *</label>
+            <input type="number" formControlName="price" step="0.01">
+          </div>
+          <div class="form-group half">
+            <label>Type *</label>
+            <select formControlName="type">
+              <option *ngFor="let t of productTypes" [value]="t.value">{{ t.label }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="nested-form-section" formGroupName="cardDetails" *ngIf="productForm.get('type')?.value === 'SINGLE'">
+          <h3 class="section-title">Card Specifications</h3>
+          <div class="row">
+            <div class="form-group half">
+              <label>HP</label>
+              <input type="text" formControlName="hp" placeholder="e.g. 120">
+            </div>
+            <div class="form-group half">
+              <label>Types</label>
+              <input type="text" formControlName="types" placeholder="e.g. Fire">
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group half">
+              <label>Stage</label>
+              <input type="text" formControlName="stage" placeholder="e.g. Basic">
+            </div>
+            <div class="form-group half">
+              <label>Weakness</label>
+              <input type="text" formControlName="weakness">
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group half">
+              <label>Retreat Cost</label>
+              <input type="text" formControlName="retreatCost">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Flavor Text</label>
+            <textarea formControlName="flavorText" rows="2"></textarea>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Category *</label>
+          <select formControlName="categoryId">
+            <option value="" disabled>Select Category</option>
+            <option *ngFor="let c of categories" [value]="c.id">{{ c.name }}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Image URL *</label>
+          <input type="text" formControlName="image" placeholder="https://...">
+        </div>
+
+        <div class="row">
+          <div class="form-group half">
+            <label>Rarity</label>
+            <select formControlName="rarity">
+              <option [ngValue]="null">None</option>
+              <option *ngFor="let r of rarities" [value]="r.value">{{ r.label }}</option>
+            </select>
+          </div>
+          <div class="form-group half">
+            <label>Condition</label>
+            <select formControlName="condition">
+              <option [ngValue]="null">None</option>
+              <option *ngFor="let c of conditions" [value]="c.value">{{ c.label }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row toggles">
+          <label class="toggle-label">
+            <input type="checkbox" formControlName="active"> Active
+          </label>
+          <label class="toggle-label">
+            <input type="checkbox" formControlName="featured"> Featured
+          </label>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-cancel" (click)="closeForm()">Cancel</button>
+          <button type="submit" class="btn-submit" [disabled]="productForm.invalid">Save Product</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
