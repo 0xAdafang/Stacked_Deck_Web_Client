@@ -1,20 +1,23 @@
+<app-header> </app-header>
 <div class="admin-page" [class.dark-theme]="isDark">
   <div class="header-section">
-    <h1>Products Inventory</h1>
-    <button class="btn-create" (click)="openCreate()">+ New Product</button>
+    <h1>Inventory Dashboard</h1>
+    <button class="btn-create" (click)="openCreate()">
+      <span>+</span> New Product
+    </button>
   </div>
 
   <div class="table-container">
     <table class="admin-table">
       <thead>
       <tr>
-        <th>Image</th>
-        <th>SKU</th>
-        <th>Name</th>
+        <th>Visual</th>
+        <th>Product Info</th>
         <th>Category</th>
         <th>Type</th>
         <th>Price</th>
-        <th>Status</th> <th>Active</th>
+        <th>Stock Status</th>
+        <th>Active</th>
         <th>Actions</th>
       </tr>
       </thead>
@@ -23,33 +26,28 @@
         <td>
           <img [src]="p.image" alt="product" class="table-thumb">
         </td>
-        <td>{{ p.sku }}</td>
         <td>
           <div class="name-cell">
             <span>{{ p.name }}</span>
-            <span class="featured-badge" *ngIf="p.featured">Featured</span>
+            <div class="featured-badge" *ngIf="p.featured">Featured</div>
+            <div style="font-size: 0.75rem; color: #71717a; margin-top: 2px;">{{ p.sku }}</div>
           </div>
         </td>
-        <td>{{ p.categoryName || 'N/A' }}</td>
+        <td>{{ p.categoryName || '—' }}</td>
         <td><span class="type-badge">{{ p.type.replace('_', ' ') }}</span></td>
-        <td>{{ p.price | currency }}</td>
-
+        <td style="font-weight: 700; color: #ef4444;">{{ p.price | currency }}</td>
         <td>
-            <span class="badge" [ngStyle]="{'background': p.inStock ? '#10b981' : '#ef4444', 'color': 'white'}">
-             {{ p.inStock ? 'In Stock' : 'Out' }}
+           <span class="badge" [ngStyle]="{'background': p.inStock ? 'rgba(34, 197, 94, 0.2)' : 'rgba(239, 68, 68, 0.2)', 'color': p.inStock ? '#4ade80' : '#f87171', 'border': '1px solid ' + (p.inStock ? 'rgba(34, 197, 94, 0.3)' : 'rgba(239, 68, 68, 0.3)')}">
+             {{ p.inStock ? 'In Stock' : 'Out of Stock' }}
            </span>
         </td>
-
         <td>
-          <span class="status-dot" [class.active]="p.active"></span>
+          <span class="status-dot" [class.active]="p.active" title="{{ p.active ? 'Visible' : 'Hidden' }}"></span>
         </td>
         <td class="actions-cell">
           <button class="btn-icon edit" (click)="openEdit(p)">Edit</button>
-          <button class="btn-icon delete" (click)="onDelete(p.id)">Del</button>
+          <button class="btn-icon delete" (click)="onDelete(p)">Del</button>
         </td>
-      </tr>
-      <tr *ngIf="products.length === 0">
-        <td colspan="9" class="empty-state">No products found.</td>
       </tr>
       </tbody>
     </table>
@@ -57,32 +55,36 @@
 
   <div class="modal-overlay" *ngIf="showForm" (click)="closeForm()">
     <div class="modal-content" (click)="$event.stopPropagation()">
-      <h2>{{ isEditing ? 'Edit Product' : 'Create Product' }}</h2>
+      <h2>{{ isEditing ? 'Edit Product' : 'Add New Product' }}</h2>
 
       <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
         <div class="row">
           <div class="form-group half">
-            <label>SKU *</label>
-            <input type="text" formControlName="sku" [readonly]="isEditing">
+            <label>SKU</label>
+            <input type="text" formControlName="sku" [readonly]="isEditing" placeholder="SV03-001">
           </div>
           <div class="form-group half">
-            <label>Name *</label>
-            <input type="text" formControlName="name">
+            <label>Name</label>
+            <input type="text" formControlName="name" placeholder="Charizard ex">
           </div>
         </div>
 
         <div class="form-group">
           <label>Description</label>
-          <textarea formControlName="description" rows="3"></textarea>
+          <textarea formControlName="description" rows="3" placeholder="Description of the product..."></textarea>
         </div>
 
         <div class="row">
           <div class="form-group half">
-            <label>Price ($) *</label>
-            <input type="number" formControlName="price" step="0.01">
+            <label>Price ($)</label>
+            <input type="number" formControlName="price" step="0.01" placeholder="0.00">
+          </div>
+          <div class="form-group half" *ngIf="!isEditing">
+            <label>Initial Stock</label>
+            <input type="number" formControlName="initialStock" min="0" placeholder="0">
           </div>
           <div class="form-group half">
-            <label>Type *</label>
+            <label>Type</label>
             <select formControlName="type">
               <option *ngFor="let t of productTypes" [value]="t.value">{{ t.label }}</option>
             </select>
@@ -90,48 +92,63 @@
         </div>
 
         <div class="nested-form-section" formGroupName="cardDetails" *ngIf="productForm.get('type')?.value === 'SINGLE'">
-          <h3 class="section-title">Card Specifications</h3>
+          <h3 class="section-title">Single Card Data</h3>
+
           <div class="row">
             <div class="form-group half">
               <label>HP</label>
-              <input type="text" formControlName="hp" placeholder="e.g. 120">
+              <input type="text" formControlName="hp" placeholder="330">
             </div>
             <div class="form-group half">
               <label>Types</label>
-              <input type="text" formControlName="types" placeholder="e.g. Fire">
+              <input type="text" formControlName="types" placeholder="Fire">
             </div>
           </div>
+
           <div class="row">
             <div class="form-group half">
               <label>Stage</label>
-              <input type="text" formControlName="stage" placeholder="e.g. Basic">
+              <input type="text" formControlName="stage" placeholder="Stage 2">
             </div>
             <div class="form-group half">
               <label>Weakness</label>
-              <input type="text" formControlName="weakness">
+              <input type="text" formControlName="weakness" placeholder="Water x2">
             </div>
           </div>
+
           <div class="row">
             <div class="form-group half">
               <label>Retreat Cost</label>
-              <input type="text" formControlName="retreatCost">
+              <input type="text" formControlName="retreatCost" placeholder="2">
             </div>
           </div>
+
+          <div class="form-group">
+            <label>Attacks & Abilities</label>
+            <textarea formControlName="attackDetails" rows="3" placeholder="[RC] Wing Attack (60)"></textarea>
+          </div>
+
           <div class="form-group">
             <label>Flavor Text</label>
-            <textarea formControlName="flavorText" rows="2"></textarea>
+            <textarea formControlName="flavorText" rows="2" placeholder="Pokedex entry..."></textarea>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group half">
+            <label>Artist / Illustrator</label>
+            <input type="text" formControlName="illustrator" placeholder="e.g. Mitsuhiro Arita">
           </div>
         </div>
         <div class="form-group">
-          <label>Category *</label>
+          <label>Category (Set)</label>
           <select formControlName="categoryId">
-            <option value="" disabled>Select Category</option>
-            <option *ngFor="let c of categories" [value]="c.id">{{ c.name }}</option>
+            <option value="" disabled>Select a Set...</option>
+            <option *ngFor="let c of categories" [value]="c.id">{{ c.name }} ({{ c.code || 'N/A' }})</option>
           </select>
         </div>
 
         <div class="form-group">
-          <label>Image URL *</label>
+          <label>Image URL</label>
           <input type="text" formControlName="image" placeholder="https://...">
         </div>
 
@@ -139,14 +156,14 @@
           <div class="form-group half">
             <label>Rarity</label>
             <select formControlName="rarity">
-              <option [ngValue]="null">None</option>
+              <option [ngValue]="null">Select Rarity...</option>
               <option *ngFor="let r of rarities" [value]="r.value">{{ r.label }}</option>
             </select>
           </div>
           <div class="form-group half">
             <label>Condition</label>
             <select formControlName="condition">
-              <option [ngValue]="null">None</option>
+              <option [ngValue]="null">Select Condition...</option>
               <option *ngFor="let c of conditions" [value]="c.value">{{ c.label }}</option>
             </select>
           </div>
@@ -154,18 +171,21 @@
 
         <div class="row toggles">
           <label class="toggle-label">
-            <input type="checkbox" formControlName="active"> Active
+            <input type="checkbox" formControlName="active">
+            <span>Visible</span>
           </label>
           <label class="toggle-label">
-            <input type="checkbox" formControlName="featured"> Featured
+            <input type="checkbox" formControlName="featured">
+            <span>Featured</span>
           </label>
         </div>
 
         <div class="form-actions">
           <button type="button" class="btn-cancel" (click)="closeForm()">Cancel</button>
-          <button type="submit" class="btn-submit" [disabled]="productForm.invalid">Save Product</button>
+          <button type="submit" class="btn-submit" [disabled]="productForm.invalid">Save</button>
         </div>
       </form>
     </div>
   </div>
 </div>
+<app-footer></app-footer>

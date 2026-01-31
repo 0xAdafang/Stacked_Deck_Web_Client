@@ -75,9 +75,10 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
       price: [0, [Validators.required, Validators.min(0)]],
       categoryId: ['', Validators.required],
       image: ['', Validators.required],
-      type: ['SINGLE_CARD', Validators.required],
+      type: ['SINGLE', Validators.required],
       rarity: [null],
       condition: [null],
+      illustrator: [''],
       active: [true],
       featured: [false],
 
@@ -120,7 +121,7 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
     this.selectedProductId = undefined;
     this.productForm.reset({
       price: 0,
-      stockQuantity: 0,
+      initialStock: 0,
       active: true,
       featured: false,
       type: 'SINGLE'
@@ -138,11 +139,13 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
       name: product.name,
       description: product.description,
       price: product.price,
+      initialStock: [0, [Validators.min(0)]],
       categoryId: (product as any).categoryId || '',
       image: product.image,
       type: product.type,
       rarity: product.rarity,
       condition: product.condition,
+      illustrator: product.illustrator,
       active: (product as any).active ?? true,
       featured: (product as any).featured ?? false
     });
@@ -152,12 +155,20 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
     }
   }
 
-  onDelete(product: string) {
+  onDelete(product: Product) {
     if (confirm(`Delete ${product.name}?`)) {
       this.adminService.deleteProduct(product.id).subscribe(() => {
         this.loadData();
       });
     }
+  }
+
+  private generateSlug(name: string): string {
+    return name.toLowerCase()
+      .trim()
+      .replace(/[^\w\s-]/g, '')
+      .replace(/[\s_-]+/g, '-')
+      .replace(/^-+|-+$/g, '');
   }
 
   onSubmit() {
@@ -167,21 +178,46 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
 
     const cardDetails = formVal.type === 'SINGLE' ? formVal.cardDetails : null;
 
-    const payload: ProductRequest = {
-      ...formVal,
-      price: Math.round(formVal.price * 100),
+    const payload: any = {
+      sku: formVal.sku,
+      name: formVal.name,
+      slug: this.generateSlug(formVal.name) + '-' + formVal.sku.toLowerCase(),
+      description: formVal.description,
+
+      images: [formVal.image],
+
+      type: formVal.type,
+
+      baseAmount: Math.round(formVal.price * 100),
+      currency: 'CAD',
+
+      categoryId: formVal.categoryId,
+      active: formVal.active,
+      initialStock: formVal.initialStock,
+
+
+      illustrator: formVal.illustrator,
       cardDetails: cardDetails
     };
 
     if (this.isEditing && this.selectedProductId) {
-      this.adminService.updateProduct(this.selectedProductId, payload).subscribe(() => {
-        this.closeForm();
-        this.loadData();
+      this.adminService.updateProduct(this.selectedProductId, payload).subscribe({
+        next: () => {
+          this.closeForm();
+          this.loadData();
+        },
+        error: (err) => console.error('Erreur Update', err)
       });
     } else {
-      this.adminService.createProduct(payload).subscribe(() => {
-        this.closeForm();
-        this.loadData();
+      this.adminService.createProduct(payload).subscribe({
+        next: () => {
+          this.closeForm();
+          this.loadData();
+        },
+        error: (err) => {
+          console.error('Erreur Création', err);
+          alert('Erreur lors de la création (Vérifiez la console)');
+        }
       });
     }
   }

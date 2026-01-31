@@ -31,6 +31,12 @@ export interface ProductRequest {
 export interface CategoryDto {
   id: string;
   name: string;
+  code?: string;
+  slug: string;
+  image?: string;
+  parentId?: string;
+  position?: number;
+  cardCount?: number;
 }
 
 @Injectable({

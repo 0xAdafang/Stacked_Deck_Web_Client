@@ -34,6 +34,7 @@ export interface Product {
 
   rarity?: string;
   condition?: string;
+  illustrator?: string;
 
 
   active?: boolean;

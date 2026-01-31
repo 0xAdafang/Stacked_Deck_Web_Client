@@ -1,93 +1,19 @@
-// --- Variables (Team Rocket Theme) ---
+
 $bg-dark: #09090b;
-$card-dark: #18181b;
-$border-dark: #27272a;
+$panel-dark: #18181b;
+$input-bg: #27272a;
+$border: #3f3f46;
 $primary: #ef4444;
-$primary-hover: #dc2626;
-$text-main: #f4f4f5;
+$primary-glow: rgba(239, 68, 68, 0.5);
+$text-main: #ffffff;
 $text-muted: #a1a1aa;
-$success: #22c55e;
-$warning: #f59e0b;
-
-$bg-light: #f4f4f5;
-$card-light: #ffffff;
-$text-light: #18181b;
-$border-light: #e4e4e7;
-$text-muted-light: #52525b;
-
-:host { display: block; }
-
-.admin-container {
-  min-height: 100vh;
-  padding: 2rem;
-  background-color: $bg-dark;
-  color: #f4f4f5;
 
 
-  &.light-theme {
-    background-color: $bg-light;
-    color: $text-light;
-
-    .editor-panel, .table-wrapper {
-      background-color: $card-light;
-      border-color: $border-light;
-      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-    }
-
-
-    input, textarea, select {
-      background-color: white;
-      border-color: $border-light;
-      color: $text-light;
-      &::placeholder { color: $text-muted-light; }
-    }
-
-
-    .admin-nav a {
-      color: $text-muted-light;
-      &:hover { color: $primary; background: rgba($primary, 0.1); }
-      &.active { background: $primary; color: white; }
-    }
-
-
-    .admin-table {
-      th { background-color: #f9fafb; border-bottom-color: $border-light; color: $text-muted-light; }
-      td { border-bottom-color: $border-light; }
-      tr:hover td { background-color: #f9fafb; }
-      .p-name { color: $text-light; }
-    }
-  }
-}
-
-.title-group {
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-
-  h1 { margin: 0; }
-}
-
-.admin-nav {
-  display: flex;
-  background: rgba(255,255,255,0.05); // Fond nav léger
-  .light-theme & { background: rgba(0,0,0,0.05); } // Fond nav léger mode clair
-
-  padding: 0.25rem;
-  border-radius: 0.5rem;
-  gap: 0.5rem;
-
-  a {
-    text-decoration: none;
-    color: #a1a1aa;
-    font-weight: 600;
-    padding: 0.5rem 1rem;
-    border-radius: 0.375rem;
-    font-size: 0.9rem;
-    transition: all 0.2s;
-
-    &:hover { color: white; }
-    &.active { background-color: $primary; color: white; }
-  }
+@mixin card-style {
+  background: $panel-dark;
+  border: 1px solid $border;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 :host {
@@ -96,301 +22,325 @@ $text-muted-light: #52525b;
   min-height: 100vh;
   color: $text-main;
   padding: 2rem;
+  font-family: 'Inter', sans-serif;
 }
 
-
-.header-actions {
+.header-section {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
 
   h1 {
-    margin: 0;
-    color: $primary;
-    text-transform: uppercase;
+    font-size: 1.8rem;
     font-weight: 800;
-    letter-spacing: 1px;
+    letter-spacing: -0.02em;
+    background: linear-gradient(to right, #fff, #a1a1aa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 0;
   }
 }
 
-.btn-add {
-  background-color: $primary;
+.btn-create {
+  background: $primary;
   color: white;
   border: none;
   padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
-  font-weight: 700;
+  border-radius: 8px;
+  font-weight: 600;
   cursor: pointer;
-  text-transform: uppercase;
-  font-size: 0.9rem;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
 
   &:hover {
-    background-color: $primary-hover;
-    box-shadow: 0 0 10px rgba($primary, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
   }
+  &:active { transform: translateY(0); }
 }
 
 
-.editor-panel {
-  background: $card-dark;
-  border: 1px solid $border-dark;
-  padding: 2rem;
-  border-radius: 0.75rem;
-  max-width: 900px;
-  margin: 0 auto 3rem auto;
-  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
-
-  h2 {
-    margin-top: 0;
-    margin-bottom: 1.5rem;
-    font-size: 1.5rem;
-    border-bottom: 1px solid $border-dark;
-    padding-bottom: 1rem;
-  }
-
-  .row {
-    display: flex;
-    gap: 1.5rem;
-    margin-bottom: 1rem;
-  }
-
-  .half { flex: 1; }
-
-  .form-group {
-    margin-bottom: 1.25rem;
-
-    label {
-      display: block;
-      margin-bottom: 0.5rem;
-      font-size: 0.9rem;
-      color: $text-muted;
-      font-weight: 500;
-    }
-
-    input, textarea, select {
-      width: 100%;
-      padding: 0.75rem;
-      background: #27272a;
-      border: 1px solid transparent;
-      color: white;
-      border-radius: 0.5rem;
-      font-size: 0.95rem;
-      transition: all 0.2s;
-
-      &:focus {
-        border-color: $primary;
-        outline: none;
-        box-shadow: 0 0 0 1px $primary;
-      }
-
-      &::placeholder { opacity: 0.4; }
-    }
-
-    textarea { resize: vertical; }
-
-    &.checkbox {
-      display: flex;
-      align-items: center;
-      margin-top: 0.5rem;
-
-      label {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        color: $text-main;
-        cursor: pointer;
-
-        input[type="checkbox"] {
-          width: 1.2rem;
-          height: 1.2rem;
-          accent-color: $primary;
-          cursor: pointer;
-        }
-      }
-    }
-  }
-
-  .form-actions {
-    display: flex;
-    gap: 1rem;
-    margin-top: 2rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid $border-dark;
-
-    button {
-      flex: 1;
-      padding: 1rem;
-      border-radius: 0.5rem;
-      font-weight: 700;
-      cursor: pointer;
-      text-transform: uppercase;
-      transition: all 0.2s;
-    }
-
-    .btn-cancel {
-      background: transparent;
-      border: 1px solid $border-dark;
-      color: $text-muted;
-      &:hover { border-color: $text-main; color: $text-main; }
-    }
-
-    .btn-save {
-      background: $primary;
-      border: none;
-      color: white;
-      &:hover { background: $primary-hover; }
-      &:disabled { opacity: 0.5; cursor: not-allowed; }
-    }
-  }
-}
-
-
-.table-wrapper {
-  background: $card-dark;
-  border: 1px solid $border-dark;
-  border-radius: 0.75rem;
-  overflow-x: auto;
-}
-
-.nested-form-section {
-  background-color: rgba(255, 255, 255, 0.02);
-  border: 1px dashed rgba(255, 255, 255, 0.2);
-  padding: 1.25rem;
-  border-radius: 8px;
-  margin-bottom: 1.5rem;
-
-  .section-title {
-    margin-top: 0;
-    margin-bottom: 1rem;
-    font-size: 1rem;
-    color: #a1a1aa;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-
-  .form-group {
-    margin-bottom: 1rem;
-    input, textarea, select {
-
-      @extend input;
-    }
-  }
-
-
-  .row {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 0.5rem;
-    .half { flex: 1; }
-  }
+.table-container {
+  @include card-style;
+  overflow: hidden;
 }
 
 .admin-table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 800px; // Force scroll on mobile
-
-  th, td {
-    padding: 1rem 1.5rem;
-    text-align: left;
-    border-bottom: 1px solid $border-dark;
-    vertical-align: middle;
-  }
 
   th {
-    background: rgba(255, 255, 255, 0.02);
-    color: $text-muted;
-    text-transform: uppercase;
+    background: rgba(255, 255, 255, 0.03);
+    text-align: left;
+    padding: 1rem 1.5rem;
     font-size: 0.75rem;
-    font-weight: 700;
+    text-transform: uppercase;
     letter-spacing: 0.05em;
+    color: $text-muted;
+    font-weight: 600;
+    border-bottom: 1px solid $border;
+  }
+
+  td {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid rgba(63, 63, 70, 0.4);
+    vertical-align: middle;
+    transition: background 0.2s;
   }
 
   tr:last-child td { border-bottom: none; }
 
-  tr:hover td { background-color: rgba(255, 255, 255, 0.02); }
+  tr:hover td {
+    background: rgba(255, 255, 255, 0.02);
+  }
 
 
-  .thumb {
-    width: 48px;
-    height: auto;
-    border-radius: 4px;
-    object-fit: cover;
+  .table-thumb {
+    width: 48px; height: 48px;
+    object-fit: contain;
+    border-radius: 6px;
     background: #000;
+    border: 1px solid #333;
   }
 
-  .p-name {
-    font-weight: 700;
-    color: $text-main;
-    font-size: 0.95rem;
+  .name-cell {
+    display: flex;
+    flex-direction: column;
+    span:first-child { font-weight: 600; color: white; font-size: 0.95rem; }
+    .featured-badge {
+      display: inline-block;
+      font-size: 0.65rem;
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: white;
+      padding: 2px 6px;
+      border-radius: 4px;
+      width: fit-content;
+      margin-top: 4px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
   }
 
-  .p-sku {
-    font-size: 0.8rem;
-    color: $primary;
-    font-family: monospace;
-    margin-top: 0.2rem;
+  .type-badge {
+    font-size: 0.75rem;
+    background: rgba(255,255,255,0.1);
+    padding: 4px 8px;
+    border-radius: 6px;
+    color: #d4d4d8;
   }
 
-  .amount {
-    font-weight: 700;
-    color: $success;
-  }
 
   .badge {
-    padding: 0.25rem 0.6rem;
-    border-radius: 4px;
-    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
     font-size: 0.75rem;
+    font-weight: 700;
     text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+
+  .status-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: #3f3f46;
     display: inline-block;
-
-    &.low {
-      background: rgba($warning, 0.15);
-      color: $warning;
-      border: 1px solid rgba($warning, 0.3);
-    }
-
-    &.status {
-      &.active {
-        background: rgba($success, 0.15);
-        color: $success;
-        border: 1px solid rgba($success, 0.3);
-      }
-      &:not(.active) {
-        background: rgba(#71717a, 0.15);
-        color: #71717a;
-        border: 1px solid rgba(#71717a, 0.3);
-      }
+    transition: all 0.3s;
+    &.active {
+      background: #22c55e;
+      box-shadow: 0 0 8px rgba(34, 197, 94, 0.4);
     }
   }
 
-
-  .actions {
+  .actions-cell {
     display: flex;
-    gap: 0.75rem;
+    gap: 8px;
 
     .btn-icon {
       background: transparent;
-      border: 1px solid $border-dark;
-      border-radius: 0.375rem;
-      padding: 0.5rem;
+      border: 1px solid $border;
+      color: $text-muted;
+      padding: 6px 10px;
+      border-radius: 6px;
       cursor: pointer;
-      font-size: 1rem;
+      font-size: 0.8rem;
       transition: all 0.2s;
 
-      &.edit:hover {
-        border-color: #60a5fa;
-        background: rgba(#60a5fa, 0.1);
-      }
-
-      &.delete:hover {
-        border-color: $primary;
-        background: rgba($primary, 0.1);
-      }
+      &:hover { color: white; border-color: white; }
+      &.delete:hover { color: $primary; border-color: $primary; background: rgba($primary, 0.1); }
     }
+  }
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.modal-content {
+  @include card-style;
+  width: 100%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 2.5rem;
+  background: #18181b;
+  position: relative;
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+
+  h2 {
+    margin-top: 0;
+    margin-bottom: 2rem;
+    font-size: 1.5rem;
+    border-bottom: 1px solid $border;
+    padding-bottom: 1rem;
+    color: white;
+  }
+
+
+  &::-webkit-scrollbar { width: 6px; }
+  &::-webkit-scrollbar-thumb { background: $border; border-radius: 3px; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+
+.form-group {
+  margin-bottom: 1.5rem;
+
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: $text-muted;
+  }
+
+  input, select, textarea {
+    width: 100%;
+    box-sizing: border-box;
+    background: $input-bg;
+    border: 1px solid transparent;
+    color: white;
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    transition: all 0.2s;
+
+    &::placeholder { color: #52525b; opacity: 1; }
+
+    &:hover { background: lighten($input-bg, 3%); }
+
+    &:focus {
+      outline: none;
+      background: lighten($input-bg, 2%);
+      border-color: $primary;
+      box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15);
+    }
+  }
+
+  textarea { resize: vertical; min-height: 100px; }
+}
+
+.row {
+  display: flex;
+  gap: 1.5rem;
+  .half { flex: 1; }
+}
+
+
+.nested-form-section {
+  background: rgba($primary, 0.03);
+  border: 1px dashed rgba($primary, 0.3);
+  padding: 1.5rem;
+  border-radius: 10px;
+  margin-bottom: 2rem;
+
+  .section-title {
+    color: $primary;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-top: 0;
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    &::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: $primary;
+      border-radius: 50%;
+    }
+  }
+}
+
+
+.toggles {
+  margin-top: 1rem;
+  background: rgba(255,255,255,0.03);
+  padding: 1rem;
+  border-radius: 8px;
+
+  .toggle-label {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    font-weight: 600;
+    user-select: none;
+
+    input { width: 1.2rem; height: 1.2rem; accent-color: $primary; }
+  }
+}
+
+.form-actions {
+  margin-top: 2.5rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+
+  button {
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+  }
+
+  .btn-cancel {
+    background: transparent;
+    border: 1px solid $border;
+    color: $text-muted;
+    &:hover { background: rgba(255,255,255,0.05); color: white; }
+  }
+
+  .btn-submit {
+    background: $primary;
+    color: white;
+    border: none;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+
+    &:hover {
+      background: lighten($primary, 5%);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 15px rgba(239, 68, 68, 0.35);
+    }
+
+    &:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
   }
 }
