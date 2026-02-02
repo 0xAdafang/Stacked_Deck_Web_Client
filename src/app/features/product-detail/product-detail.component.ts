@@ -63,7 +63,8 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
         if (!prod.inStock) {
           this.checkInventory(prod.sku);
         } else {
-          this.quantity = 0;
+          this.quantity = 1;
+          this.maxQuantity = 99;
           this.loading = false;
         }
       },
@@ -80,6 +81,11 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
         this.stockStatus = status;
         this.maxQuantity = status.quantityAvailable;
         this.quantity = 1;
+        this.loading = false;
+
+        if (this.product && status.inStock) {
+          this.product.inStock = true;
+        }
         this.loading = false;
       },
       error: () => {

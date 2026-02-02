@@ -95,7 +95,7 @@ export class ProductService {
             categoryCode: dto.categoryCode,
             cardDetails: dto.cardDetails,
             condition: dto.condition,
-            inStock: dto.stockQuantity > 0 && dto.active
+            inStock: dto.inStock
           })),
           page: response.page || {}
         };

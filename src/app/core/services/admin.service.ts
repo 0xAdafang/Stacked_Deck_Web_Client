@@ -78,4 +78,8 @@ export class AdminService {
       return this.http.get<CategoryDto[]>(`${this.catalogApiUrl}/categories`);
     }
 
+    addStock(productId: string, quantity: number) {
+      return this.http.post<void>(`${this.apiUrl}/catalog/products/${productId}/stock/add`, { quantity });
+    }
+
 }

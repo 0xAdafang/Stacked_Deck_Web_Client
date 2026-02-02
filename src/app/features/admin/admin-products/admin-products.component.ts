@@ -74,6 +74,7 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
       description: ['', Validators.required],
       price: [0, [Validators.required, Validators.min(0)]],
       categoryId: ['', Validators.required],
+      initialStock: [0],
       image: ['', Validators.required],
       type: ['SINGLE', Validators.required],
       rarity: [null],
@@ -91,7 +92,8 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
         resistance: [''],
         flavorText: [''],
         attackDetails: ['']
-      })
+      }),
+
     });
   }
 
@@ -129,10 +131,13 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
     this.showForm = true;
   }
 
+  currentStock: number | null = null;
+
   openEdit(product: Product) {
     this.isEditing = true;
     this.selectedProductId = product.id;
     this.showForm = true;
+    this.currentStock = null;
 
     this.productForm.patchValue({
       sku: product.sku,
@@ -217,6 +222,30 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
         error: (err) => {
           console.error('Erreur Création', err);
           alert('Erreur lors de la création (Vérifiez la console)');
+        }
+      });
+    }
+  }
+
+  onRestock(inputElement: HTMLInputElement) {
+    const qty = parseInt(inputElement.value, 10);
+
+    if (!qty || qty <= 0) {
+      alert("Please enter a valid quantity");
+      return;
+    }
+
+    if (this.selectedProductId) {
+
+      this.adminService.addStock(this.selectedProductId, qty).subscribe({
+        next: () => {
+          alert(`Successfully added ${qty} units!`);
+          inputElement.value = '';
+          this.loadData();
+        },
+        error: (err) => {
+          console.error('Restock failed', err);
+          alert('Error adding stock. Check console.');
         }
       });
     }
