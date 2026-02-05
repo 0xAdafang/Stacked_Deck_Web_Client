@@ -1,56 +1,136 @@
-<app-header> </app-header>
-<div class="admin-page" [class.dark-theme]="isDark">
-  <div class="header-section">
-    <h1>Inventory Dashboard</h1>
+<app-header></app-header>
+
+<div class="admin-page" [class.dark-theme]="isDark" [class.light-theme]="!isDark">
+
+  <div class="header-title-row">
+    <h1>Inventory Dashboard 📦</h1>
     <button class="btn-create" (click)="openCreate()">
       <span>+</span> New Product
     </button>
   </div>
 
-  <div class="table-container">
+  <nav class="admin-nav">
+    <a routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Dashboard</a>
+    <a routerLink="/admin/products" routerLinkActive="active">Products</a>
+  </nav>
+
+  <div class="search-filter-bar">
+    <div class="search-box">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <path d="m21 21-4.35-4.35"></path>
+      </svg>
+      <input
+        type="text"
+        placeholder="Search by name, SKU..."
+        [value]="searchTerm"
+        (input)="onSearchChange($event)">
+    </div>
+
+    <div class="filter-group">
+      <select (change)="onCategoryFilter($event)">
+        <option value="">All Sets</option>
+        <option *ngFor="let c of categories" [value]="c.id">{{ c.name }}</option>
+      </select>
+
+      <select (change)="onTypeFilter($event)">
+        <option value="">All Types</option>
+        <option *ngFor="let t of productTypes" [value]="t.value">{{ t.label }}</option>
+      </select>
+
+      <select (change)="onStatusFilter($event)">
+        <option value="">All Status</option>
+        <option value="active">Active Only</option>
+        <option value="inactive">Inactive Only</option>
+        <option value="inStock">In Stock</option>
+        <option value="outOfStock">Out of Stock</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="results-count">
+    {{ filteredProducts.length }} product{{ filteredProducts.length !== 1 ? 's' : '' }}
+  </div>
+
+  <div *ngIf="loading" class="loading-state">
+    <div class="spinner"></div>
+  </div>
+
+  <div class="table-container" *ngIf="!loading">
     <table class="admin-table">
       <thead>
       <tr>
-        <th>Visual</th>
+        <th width="80">Visual</th>
         <th>Product Info</th>
         <th>Category</th>
         <th>Type</th>
         <th>Price</th>
-        <th>Stock Status</th>
-        <th>Active</th>
-        <th>Actions</th>
+        <th>Stock</th>
+        <th>Status</th>
+        <th width="120">Actions</th>
       </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let p of products">
+      <tr *ngFor="let p of paginatedProducts" (click)="openEdit(p)">
         <td>
           <img [src]="p.image" alt="product" class="table-thumb">
         </td>
         <td>
           <div class="name-cell">
-            <span>{{ p.name }}</span>
-            <div class="featured-badge" *ngIf="p.featured">Featured</div>
-            <div style="font-size: 0.75rem; color: #71717a; margin-top: 2px;">{{ p.sku }}</div>
+            <span>
+                {{ p.name }}
+              <div class="featured-badge" *ngIf="p.featured">Featured</div>
+            </span>
+            <div class="sku-text">{{ p.sku }}</div>
           </div>
         </td>
         <td>{{ p.categoryName || '—' }}</td>
         <td><span class="type-badge">{{ p.type.replace('_', ' ') }}</span></td>
         <td style="font-weight: 700; color: #ef4444;">{{ p.price | currency }}</td>
         <td>
-           <span class="badge" [ngStyle]="{'background': p.inStock ? 'rgba(34, 197, 94, 0.2)' : 'rgba(239, 68, 68, 0.2)', 'color': p.inStock ? '#4ade80' : '#f87171', 'border': '1px solid ' + (p.inStock ? 'rgba(34, 197, 94, 0.3)' : 'rgba(239, 68, 68, 0.3)')}">
+           <span class="badge" [ngStyle]="{
+             'background': p.inStock ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)',
+             'color': p.inStock ? '#22c55e' : '#f87171',
+             'border': '1px solid ' + (p.inStock ? 'rgba(34, 197, 94, 0.2)' : 'rgba(239, 68, 68, 0.2)'),
+             'padding': '4px 8px', 'border-radius': '6px', 'font-size': '0.75rem'
+           }">
              {{ p.inStock ? 'In Stock' : 'Out of Stock' }}
            </span>
         </td>
         <td>
-          <span class="status-dot" [class.active]="p.active" title="{{ p.active ? 'Visible' : 'Hidden' }}"></span>
+          <span class="status-dot" [class.active]="p.active" [title]="p.active ? 'Visible' : 'Hidden'"></span>
         </td>
-        <td class="actions-cell">
-          <button class="btn-icon edit" (click)="openEdit(p)">Edit</button>
-          <button class="btn-icon delete" (click)="onDelete(p)">Del</button>
+        <td (click)="$event.stopPropagation()">
+          <div class="actions-wrapper">
+            <button class="btn-icon" (click)="openEdit(p)" title="Edit">
+              ✏️
+            </button>
+            <button class="btn-icon delete" (click)="onDelete(p)" title="Delete">
+              🗑️
+            </button>
+          </div>
+        </td>
+      </tr>
+      <tr *ngIf="paginatedProducts.length === 0">
+        <td colspan="8" style="text-align: center; padding: 4rem; opacity: 0.6;">
+          <div style="font-size: 2rem; margin-bottom: 1rem;">🔍</div>
+          No products found matching your filters.
         </td>
       </tr>
       </tbody>
     </table>
+  </div>
+
+  <div class="pagination" *ngIf="!loading && totalPages > 1">
+    <button class="page-btn" (click)="previousPage()" [disabled]="currentPage === 0">‹</button>
+    <button
+      *ngFor="let page of [].constructor(totalPages); let i = index"
+      class="page-btn"
+      [class.active]="i === currentPage"
+      (click)="goToPage(i)">
+      {{ i + 1 }}
+    </button>
+    <button class="page-btn" (click)="nextPage()" [disabled]="currentPage === totalPages - 1">›</button>
   </div>
 
   <div class="modal-overlay" *ngIf="showForm" (click)="closeForm()">
@@ -137,12 +217,14 @@
             <textarea formControlName="flavorText" rows="2" placeholder="Pokedex entry..."></textarea>
           </div>
         </div>
+
         <div class="row">
           <div class="form-group half">
             <label>Artist / Illustrator</label>
             <input type="text" formControlName="illustrator" placeholder="e.g. Mitsuhiro Arita">
           </div>
         </div>
+
         <div class="form-group">
           <label>Category (Set)</label>
           <select formControlName="categoryId">
@@ -218,4 +300,3 @@
     </div>
   </div>
 </div>
-<app-footer></app-footer>

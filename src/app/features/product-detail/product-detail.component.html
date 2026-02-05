@@ -3,103 +3,145 @@
 <div class="main-content">
   <div class="loading-container" *ngIf="loading">
     <div class="spinner"></div>
-    <p>Loading product...</p>
+    <p>Loading details...</p>
   </div>
 
   <div class="error-container" *ngIf="error && !loading">
-    <p>Product not found or an error occurred.</p>
-    <button routerLink="/products">Back to Products</button>
+    <p>Card not found in the deck.</p>
+    <button routerLink="/products" class="btn-back">Return to Catalog</button>
   </div>
 
   <div class="product-wrapper" *ngIf="!loading && !error && product" [class.dark-theme]="isDark" [class.light-theme]="!isDark">
-    <div class="breadcrumb">
-      <a routerLink="/">Home</a> &gt;
-      <a routerLink="/products">Products</a> &gt;
-      <span>{{ product.name }}</span>
-    </div>
 
-    <div class="product-layout">
-      <div class="product-gallery">
-        <div class="main-image">
-          <img [src]="selectedImage" [alt]="product.name">
-        </div>
-        <div class="thumbnail-list" *ngIf="product.images && product.images.length > 0">
-          <img *ngFor="let img of product.images" [src]="img" [class.active]="img === selectedImage" (click)="changeImage(img)" alt="thumbnail">
-        </div>
-      </div>
+    <div class="container">
+      <nav class="breadcrumb">
+        <a routerLink="/">Home</a>
+        <span class="sep">/</span>
+        <a routerLink="/products">Catalog</a>
+        <span class="sep">/</span>
+        <span class="current">{{ product.name }}</span>
+      </nav>
 
-      <div class="product-info">
-        <h5>
-          <span *ngIf="product.categoryCode" style="opacity: 0.7; margin-right: 5px;">{{ product.categoryCode }}:</span>
-          {{ product.categoryName }}
-        </h5>
+      <div class="product-grid">
 
-        <h1>{{ product.name }}</h1>
-
-        <div class="product-meta">
-          <span class="meta-badge rarity" [style.background-color]="getRarityColor(product.rarity || '')" *ngIf="product.rarity">
-            {{ product.rarity.replace('_', ' ') }}
-          </span>
-          <span class="meta-badge condition" *ngIf="product.condition">
-            {{ getConditionLabel(product.condition) }}
-          </span>
-        </div>
-
-        <div class="product-price">
-          {{ product.price | currency:'USD' }}
-        </div>
-
-        <div class="card-specs-container" *ngIf="product.cardDetails && product.type === 'SINGLE'">
-          <div class="specs-grid">
-            <div class="spec-item" *ngIf="product.cardDetails.hp">
-              <span class="label">HP</span>
-              <span class="value">{{ product.cardDetails.hp }}</span>
+        <div class="gallery-column">
+          <div class="sticky-gallery">
+            <div class="main-image-wrapper">
+              <img [src]="selectedImage" [alt]="product.name" class="main-image">
+              <span class="rarity-badge" *ngIf="product.rarity" [style.background-color]="getRarityColor(product.rarity)">
+                {{ product.rarity.replace('_', ' ') }}
+              </span>
             </div>
-            <div class="spec-item" *ngIf="product.cardDetails.types">
-              <span class="label">Type</span>
-              <span class="value">{{ product.cardDetails.types }}</span>
-            </div>
-            <div class="spec-item" *ngIf="product.cardDetails.stage">
-              <span class="label">Stage</span>
-              <span class="value">{{ product.cardDetails.stage }}</span>
-            </div>
-            <div class="spec-item" *ngIf="product.cardDetails.weakness">
-              <span class="label">Weakness</span>
-              <span class="value">{{ product.cardDetails.weakness }}</span>
-            </div>
-            <div class="spec-item" *ngIf="product.cardDetails.retreatCost">
-              <span class="label">Retreat</span>
-              <span class="value">{{ product.cardDetails.retreatCost }}</span>
+
+            <div class="thumbnails-list" *ngIf="product.images && product.images.length > 1">
+              <div *ngFor="let img of product.images"
+                   class="thumb-item"
+                   [class.active]="img === selectedImage"
+                   (click)="changeImage(img)">
+                <img [src]="img" alt="view">
+              </div>
             </div>
           </div>
-          <div class="flavor-text" *ngIf="product.cardDetails.flavorText">
-            "{{ product.cardDetails.flavorText }}"
+        </div>
+
+        <div class="details-column">
+
+          <div class="product-header">
+            <h2 class="set-name" *ngIf="product.categoryName">
+              <span class="set-code" *ngIf="product.categoryCode">{{ product.categoryCode }}</span>
+              {{ product.categoryName }}
+            </h2>
+            <h1 class="product-title">{{ product.name }}</h1>
+
+            <div class="product-meta">
+              <div class="sku">SKU: {{ product.sku }}</div>
+              <div class="condition-badge" *ngIf="product.condition">
+                {{ getConditionLabel(product.condition) }}
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="description">
-          <p>{{ product.description }}</p>
-        </div>
 
-        <div class="product-actions">
-          <div class="quantity-selector" [class.disabled]="!product.inStock">
-            <button (click)="updateQuantity(-1)" [disabled]="quantity <= 1">-</button>
-            <input type="text" [value]="quantity" readonly>
-            <button (click)="updateQuantity(1)" [disabled]="quantity >= maxQuantity">+</button>
+          <div class="purchase-card">
+            <div class="price-section">
+              <span class="price">{{ product.price | currency:'USD' }}</span>
+              <span class="stock-status" [class.in-stock]="product.inStock" [class.out-stock]="!product.inStock">
+                 {{ product.inStock ? 'In Stock' : 'Out of Stock' }}
+              </span>
+            </div>
+
+            <div class="actions-row">
+              <div class="quantity-control" [class.disabled]="!product.inStock">
+                <button (click)="updateQuantity(-1)" [disabled]="quantity <= 1">−</button>
+                <input type="number" [value]="quantity" readonly>
+                <button (click)="updateQuantity(1)" [disabled]="quantity >= maxQuantity">+</button>
+              </div>
+
+              <button class="btn-add-cart" (click)="addToCart()" [disabled]="!product.inStock">
+                Add to Cart
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+              </button>
+            </div>
+
+            <div class="stock-limit-msg" *ngIf="quantity >= maxQuantity && product.inStock">
+              Max stock reached ({{ maxQuantity }} available)
+            </div>
+
+            <div class="success-message" [class.show]="showSuccessMessage">
+              ✓ Added to cart!
+            </div>
           </div>
 
-          <button class="btn-add-cart" (click)="addToCart()" [disabled]="!product.inStock">
-            {{ product.inStock ? 'Add to Cart' : 'Out of Stock' }}
-          </button>
-        </div>
+          <div class="description-section" *ngIf="product.description">
+            <h3>Description</h3>
+            <p>{{ product.description }}</p>
+          </div>
 
-        <p *ngIf="product.inStock && stockStatus?.lowStock" style="color: #eab308; font-size: 0.9rem; margin-top: 10px;">
-          Only {{ stockStatus?.quantityAvailable }} left!
-        </p>
+          <div class="specs-panel" *ngIf="product.cardDetails && product.type === 'SINGLE'">
+            <h3>Card Details</h3>
 
+            <div class="specs-grid">
+              <div class="spec-box" *ngIf="product.cardDetails.hp">
+                <span class="label">HP</span>
+                <span class="value">{{ product.cardDetails.hp }}</span>
+              </div>
+              <div class="spec-box" *ngIf="product.cardDetails.types">
+                <span class="label">Type</span>
+                <span class="value">{{ product.cardDetails.types }}</span>
+              </div>
+              <div class="spec-box" *ngIf="product.cardDetails.stage">
+                <span class="label">Stage</span>
+                <span class="value">{{ product.cardDetails.stage }}</span>
+              </div>
+              <div class="spec-box" *ngIf="product.cardDetails.weakness">
+                <span class="label">Weakness</span>
+                <span class="value">{{ product.cardDetails.weakness }}</span>
+              </div>
+              <div class="spec-box" *ngIf="product.cardDetails.retreatCost">
+                <span class="label">Retreat</span>
+                <span class="value">{{ product.cardDetails.retreatCost }}</span>
+              </div>
+              <div class="spec-box" *ngIf="product.cardDetails.resistance">
+                <span class="label">Resistance</span>
+                <span class="value">{{ product.cardDetails.resistance }}</span>
+              </div>
+            </div>
 
-        <div class="success-message" *ngIf="showSuccessMessage">
-          Item added to cart!
-        </div>
+            <div class="attacks-section" *ngIf="product.cardDetails.attackDetails">
+              <span class="label">Attacks / Abilities</span>
+              <p class="flavor-text" style="white-space: pre-line">{{ product.cardDetails.attackDetails }}</p>
+            </div>
 
-      </div> </div> </div> </div>
+            <div class="flavor-section" *ngIf="product.cardDetails.flavorText">
+              <span class="label">Pokedex Entry</span>
+              <p class="flavor-text">"{{ product.cardDetails.flavorText }}"</p>
+            </div>
+
+            <div class="artist-section" *ngIf="product.illustrator">
+              <span class="label">Illustrator</span>
+              <span class="value">{{ product.illustrator }}</span>
+            </div>
+          </div>
+
+        </div> </div> </div> </div>
+</div>
 <app-footer></app-footer>

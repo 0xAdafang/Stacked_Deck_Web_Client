@@ -47,10 +47,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
       queryParams: { type: 'ETB' }
     },
     {
-      label: 'Boxes & Bundles',
+      label: 'Booster Boxes',
       route: '/products',
       queryParams: { type: 'BOOSTER_BOX' }
+    },
+    {
+      label: 'Bundles',
+      route: '/products',
+      queryParams: { type: 'BUNDLE' }
     }
+
   ];
 
   constructor(

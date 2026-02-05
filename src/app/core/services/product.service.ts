@@ -35,6 +35,8 @@ export interface Product {
 
 
   inStock: boolean;
+
+  illustrator?: string;
 }
 
 export interface PageResponse<T> {

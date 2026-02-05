@@ -60,13 +60,8 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
         this.product = prod;
         this.selectedImage = prod.image;
 
-        if (!prod.inStock) {
+
           this.checkInventory(prod.sku);
-        } else {
-          this.quantity = 1;
-          this.maxQuantity = 99;
-          this.loading = false;
-        }
       },
       error: () => {
         this.error = true;
@@ -81,10 +76,10 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
         this.stockStatus = status;
         this.maxQuantity = status.quantityAvailable;
         this.quantity = 1;
-        this.loading = false;
 
-        if (this.product && status.inStock) {
-          this.product.inStock = true;
+
+        if (this.product) {
+          this.product.inStock = status.inStock;
         }
         this.loading = false;
       },

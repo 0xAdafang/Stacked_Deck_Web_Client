@@ -4,7 +4,6 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ProductService } from '../../../core/services/product.service';
 import { AdminService, ProductRequest, CategoryDto } from '../../../core/services/admin.service';
 import { Product } from '../../../core/models/product.model';
-import {FooterComponent} from '../../../shared/components/footer/footer.component';
 import {HeaderComponent} from '../../../shared/components/header/header.component';
 import { RouterModule } from '@angular/router';
 import { ThemeService } from '../../../core/services/theme.service';
@@ -13,12 +12,13 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-admin-products',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, CurrencyPipe, FooterComponent, HeaderComponent, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, CurrencyPipe, HeaderComponent, RouterModule],
   templateUrl: 'admin-products.component.html',
   styleUrls: ['admin-products.component.scss']
 })
 export class AdminProductsComponent implements OnInit, OnDestroy {
   products: Product[] = [];
+  filteredProducts: Product[] = [];
   categories: CategoryDto[] = [];
   productForm: FormGroup;
 
@@ -29,6 +29,17 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
   isEditing = false;
   showForm = false;
   selectedProductId?: string;
+
+  currentPage = 0;
+  pageSize = 10;
+  totalPages = 0;
+  paginatedProducts: Product[] = [];
+
+  searchTerm = '';
+  selectedCategory = '';
+  selectedType = '';
+  selectedStatus = '';
+
 
   productTypes = [
     { label: 'Single Card', value: 'SINGLE' },
@@ -74,7 +85,7 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
       description: ['', Validators.required],
       price: [0, [Validators.required, Validators.min(0)]],
       categoryId: ['', Validators.required],
-      initialStock: [0],
+      initialStock: 0,
       image: ['', Validators.required],
       type: ['SINGLE', Validators.required],
       rarity: [null],
@@ -102,7 +113,9 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
     this.loadData();
   }
 
-  ngOnDestroy() { this.themeSub?.unsubscribe(); }
+  ngOnDestroy() {
+    this.themeSub?.unsubscribe();
+  }
 
   loadData() {
     this.loading = true;
@@ -110,6 +123,7 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
     this.productService.getProducts({page: 0, size: 100}).subscribe({
       next: (page) => {
         this.products = page.content;
+        this.applyFilters();
         this.loading = false;
       },
       error: () => this.loading = false
@@ -117,6 +131,85 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
 
     this.adminService.getCategories().subscribe(cats => this.categories = cats);
   }
+
+  applyFilters() {
+    let result = [...this.products];
+
+    if (this.searchTerm) {
+      const term = this.searchTerm.toLowerCase();
+      result = result.filter(p =>
+      p.name.toLowerCase().includes(term) ||
+      p.sku.toLowerCase().includes(term)
+      );
+    }
+
+    if (this.selectedCategory) {
+      result = result.filter(p => (p as any).categoryId === this.selectedCategory);
+    }
+
+    if (this.selectedType) {
+      result = result.filter(p => p.type === this.selectedType);
+    }
+
+    if (this.selectedStatus === 'active') {
+      result = result.filter(p => (p as any).active === true);
+    } else if (this.selectedStatus === 'inactive') {
+      result = result.filter(p => (p as any).active === false);
+    } else if  (this.selectedStatus === 'inStock') {
+      result = result.filter(p => p.inStock === true);
+    } else if (this.selectedStatus === 'outOfStock') {
+      result = result.filter(p => p.inStock === false);
+    }
+
+    this.filteredProducts = result;
+    this.totalPages = Math.ceil(this.filteredProducts.length / this.pageSize);
+    this.currentPage = 0;
+    this.updatePagination();
+
+  }
+
+  updatePagination() {
+    const start = this.currentPage * this.pageSize;
+    const end = start + this.pageSize;
+    this.paginatedProducts = this.filteredProducts.slice(start, end);
+  }
+
+  onSearchChange(event:  any) {
+    this.searchTerm = event.target.value;
+    this.applyFilters();
+  }
+
+  onCategoryFilter(event : any) {
+    this.selectedCategory = event.target.value;
+    this.applyFilters();
+  }
+
+  onTypeFilter(event : any) {
+    this.selectedType = event.target.value;
+    this.applyFilters();
+  }
+
+  onStatusFilter(event : any) {
+    this.selectedStatus = event.target.value;
+    this.applyFilters();
+  }
+
+  goToPage(page: number) {
+    if (page >= 0 && page < this.totalPages) {
+      this.currentPage = page;
+      this.updatePagination();
+    }
+  }
+
+  previousPage() {
+    this.goToPage(this.currentPage - 1);
+  }
+
+  nextPage() {
+    this.goToPage(this.currentPage + 1);
+  }
+
+
 
   openCreate() {
     this.isEditing = false;
@@ -144,7 +237,7 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
       name: product.name,
       description: product.description,
       price: product.price,
-      initialStock: [0, [Validators.min(0)]],
+      initialStock: 0,
       categoryId: (product as any).categoryId || '',
       image: product.image,
       type: product.type,
@@ -193,6 +286,9 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
 
       type: formVal.type,
 
+      rarity: formVal.rarity,
+      condition: formVal.condition,
+
       baseAmount: Math.round(formVal.price * 100),
       currency: 'CAD',
 
@@ -220,8 +316,8 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
           this.loadData();
         },
         error: (err) => {
-          console.error('Erreur Création', err);
-          alert('Erreur lors de la création (Vérifiez la console)');
+          console.error('Error Creating', err);
+          alert('Error during creation (Check the console)');
         }
       });
     }
