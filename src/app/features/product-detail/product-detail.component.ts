@@ -71,24 +71,44 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
   }
 
   checkInventory(sku: string): void {
+    if (this.product?.inStock) {
+      this.maxQuantity = 10;
+    }
+
     this.inventoryService.getStatus(sku).subscribe({
-      next: (status) => {
+      next: (status: any) => {
+        console.log('📦 Inventory Status reçu:', status);
+
         this.stockStatus = status;
-        this.maxQuantity = status.quantityAvailable;
+
+
+        this.maxQuantity = status.quantityAvailable ?? status.quantity ?? 0;
+
+
         this.quantity = 1;
 
 
         if (this.product) {
-          this.product.inStock = status.inStock;
+          this.product.inStock = (this.maxQuantity > 0);
         }
+
         this.loading = false;
       },
-      error: () => {
-        this.maxQuantity = 1;
+      error: (err) => {
+        if (err.status === 404) {
+          console.warn(`⚠️ Pas d'inventaire trouvé pour ${sku} (404). On considère Stock = 0.`);
+          this.maxQuantity = 0;
+          if (this.product) this.product.inStock = false;
+        } else {
+          console.error('❌ Erreur technique Inventory:', err);
+
+        }
         this.loading = false;
       }
-    })
+    });
   }
+
+
 
   changeImage(img: string): void {
   this.selectedImage = img;
@@ -101,6 +121,8 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
 
     if (newQty >= 1 && newQty <= this.maxQuantity) {
       this.quantity = newQty;
+    } else {
+      console.log(`Bloqué : Tentative ${newQty} vs Max ${this.maxQuantity}`);
     }
   }
 
