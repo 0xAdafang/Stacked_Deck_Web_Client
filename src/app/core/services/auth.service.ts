@@ -26,6 +26,7 @@ export class AuthService {
   ) {}
 
 
+
   login(payload: LoginPayload) {
     return this.http.post<AuthResponse>(`${this.baseUrl}/login`, payload, {
       withCredentials: true
@@ -120,6 +121,19 @@ export class AuthService {
       return of(null);
     }
 
-    return of(null);
+    return this.http.post<AuthResponse>(`${this.baseUrl}/refresh`, {}, {
+      withCredentials: true
+    }).pipe(
+      tap(res => {
+        this.saveToken(res.accessToken);
+        this.userService.setCurrentUser(res.user);
+      }),
+      map(res => res.user),
+      catchError((err) =>{
+        console.error('Bootstrap auth failed:', err);
+        this.logout();
+        return of(null);
+      })
+    );
   }
 }
